@@ -102075,9 +102075,9 @@ Func_7210b: ; 7210b (1c:610b)
 	ld [rBGP], a ; $FF00+$47
 	ld de, $8800
 	ld a, [$cf2d]
-	and a
-	jr z, .asm_72122
-	call Func_72188
+	dec a
+	jr c, .asm_72122
+	call CopyPalTable
 	jr .asm_72128
 .asm_72122
 	ld bc, $1000
@@ -102413,180 +102413,298 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_MEWMON    ; MEWTWO
 	db PAL_MEWMON    ; MEW
 
-; palettes for overworlds, title screen, monsters
-SuperPalettes: ; 72660 (1c:6660)
-	RGB 31,29,31 ; PAL_ROUTE
-	RGB 21,28,11
-	RGB 20,26,31
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_PALLET
-	RGB 25,28,27
-	RGB 20,26,31
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_VIRIDIAN
-	RGB 17,26,3
-	RGB 20,26,31
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_PEWTER
-	RGB 23,25,16
-	RGB 20,26,31
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_CERULEAN
-	RGB 17,20,30
-	RGB 20,26,31
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_LAVENDER
-	RGB 27,20,27
-	RGB 20,26,31
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_VERMILION
-	RGB 30,18,0
-	RGB 20,26,31
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_CELADON
-	RGB 16,30,22
-	RGB 20,26,31
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_FUCHSIA
-	RGB 31,15,22
-	RGB 20,26,31
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_CINNABAR
-	RGB 26,10,6
-	RGB 20,26,31
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_INDIGO
-	RGB 22,14,24
-	RGB 20,26,31
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_SAFFRON
-	RGB 27,27,3
-	RGB 20,26,31
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_TOWNMAP
-	RGB 20,26,31
-	RGB 17,23,10
-	RGB 3,2,2
-IF _RED
-	RGB 31,29,31 ; PAL_LOGO1
-	RGB 30,30,17
-	RGB 17,23,10
-	RGB 21,0,4
-ENDC
-IF _BLUE
-	RGB 31,29,31 ; PAL_LOGO1
-	RGB 30,30,17
-	RGB 21,0,4
-	RGB 14,19,29
-ENDC
-	RGB 31,29,31 ; XXX
-	RGB 30,30,17
-	RGB 18,18,24
-	RGB 7,7,16
-	RGB 31,29,31 ; PAL_LOGO2
-	RGB 24,20,30
-	RGB 11,20,30
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_MEWMON
-	RGB 30,22,17
-	RGB 16,14,19
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_BLUEMON
-	RGB 18,20,27
-	RGB 11,15,23
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_REDMON
-	RGB 31,20,10
-	RGB 26,10,6
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_CYANMON
-	RGB 21,25,29
-	RGB 14,19,25
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_PURPLEMON
-	RGB 27,22,24
-	RGB 21,15,23
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_BROWNMON
-	RGB 28,20,15
-	RGB 21,14,9
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_GREENMON
-	RGB 20,26,16
-	RGB 9,20,11
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_PINKMON
-	RGB 30,22,24
-	RGB 28,15,21
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_YELLOWMON
-	RGB 31,28,14
-	RGB 26,20,0
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_GREYMON
-	RGB 26,21,22
-	RGB 15,15,18
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_SLOTS1
-	RGB 26,21,22
-	RGB 27,20,6
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_SLOTS2
-	RGB 31,31,17
-IF _RED
-	RGB 25,17,21
-ENDC
-IF _BLUE
-	RGB 16,19,29
-ENDC
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_SLOTS3
-	RGB 22,31,16
-IF _RED
-	RGB 25,17,21
-ENDC
-IF _BLUE
-	RGB 16,19,29
-ENDC
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_SLOTS4
-IF _RED
-	RGB 16,19,29
-	RGB 25,17,21
-ENDC
-IF _BLUE
-	RGB 25,17,21
-	RGB 16,19,29
-ENDC
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_BLACK
-	RGB 7,7,7
-	RGB 2,3,3
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_GREENBAR
-	RGB 30,26,15
-	RGB 9,20,11
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_YELLOWBAR
-	RGB 30,26,15
-	RGB 26,20,0
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_REDBAR
-	RGB 30,26,15
-	RGB 26,10,6
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_BADGE
-	RGB 30,22,17
-	RGB 11,15,23
-	RGB 3,2,2
-	RGB 31,29,31 ; PAL_CAVE
-	RGB 21,14,9
-	RGB 18,24,22
-	RGB 3,2,2
-	RGB 31,29,31 ; XXX
-	RGB 31,28,14
-	RGB 24,20,10
-	RGB 3,2,2
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	
+CopyPalTable
+	jr nz,.yes
+	jp $6188 ; no
+.yes
+	ld a,BANK(SuperPalettes)
+	ld bc,$1000
+	jp FarCopyData
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+
 BorderPalettes: ; 72788 (1c:6788)
 
 IF _RED
@@ -128467,3 +128585,181 @@ MoveNames: ; b0000 (2c:4000)
 	db "SLASH@"
 	db "SUBSTITUTE@"
 	db "STRUGGLE@"
+
+	
+SECTION "bank2F",ROMX,BANK[$2F]
+	
+	; palettes for overworlds, title screen, monsters
+SuperPalettes: ; 72660 (1c:6660)
+	RGB 31,29,31 ; PAL_ROUTE
+	RGB 21,28,11
+	RGB 20,26,31
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_PALLET
+	RGB 25,28,27
+	RGB 20,26,31
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_VIRIDIAN
+	RGB 17,26,3
+	RGB 20,26,31
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_PEWTER
+	RGB 23,25,16
+	RGB 20,26,31
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_CERULEAN
+	RGB 17,20,30
+	RGB 20,26,31
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_LAVENDER
+	RGB 27,20,27
+	RGB 20,26,31
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_VERMILION
+	RGB 30,18,0
+	RGB 20,26,31
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_CELADON
+	RGB 16,30,22
+	RGB 20,26,31
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_FUCHSIA
+	RGB 31,15,22
+	RGB 20,26,31
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_CINNABAR
+	RGB 26,10,6
+	RGB 20,26,31
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_INDIGO
+	RGB 22,14,24
+	RGB 20,26,31
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_SAFFRON
+	RGB 27,27,3
+	RGB 20,26,31
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_TOWNMAP
+	RGB 20,26,31
+	RGB 17,23,10
+	RGB 3,2,2
+IF _RED
+	RGB 31,29,31 ; PAL_LOGO1
+	RGB 30,30,17
+	RGB 17,23,10
+	RGB 21,0,4
+ENDC
+IF _BLUE
+	RGB 31,29,31 ; PAL_LOGO1
+	RGB 30,30,17
+	RGB 21,0,4
+	RGB 14,19,29
+ENDC
+	RGB 31,29,31 ; XXX
+	RGB 30,30,17
+	RGB 18,18,24
+	RGB 7,7,16
+	RGB 31,29,31 ; PAL_LOGO2
+	RGB 24,20,30
+	RGB 11,20,30
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_MEWMON
+	RGB 30,22,17
+	RGB 16,14,19
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_BLUEMON
+	RGB 18,20,27
+	RGB 11,15,23
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_REDMON
+	RGB 31,20,10
+	RGB 26,10,6
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_CYANMON
+	RGB 21,25,29
+	RGB 14,19,25
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_PURPLEMON
+	RGB 27,22,24
+	RGB 21,15,23
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_BROWNMON
+	RGB 28,20,15
+	RGB 21,14,9
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_GREENMON
+	RGB 20,26,16
+	RGB 9,20,11
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_PINKMON
+	RGB 30,22,24
+	RGB 28,15,21
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_YELLOWMON
+	RGB 31,28,14
+	RGB 26,20,0
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_GREYMON
+	RGB 26,21,22
+	RGB 15,15,18
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_SLOTS1
+	RGB 26,21,22
+	RGB 27,20,6
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_SLOTS2
+	RGB 31,31,17
+IF _RED
+	RGB 25,17,21
+ENDC
+IF _BLUE
+	RGB 16,19,29
+ENDC
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_SLOTS3
+	RGB 22,31,16
+IF _RED
+	RGB 25,17,21
+ENDC
+IF _BLUE
+	RGB 16,19,29
+ENDC
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_SLOTS4
+IF _RED
+	RGB 16,19,29
+	RGB 25,17,21
+ENDC
+IF _BLUE
+	RGB 25,17,21
+	RGB 16,19,29
+ENDC
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_BLACK
+	RGB 7,7,7
+	RGB 2,3,3
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_GREENBAR
+	RGB 30,26,15
+	RGB 9,20,11
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_YELLOWBAR
+	RGB 30,26,15
+	RGB 26,20,0
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_REDBAR
+	RGB 30,26,15
+	RGB 26,10,6
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_BADGE
+	RGB 30,22,17
+	RGB 11,15,23
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_CAVE
+	RGB 21,14,9
+	RGB 18,24,22
+	RGB 3,2,2
+	RGB 31,29,31 ; XXX
+	RGB 31,28,14
+	RGB 24,20,10
+	RGB 3,2,2
