@@ -3489,33 +3489,41 @@ UncompressMonSprite: ; 1627 (0:1627)
 ; $74 ≤ index < $99, bank $C
 ; $99 ≤ index,       bank $D
 	ld a,[$CF91] ; XXX name for this ram location
-	ld b,a
-	cp MEW
-	ld a,BANK(MewPicFront)
-	jr z,.GotBank
-	ld a,b
 	cp FOSSIL_KABUTOPS
+	jr z,.RecallBank
+	cp FOSSIL_AERODACTYL
+	jr z,.RecallBank
+	cp MON_GHOST
+	jr z,.RecallBank
+	ld a,[$D0D3]
+	jr .GotBank
+.RecallBank
 	ld a,BANK(FossilKabutopsPic)
-	jr z,.GotBank
-	ld a,b
-	cp TANGELA + 1
-	ld a,BANK(TangelaPicFront)
-	jr c,.GotBank
-	ld a,b
-	cp MOLTRES + 1
-	ld a,BANK(MoltresPicFront)
-	jr c,.GotBank
-	ld a,b
-	cp BEEDRILL + 2
-	ld a,BANK(BeedrillPicFront)
-	jr c,.GotBank
-	ld a,b
-	cp STARMIE + 1
-	ld a,BANK(StarmiePicFront)
-	jr c,.GotBank
-	ld a,BANK(VictreebelPicFront)
 .GotBank
 	jp UncompressSpriteData
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 
 ; known jump sources: 13b1 (0:13b1), 3ca4f (f:4a4f), 3d17d (f:517d), 3efce (f:6fce), 3efda (f:6fda), 5dbfd (17:5bfd)
 ; de: destination location
