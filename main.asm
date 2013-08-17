@@ -101646,11 +101646,11 @@ Func_71ddf: ; 71ddf (1c:5ddf)
 ; 71e12 (1c:5e12)
 	ld a, [W_PLAYERBATTSTATUS3]
 	ld hl, W_PLAYERMONID        ; player Pokemon ID
-	call DeterminePaletteID
+	call DeterminePaletteIDBack
 	ld b, a
 	ld a, [W_ENEMYBATTSTATUS3]
 	ld hl, W_ENEMYMONID                ; enemy Pokemon ID
-	call DeterminePaletteID
+	call DeterminePaletteIDFront
 
 	ld c, a
 	ld hl, $cf2e
@@ -101684,7 +101684,7 @@ Func_71ddf: ; 71ddf (1c:5ddf)
 	jr c, .asm_71e64
 	ld a, $1
 .asm_71e64
-	call Func_71f9d
+	call Func_72666
 	push af
 	ld hl, $cf2e
 	ld a, [$cf25]
@@ -101704,7 +101704,7 @@ Func_71ddf: ; 71ddf (1c:5ddf)
 	ld bc, $10
 	call CopyData
 	ld a, [$cf91]
-	call Func_71f9d
+	call Func_72666
 	ld hl, $cf30
 	ld [hl], a
 	ld hl, $cf2d
@@ -101780,7 +101780,7 @@ INCBIN "baserom.gbc",$71e9f,$71ea6 - $71e9f
 	ld a, $1e
 	jr nz, .asm_71f31
 	ld a, [$cf1d]
-	call Func_71f9d
+	call Func_72666
 .asm_71f31
 	ld [$cf2e], a
 	ld hl, $cf2d
@@ -101829,7 +101829,7 @@ INCBIN "baserom.gbc",$71f73,$71f8f - $71f73
 Unknown_71f8f: ; 71f8f (1c:5f8f)
 INCBIN "baserom.gbc",$71f8f,$71f97 - $71f8f
 
-DeterminePaletteID: ; 71f97 (1c:5f97)
+DeterminePaletteIDOLD: ; 71f97 (1c:5f97)
 	bit 3, a                 ; bit 3 of battle status 3 (unused?)
 	ld a, PAL_GREYMON
 	ret nz
@@ -102413,144 +102413,123 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_MEWTWO
 	db PAL_MEW
 
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
+DeterminePaletteIDFront: ; 72660 (1c:6660)
+	bit 3, a                 ; bit 3 of battle status 3 (unused?)
+	ld a, PAL_GREYMON
+	ret nz
+	ld a, [hl]
+Func_72666: ; 72666 (1c:6666)
+	ld [$D11E], a
+	and a
+	jr z, .idZero
+	push bc
+	ld a, $3A
+	call Predef               ; turn Pokemon ID number into Pokedex number
+	pop bc
+	ld a, [$D11E]
+.idZero
+	ld hl, MonsterPalettes
+	cp a, $00
+	jr nz, .getPalID
+	ld a, [$D031]
+	ld hl, TrainerPalettes
+.getPalID
+	ld e, a
+	ld d, $00
+
+	add hl, de
+	ld a, [hl]
+	ret	
+	
+DeterminePaletteIDBack: ; 72689 (1c:6689)
+	bit 3, a                 ; bit 3 of battle status 3 (unused?)
+	ld a, PAL_GREYMON
+	ret nz
+	ld a, [hl]
+Func_72689: ; 72689 (1c:6689)
+	ld [$D11E], a
+	and a
+	jr z, .idZero
+	push bc
+	ld a, $3A
+	call Predef               ; turn Pokemon ID number into Pokedex number
+	pop bc
+	ld a, [$D11E]
+.idZero
+	ld hl, MonsterPalettes
+	cp a, $00
+	jr nz, .getPalID
+	ld a, $EB ; trainer pal id
+	ret
+.getPalID
+	ld e, a
+	ld d, $00
+	add hl, de
+	ld a, [hl]
+	ret
+
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	
+TrainerPalettes: ; 726ba (1c:66ba)
+	db PAL_HERO
+	db PAL_YOUNGSTER
+	db PAL_BUGCATCHER
+	db PAL_LASS
+	db PAL_SAILOR
+	db PAL_JR_TRAINER_M
+	db PAL_JR_TRAINER_F
+	db PAL_POKEMANIAC
+	db PAL_SUPERNERD
+	db PAL_HIKER
+	db PAL_BIKER
+	db PAL_BURGLAR
+	db PAL_ENGINEER
+	db PAL_JUGGLER
+	db PAL_FISHERMAN
+	db PAL_SWIMMER
+	db PAL_CUEBALL
+	db PAL_GAMBLER
+	db PAL_BEAUTY
+	db PAL_PSYCHIC
+	db PAL_ROCKER
+	db PAL_JUGGLER2
+	db PAL_TAMER
+	db PAL_BIRDKEEPER
+	db PAL_BLACKBELT
+	db PAL_GARY1
+	db PAL_OAK
+	db PAL_CHIEF
+	db PAL_SCIENTIST
+	db PAL_GIOVANNI
+	db PAL_ROCKET
+	db PAL_COOLTRAINER_M
+	db PAL_COOLTRAINER_F
+	db PAL_BRUNO
+	db PAL_BROCK
+	db PAL_MISTY
+	db PAL_LT_SURGE
+	db PAL_ERIKA
+	db PAL_KOGA
+	db PAL_BLAINE
+	db PAL_SABRINA
+	db PAL_GENTLEMAN
+	db PAL_GARY2
+	db PAL_GARY3
+	db PAL_LORELEI
+	db PAL_CHANNELER
+	db PAL_AGATHA
+	db PAL_LANCE
+	
 	nop
 	nop
 	nop
