@@ -3535,6 +3535,7 @@ LoadMonFrontSprite: ; 1665 (0:1665)
 	call UncompressMonSprite
 	ld hl, W_MONHSPRITEDIM
 	ld a, [hli]
+LoadUncompressedBackSprite:
 	ld c, a
 	pop de
 	; fall through
@@ -10840,11 +10841,336 @@ Func_40b0: ; 40b0 (1:40b0)
 	ld a, $7
 	jp Predef ; indirect jump to HealParty (f6a5 (3:76a5))
 ; 4112 (1:4112)
-MewPicFront: ; 4112 (1:4112)
-	INCBIN "pic/bmon/mew.pic"
-MewPicBack: ; 4205 (1:4205)
-	INCBIN "pic/monback/mewb.pic"
-; 0x425b
+
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 
 MewBaseStats: ; 425b (1:425b)
 	db DEX_MEW ; pokedex id
@@ -29925,6 +30251,19 @@ Func_12ec7: ; 12ec7 (4:6ec7)
 
 RedPicFront: ; 12ede (4:6ede)
 	INCBIN "pic/trainer/red.pic"
+	
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	
 ShrinkPic1: ; 12fe8 (4:6fe8)
 	INCBIN "pic/trainer/shrink1.pic"
 ShrinkPic2: ; 13042 (4:7042)
@@ -44040,122 +44379,274 @@ INCBIN "baserom.gbc",$22325,$23f52 - $22325
 
 SECTION "bank9",ROMX,BANK[$9]
 
-RhydonPicFront: ; 24000 (9:4000)
-	INCBIN "pic/bmon/rhydon.pic"
-RhydonPicBack: ; 24202 (9:4202)
-	INCBIN "pic/monback/rhydonb.pic"
-KangaskhanPicFront: ; 2429a (9:429a)
-	INCBIN "pic/bmon/kangaskhan.pic"
-KangaskhanPicBack: ; 244a6 (9:44a6)
-	INCBIN "pic/monback/kangaskhanb.pic"
-NidoranMPicFront: ; 2453c (9:453c)
-	INCBIN "pic/bmon/nidoranm.pic"
-NidoranMPicBack: ; 24623 (9:4623)
-	INCBIN "pic/monback/nidoranmb.pic"
-ClefairyPicFront: ; 24682 (9:4682)
-	INCBIN "pic/bmon/clefairy.pic"
-ClefairyPicBack: ; 24785 (9:4785)
-	INCBIN "pic/monback/clefairyb.pic"
-SpearowPicFront: ; 247df (9:47df)
-	INCBIN "pic/bmon/spearow.pic"
-SpearowPicBack: ; 248c2 (9:48c2)
-	INCBIN "pic/monback/spearowb.pic"
-VoltorbPicFront: ; 24911 (9:4911)
-	INCBIN "pic/bmon/voltorb.pic"
-VoltorbPicBack: ; 2499a (9:499a)
-	INCBIN "pic/monback/voltorbb.pic"
-NidokingPicFront: ; 249f8 (9:49f8)
-	INCBIN "pic/bmon/nidoking.pic"
-NidokingPicBack: ; 24c60 (9:4c60)
-	INCBIN "pic/monback/nidokingb.pic"
-SlowbroPicFront: ; 24d0a (9:4d0a)
-	INCBIN "pic/bmon/slowbro.pic"
-SlowbroPicBack: ; 24f87 (9:4f87)
-	INCBIN "pic/monback/slowbrob.pic"
+BulbasaurPicFront: ; 34000 (d:4000)
+	INCBIN "pic/bmon/bulbasaur.pic"
+BulbasaurPicBack: ; 340e5 (d:40e5)
+	INCBIN "pic/monback/bulbasaurb.pic"
 IvysaurPicFront: ; 2502b (9:502b)
 	INCBIN "pic/bmon/ivysaur.pic"
 IvysaurPicBack: ; 25157 (9:5157)
 	INCBIN "pic/monback/ivysaurb.pic"
-ExeggutorPicFront: ; 251d6 (9:51d6)
-	INCBIN "pic/bmon/exeggutor.pic"
-ExeggutorPicBack: ; 253f8 (9:53f8)
-	INCBIN "pic/monback/exeggutorb.pic"
-LickitungPicFront: ; 254a7 (9:54a7)
-	INCBIN "pic/bmon/lickitung.pic"
-LickitungPicBack: ; 2563e (9:563e)
-	INCBIN "pic/monback/lickitungb.pic"
-ExeggcutePicFront: ; 256d7 (9:56d7)
-	INCBIN "pic/bmon/exeggcute.pic"
-ExeggcutePicBack: ; 258f0 (9:58f0)
-	INCBIN "pic/monback/exeggcuteb.pic"
-GrimerPicFront: ; 25973 (9:5973)
-	INCBIN "pic/bmon/grimer.pic"
-GrimerPicBack: ; 25ab0 (9:5ab0)
-	INCBIN "pic/monback/grimerb.pic"
-GengarPicFront: ; 25b76 (9:5b76)
-	INCBIN "pic/bmon/gengar.pic"
-GengarPicBack: ; 25cc6 (9:5cc6)
-	INCBIN "pic/monback/gengarb.pic"
-NidoranFPicFront: ; 25d28 (9:5d28)
-	INCBIN "pic/bmon/nidoranf.pic"
-NidoranFPicBack: ; 25dc2 (9:5dc2)
-	INCBIN "pic/monback/nidoranfb.pic"
-NidoqueenPicFront: ; 25e09 (9:5e09)
-	INCBIN "pic/bmon/nidoqueen.pic"
-NidoqueenPicBack: ; 25fef (9:5fef)
-	INCBIN "pic/monback/nidoqueenb.pic"
-CubonePicFront: ; 260a8 (9:60a8)
-	INCBIN "pic/bmon/cubone.pic"
-CubonePicBack: ; 26196 (9:6196)
-	INCBIN "pic/monback/cuboneb.pic"
-RhyhornPicFront: ; 26208 (9:6208)
-	INCBIN "pic/bmon/rhyhorn.pic"
-RhyhornPicBack: ; 2640f (9:640f)
-	INCBIN "pic/monback/rhyhornb.pic"
-LaprasPicFront: ; 264c1 (9:64c1)
-	INCBIN "pic/bmon/lapras.pic"
-LaprasPicBack: ; 2667c (9:667c)
-	INCBIN "pic/monback/laprasb.pic"
-ArcaninePicFront: ; 266ff (9:66ff)
-	INCBIN "pic/bmon/arcanine.pic"
-ArcaninePicBack: ; 2693d (9:693d)
-	INCBIN "pic/monback/arcanineb.pic"
-GyaradosPicFront: ; 269d4 (9:69d4)
-	INCBIN "pic/bmon/gyarados.pic"
-GyaradosPicBack: ; 26c25 (9:6c25)
-	INCBIN "pic/monback/gyaradosb.pic"
-ShellderPicFront: ; 26cb6 (9:6cb6)
-	INCBIN "pic/bmon/shellder.pic"
-ShellderPicBack: ; 26dc3 (9:6dc3)
-	INCBIN "pic/monback/shellderb.pic"
-TentacoolPicFront: ; 26e2a (9:6e2a)
-	INCBIN "pic/bmon/tentacool.pic"
-TentacoolPicBack: ; 26f1c (9:6f1c)
-	INCBIN "pic/monback/tentacoolb.pic"
-GastlyPicFront: ; 26f77 (9:6f77)
-	INCBIN "pic/bmon/gastly.pic"
-GastlyPicBack: ; 27190 (9:7190)
-	INCBIN "pic/monback/gastlyb.pic"
-ScytherPicFront: ; 2721c (9:721c)
-	INCBIN "pic/bmon/scyther.pic"
-ScytherPicBack: ; 2743c (9:743c)
-	INCBIN "pic/monback/scytherb.pic"
-StaryuPicFront: ; 274e0 (9:74e0)
-	INCBIN "pic/bmon/staryu.pic"
-StaryuPicBack: ; 275ec (9:75ec)
-	INCBIN "pic/monback/staryub.pic"
+VenusaurPicFront: ; 34162 (d:4162)
+	INCBIN "pic/bmon/venusaur.pic"
+VenusaurPicBack: ; 34397 (d:4397)
+	INCBIN "pic/monback/venusaurb.pic"
+CharmanderPicFront: ; 35c5c (d:5c5c)
+	INCBIN "pic/bmon/charmander.pic"
+CharmanderPicBack: ; 35d5c (d:5d5c)
+	INCBIN "pic/monback/charmanderb.pic"
+CharmeleonPicFront: ; 35f0c (d:5f0c)
+	INCBIN "pic/bmon/charmeleon.pic"
+CharmeleonPicBack: ; 36048 (d:6048)
+	INCBIN "pic/monback/charmeleonb.pic"
+CharizardPicFront: ; 36286 (d:6286)
+	INCBIN "pic/bmon/charizard.pic"
+CharizardPicBack: ; 36495 (d:6495)
+	INCBIN "pic/monback/charizardb.pic"
+SquirtlePicFront: ; 35db8 (d:5db8)
+	INCBIN "pic/bmon/squirtle.pic"
+SquirtlePicBack: ; 35e8f (d:5e8f)
+	INCBIN "pic/monback/squirtleb.pic"
+WartortlePicFront: ; 360b1 (d:60b1)
+	INCBIN "pic/bmon/wartortle.pic"
+WartortlePicBack: ; 361f1 (d:61f1)
+	INCBIN "pic/monback/wartortleb.pic"
 BlastoisePicFront: ; 27637 (9:7637)
 	INCBIN "pic/bmon/blastoise.pic"
 BlastoisePicBack: ; 27851 (9:7851)
 	INCBIN "pic/monback/blastoiseb.pic"
-PinsirPicFront: ; 278da (9:78da)
-	INCBIN "pic/bmon/pinsir.pic"
-PinsirPicBack: ; 27aaa (9:7aaa)
-	INCBIN "pic/monback/pinsirb.pic"
-TangelaPicFront: ; 27b39 (9:7b39)
-	INCBIN "pic/bmon/tangela.pic"
-TangelaPicBack: ; 27ce7 (9:7ce7)
-	INCBIN "pic/monback/tangelab.pic"
+CaterpiePicFront: ; 30a49 (c:4a49)
+	INCBIN "pic/bmon/caterpie.pic"
+CaterpiePicBack: ; 30ae1 (c:4ae1)
+	INCBIN "pic/monback/caterpieb.pic"
+MetapodPicFront: ; 30b3a (c:4b3a)
+	INCBIN "pic/bmon/metapod.pic"
+MetapodPicBack: ; 30bc8 (c:4bc8)
+	INCBIN "pic/monback/metapodb.pic"
+ButterfreePicFront: ; 30c37 (c:4c37)
+	INCBIN "pic/bmon/butterfree.pic"
+ButterfreePicBack: ; 30e0e (c:4e0e)
+	INCBIN "pic/monback/butterfreeb.pic"
+WeedlePicFront: ; 2f57d (b:757d)
+	INCBIN "pic/bmon/weedle.pic"
+WeedlePicBack: ; 2f624 (b:7624)
+	INCBIN "pic/monback/weedleb.pic"
+KakunaPicFront: ; 2f677 (b:7677)
+	INCBIN "pic/bmon/kakuna.pic"
+KakunaPicBack: ; 2f736 (b:7736)
+	INCBIN "pic/monback/kakunab.pic"
+BeedrillPicFront: ; 2f788 (b:7788)
+	INCBIN "pic/bmon/beedrill.pic"
+BeedrillPicBack: ; 2f980 (b:7980)
+	INCBIN "pic/monback/beedrillb.pic"
+PidgeyPicFront: ; 285a7 (a:45a7)
+	INCBIN "pic/bmon/pidgey.pic"
+PidgeyPicBack: ; 2865b (a:465b)
+	INCBIN "pic/monback/pidgeyb.pic"
+PidgeottoPicFront: ; 3380a (c:780a)
+	INCBIN "pic/bmon/pidgeotto.pic"
+PidgeottoPicBack: ; 3395b (c:795b)
+	INCBIN "pic/monback/pidgeottob.pic"
+PidgeotPicFront: ; 339c2 (c:79c2)
+	INCBIN "pic/bmon/pidgeot.pic"
+PidgeotPicBack: ; 33b79 (c:7b79)
+	INCBIN "pic/monback/pidgeotb.pic"
+RattataPicFront: ; 34f6a (d:4f6a)
+	INCBIN "pic/bmon/rattata.pic"
+RattataPicBack: ; 35041 (d:5041)
+	INCBIN "pic/monback/rattatab.pic"
+RaticatePicFront: ; 3507a (d:507a)
+	INCBIN "pic/bmon/raticate.pic"
+RaticatePicBack: ; 3520d (d:520d)
+	INCBIN "pic/monback/raticateb.pic"
+SpearowPicFront: ; 247df (9:47df)
+	INCBIN "pic/bmon/spearow.pic"
+SpearowPicBack: ; 248c2 (9:48c2)
+	INCBIN "pic/monback/spearowb.pic"
+FearowPicFront: ; 28383 (a:4383)
+	INCBIN "pic/bmon/fearow.pic"
+FearowPicBack: ; 28529 (a:4529)
+	INCBIN "pic/monback/fearowb.pic"
+EkansPicFront: ; 2ef6b (b:6f6b)
+	INCBIN "pic/bmon/ekans.pic"
+EkansPicBack: ; 2f06d (b:706d)
+	INCBIN "pic/monback/ekansb.pic"
+ArbokPicFront: ; 296b4 (a:56b4)
+	INCBIN "pic/bmon/arbok.pic"
+ArbokPicBack: ; 29911 (a:5911)
+	INCBIN "pic/monback/arbokb.pic"
+PikachuPicFront: ; 2cd7d (b:4d7d)
+	INCBIN "pic/bmon/pikachu.pic"
+PikachuPicBack: ; 2ce8b (b:4e8b)
+	INCBIN "pic/monback/pikachub.pic"
+RaichuPicFront: ; 2cf03 (b:4f03)
+	INCBIN "pic/bmon/raichu.pic"
+RaichuPicBack: ; 2d0c3 (b:50c3)
+	INCBIN "pic/monback/raichub.pic"
+	
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 
 ; known jump sources: 12a35 (4:6a35), 70320 (1c:4320)
 Func_27d6b: ; 27d6b (9:7d6b)
@@ -44410,134 +44901,671 @@ UnnamedText_27fb3: ; 27fb3 (9:7fb3)
 ; 0x27fb3 + 5 bytes
 
 SECTION "bankA",ROMX,BANK[$A]
-GrowlithePicFront: ; 28000 (a:4000)
-	INCBIN "pic/bmon/growlithe.pic"
-GrowlithePicBack: ; 28101 (a:4101)
-	INCBIN "pic/monback/growlitheb.pic"
-OnixPicFront: ; 28164 (a:4164)
-	INCBIN "pic/bmon/onix.pic"
-OnixPicBack: ; 28300 (a:4300)
-	INCBIN "pic/monback/onixb.pic"
-FearowPicFront: ; 28383 (a:4383)
-	INCBIN "pic/bmon/fearow.pic"
-FearowPicBack: ; 28529 (a:4529)
-	INCBIN "pic/monback/fearowb.pic"
-PidgeyPicFront: ; 285a7 (a:45a7)
-	INCBIN "pic/bmon/pidgey.pic"
-PidgeyPicBack: ; 2865b (a:465b)
-	INCBIN "pic/monback/pidgeyb.pic"
-SlowpokePicFront: ; 286a0 (a:46a0)
-	INCBIN "pic/bmon/slowpoke.pic"
-SlowpokePicBack: ; 287c2 (a:47c2)
-	INCBIN "pic/monback/slowpokeb.pic"
-KadabraPicFront: ; 28830 (a:4830)
-	INCBIN "pic/bmon/kadabra.pic"
-KadabraPicBack: ; 289b9 (a:49b9)
-	INCBIN "pic/monback/kadabrab.pic"
-GravelerPicFront: ; 28a4c (a:4a4c)
-	INCBIN "pic/bmon/graveler.pic"
-GravelerPicBack: ; 28c00 (a:4c00)
-	INCBIN "pic/monback/gravelerb.pic"
-ChanseyPicFront: ; 28cae (a:4cae)
-	INCBIN "pic/bmon/chansey.pic"
-ChanseyPicBack: ; 28e21 (a:4e21)
-	INCBIN "pic/monback/chanseyb.pic"
-MachokePicFront: ; 28e85 (a:4e85)
-	INCBIN "pic/bmon/machoke.pic"
-MachokePicBack: ; 29063 (a:5063)
-	INCBIN "pic/monback/machokeb.pic"
-MrMimePicFront: ; 290f3 (a:50f3)
-	INCBIN "pic/bmon/mr.mime.pic"
-MrMimePicBack: ; 29247 (a:5247)
-	INCBIN "pic/monback/mr.mimeb.pic"
-HitmonleePicFront: ; 292bf (a:52bf)
-	INCBIN "pic/bmon/hitmonlee.pic"
-HitmonleePicBack: ; 2945e (a:545e)
-	INCBIN "pic/monback/hitmonleeb.pic"
-HitmonchanPicFront: ; 294bc (a:54bc)
-	INCBIN "pic/bmon/hitmonchan.pic"
-HitmonchanPicBack: ; 29643 (a:5643)
-	INCBIN "pic/monback/hitmonchanb.pic"
-ArbokPicFront: ; 296b4 (a:56b4)
-	INCBIN "pic/bmon/arbok.pic"
-ArbokPicBack: ; 29911 (a:5911)
-	INCBIN "pic/monback/arbokb.pic"
+
+SandshrewPicFront: ; 2dac9 (b:5ac9)
+	INCBIN "pic/bmon/sandshrew.pic"
+SandshrewPicBack: ; 2dbe7 (b:5be7)
+	INCBIN "pic/monback/sandshrewb.pic"
+SandslashPicFront: ; 2dc6b (b:5c6b)
+	INCBIN "pic/bmon/sandslash.pic"
+SandslashPicBack: ; 2de04 (b:5e04)
+	INCBIN "pic/monback/sandslashb.pic"
+NidoranFPicFront: ; 25d28 (9:5d28)
+	INCBIN "pic/bmon/nidoranf.pic"
+NidoranFPicBack: ; 25dc2 (9:5dc2)
+	INCBIN "pic/monback/nidoranfb.pic"
+NidorinaPicFront: ; 3548b (d:548b)
+	INCBIN "pic/bmon/nidorina.pic"
+NidorinaPicBack: ; 355c8 (d:55c8)
+	INCBIN "pic/monback/nidorinab.pic"
+NidoqueenPicFront: ; 25e09 (9:5e09)
+	INCBIN "pic/bmon/nidoqueen.pic"
+NidoqueenPicBack: ; 25fef (9:5fef)
+	INCBIN "pic/monback/nidoqueenb.pic"
+NidoranMPicFront: ; 2453c (9:453c)
+	INCBIN "pic/bmon/nidoranm.pic"
+NidoranMPicBack: ; 24623 (9:4623)
+	INCBIN "pic/monback/nidoranmb.pic"
+NidorinoPicFront: ; 35282 (d:5282)
+	INCBIN "pic/bmon/nidorino.pic"
+NidorinoPicBack: ; 353f0 (d:53f0)
+	INCBIN "pic/monback/nidorinob.pic"
+NidokingPicFront: ; 249f8 (9:49f8)
+	INCBIN "pic/bmon/nidoking.pic"
+NidokingPicBack: ; 24c60 (9:4c60)
+	INCBIN "pic/monback/nidokingb.pic"
+ClefairyPicFront: ; 24682 (9:4682)
+	INCBIN "pic/bmon/clefairy.pic"
+ClefairyPicBack: ; 24785 (9:4785)
+	INCBIN "pic/monback/clefairyb.pic"
+ClefablePicFront: ; 3288c (c:688c)
+	INCBIN "pic/bmon/clefable.pic"
+ClefablePicBack: ; 329b8 (c:69b8)
+	INCBIN "pic/monback/clefableb.pic"
+VulpixPicFront: ; 2c924 (b:4924)
+	INCBIN "pic/bmon/vulpix.pic"
+VulpixPicBack: ; 2ca9a (b:4a9a)
+	INCBIN "pic/monback/vulpixb.pic"
+NinetalesPicFront: ; 2caff (b:4aff)
+	INCBIN "pic/bmon/ninetales.pic"
+NinetalesPicBack: ; 2ccfb (b:4cfb)
+	INCBIN "pic/monback/ninetalesb.pic"
+JigglypuffPicFront: ; 2e22f (b:622f)
+	INCBIN "pic/bmon/jigglypuff.pic"
+JigglypuffPicBack: ; 2e30f (b:630f)
+	INCBIN "pic/monback/jigglypuffb.pic"
+WigglytuffPicFront: ; 2e348 (b:6348)
+	INCBIN "pic/bmon/wigglytuff.pic"
+WigglytuffPicBack: ; 2e4bf (b:64bf)
+	INCBIN "pic/monback/wigglytuffb.pic"
+ZubatPicFront: ; 2ee0c (b:6e0c)
+	INCBIN "pic/bmon/zubat.pic"
+ZubatPicBack: ; 2ef17 (b:6f17)
+	INCBIN "pic/monback/zubatb.pic"
+GolbatPicFront: ; 315e0 (c:55e0)
+	INCBIN "pic/bmon/golbat.pic"
+GolbatPicBack: ; 3180a (c:580a)
+	INCBIN "pic/monback/golbatb.pic"
+OddishPicFront: ; 3680b (d:680b)
+	INCBIN "pic/bmon/oddish.pic"
+OddishPicBack: ; 368a9 (d:68a9)
+	INCBIN "pic/monback/oddishb.pic"
+GloomPicFront: ; 36941 (d:6941)
+	INCBIN "pic/bmon/gloom.pic"
+GloomPicBack: ; 36a78 (d:6a78)
+	INCBIN "pic/monback/gloomb.pic"
+VileplumePicFront: ; 36b21 (d:6b21)
+	INCBIN "pic/bmon/vileplume.pic"
+VileplumePicBack: ; 36c82 (d:6c82)
+	INCBIN "pic/monback/vileplumeb.pic"
+ParasPicFront: ; 2f0b4 (b:70b4)
+	INCBIN "pic/bmon/paras.pic"
+ParasPicBack: ; 2f177 (b:7177)
+	INCBIN "pic/monback/parasb.pic"
 ParasectPicFront: ; 299a8 (a:59a8)
 	INCBIN "pic/bmon/parasect.pic"
 ParasectPicBack: ; 29b8c (a:5b8c)
 	INCBIN "pic/monback/parasectb.pic"
-PsyduckPicFront: ; 29c0a (a:5c0a)
-	INCBIN "pic/bmon/psyduck.pic"
-PsyduckPicBack: ; 29d3e (a:5d3e)
-	INCBIN "pic/monback/psyduckb.pic"
-DrowzeePicFront: ; 29da9 (a:5da9)
-	INCBIN "pic/bmon/drowzee.pic"
-DrowzeePicBack: ; 29f05 (a:5f05)
-	INCBIN "pic/monback/drowzeeb.pic"
-GolemPicFront: ; 29f74 (a:5f74)
-	INCBIN "pic/bmon/golem.pic"
-GolemPicBack: ; 2a0f2 (a:60f2)
-	INCBIN "pic/monback/golemb.pic"
-MagmarPicFront: ; 2a161 (a:6161)
-	INCBIN "pic/bmon/magmar.pic"
-MagmarPicBack: ; 2a2bf (a:62bf)
-	INCBIN "pic/monback/magmarb.pic"
-ElectabuzzPicFront: ; 2a367 (a:6367)
-	INCBIN "pic/bmon/electabuzz.pic"
-ElectabuzzPicBack: ; 2a4ef (a:64ef)
-	INCBIN "pic/monback/electabuzzb.pic"
-MagnetonPicFront: ; 2a588 (a:6588)
-	INCBIN "pic/bmon/magneton.pic"
-MagnetonPicBack: ; 2a723 (a:6723)
-	INCBIN "pic/monback/magnetonb.pic"
-KoffingPicFront: ; 2a7a6 (a:67a6)
-	INCBIN "pic/bmon/koffing.pic"
-KoffingPicBack: ; 2a974 (a:6974)
-	INCBIN "pic/monback/koffingb.pic"
-MankeyPicFront: ; 2aa11 (a:6a11)
-	INCBIN "pic/bmon/mankey.pic"
-MankeyPicBack: ; 2ab16 (a:6b16)
-	INCBIN "pic/monback/mankeyb.pic"
-SeelPicFront: ; 2ab84 (a:6b84)
-	INCBIN "pic/bmon/seel.pic"
-SeelPicBack: ; 2ace8 (a:6ce8)
-	INCBIN "pic/monback/seelb.pic"
-DiglettPicFront: ; 2ad33 (a:6d33)
-	INCBIN "pic/bmon/diglett.pic"
-DiglettPicBack: ; 2ae10 (a:6e10)
-	INCBIN "pic/monback/diglettb.pic"
-TaurosPicFront: ; 2ae7e (a:6e7e)
-	INCBIN "pic/bmon/tauros.pic"
-TaurosPicBack: ; 2b054 (a:7054)
-	INCBIN "pic/monback/taurosb.pic"
-FarfetchdPicFront: ; 2b0e9 (a:70e9)
-	INCBIN "pic/bmon/farfetchd.pic"
-FarfetchdPicBack: ; 2b2c6 (a:72c6)
-	INCBIN "pic/monback/farfetchdb.pic"
 VenonatPicFront: ; 2b357 (a:7357)
 	INCBIN "pic/bmon/venonat.pic"
 VenonatPicBack: ; 2b45c (a:745c)
 	INCBIN "pic/monback/venonatb.pic"
-DragonitePicFront: ; 2b4aa (a:74aa)
-	INCBIN "pic/bmon/dragonite.pic"
-DragonitePicBack: ; 2b67f (a:767f)
-	INCBIN "pic/monback/dragoniteb.pic"
-DoduoPicFront: ; 2b72c (a:772c)
-	INCBIN "pic/bmon/doduo.pic"
-DoduoPicBack: ; 2b80d (a:780d)
-	INCBIN "pic/monback/doduob.pic"
-PoliwagPicFront: ; 2b875 (a:7875)
-	INCBIN "pic/bmon/poliwag.pic"
-PoliwagPicBack: ; 2b947 (a:7947)
-	INCBIN "pic/monback/poliwagb.pic"
-JynxPicFront: ; 2b98e (a:798e)
-	INCBIN "pic/bmon/jynx.pic"
-JynxPicBack: ; 2bb42 (a:7b42)
-	INCBIN "pic/monback/jynxb.pic"
-MoltresPicFront: ; 2bbac (a:7bac)
-	INCBIN "pic/bmon/moltres.pic"
-MoltresPicBack: ; 2be02 (a:7e02)
-	INCBIN "pic/monback/moltresb.pic"
+VenomothPicFront: ; 306a9 (c:46a9)
+	INCBIN "pic/bmon/venomoth.pic"
+VenomothPicBack: ; 30841 (c:4841)
+	INCBIN "pic/monback/venomothb.pic"
+DiglettPicFront: ; 2ad33 (a:6d33)
+	INCBIN "pic/bmon/diglett.pic"
+DiglettPicBack: ; 2ae10 (a:6e10)
+	INCBIN "pic/monback/diglettb.pic"
+DugtrioPicFront: ; 30480 (c:4480)
+	INCBIN "pic/bmon/dugtrio.pic"
+DugtrioPicBack: ; 3062a (c:462a)
+	INCBIN "pic/monback/dugtriob.pic"
+	
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 
 ; known jump sources: 3fa81 (f:7a81)
 Func_2bea9: ; 2bea9 (a:7ea9)
@@ -44587,122 +45615,43 @@ UnnamedText_2bef7: ; 2bef7 (a:7ef7)
 ; 0x2bef7 + 5 bytes
 
 SECTION "bankB",ROMX,BANK[$B]
-ArticunoPicFront: ; 2c000 (b:4000)
-	INCBIN "pic/bmon/articuno.pic"
-ArticunoPicBack: ; 2c238 (b:4238)
-	INCBIN "pic/monback/articunob.pic"
-ZapdosPicFront: ; 2c29d (b:429d)
-	INCBIN "pic/bmon/zapdos.pic"
-ZapdosPicBack: ; 2c484 (b:4484)
-	INCBIN "pic/monback/zapdosb.pic"
-DittoPicFront: ; 2c514 (b:4514)
-	INCBIN "pic/bmon/ditto.pic"
-DittoPicBack: ; 2c5bd (b:45bd)
-	INCBIN "pic/monback/dittob.pic"
+
 MeowthPicFront: ; 2c609 (b:4609)
 	INCBIN "pic/bmon/meowth.pic"
 MeowthPicBack: ; 2c71f (b:471f)
 	INCBIN "pic/monback/meowthb.pic"
-KrabbyPicFront: ; 2c777 (b:4777)
-	INCBIN "pic/bmon/krabby.pic"
-KrabbyPicBack: ; 2c8b0 (b:48b0)
-	INCBIN "pic/monback/krabbyb.pic"
-VulpixPicFront: ; 2c924 (b:4924)
-	INCBIN "pic/bmon/vulpix.pic"
-VulpixPicBack: ; 2ca9a (b:4a9a)
-	INCBIN "pic/monback/vulpixb.pic"
-NinetalesPicFront: ; 2caff (b:4aff)
-	INCBIN "pic/bmon/ninetales.pic"
-NinetalesPicBack: ; 2ccfb (b:4cfb)
-	INCBIN "pic/monback/ninetalesb.pic"
-PikachuPicFront: ; 2cd7d (b:4d7d)
-	INCBIN "pic/bmon/pikachu.pic"
-PikachuPicBack: ; 2ce8b (b:4e8b)
-	INCBIN "pic/monback/pikachub.pic"
-RaichuPicFront: ; 2cf03 (b:4f03)
-	INCBIN "pic/bmon/raichu.pic"
-RaichuPicBack: ; 2d0c3 (b:50c3)
-	INCBIN "pic/monback/raichub.pic"
-DratiniPicFront: ; 2d151 (b:5151)
-	INCBIN "pic/bmon/dratini.pic"
-DratiniPicBack: ; 2d234 (b:5234)
-	INCBIN "pic/monback/dratinib.pic"
-DragonairPicFront: ; 2d297 (b:5297)
-	INCBIN "pic/bmon/dragonair.pic"
-DragonairPicBack: ; 2d3d9 (b:53d9)
-	INCBIN "pic/monback/dragonairb.pic"
-KabutoPicFront: ; 2d464 (b:5464)
-	INCBIN "pic/bmon/kabuto.pic"
-KabutoPicBack: ; 2d529 (b:5529)
-	INCBIN "pic/monback/kabutob.pic"
-KabutopsPicFront: ; 2d583 (b:5583)
-	INCBIN "pic/bmon/kabutops.pic"
-KabutopsPicBack: ; 2d73c (b:573c)
-	INCBIN "pic/monback/kabutopsb.pic"
-HorseaPicFront: ; 2d7c1 (b:57c1)
-	INCBIN "pic/bmon/horsea.pic"
-HorseaPicBack: ; 2d873 (b:5873)
-	INCBIN "pic/monback/horseab.pic"
-SeadraPicFront: ; 2d8c4 (b:58c4)
-	INCBIN "pic/bmon/seadra.pic"
-SeadraPicBack: ; 2da2b (b:5a2b)
-	INCBIN "pic/monback/seadrab.pic"
-SandshrewPicFront: ; 2dac9 (b:5ac9)
-	INCBIN "pic/bmon/sandshrew.pic"
-SandshrewPicBack: ; 2dbe7 (b:5be7)
-	INCBIN "pic/monback/sandshrewb.pic"
-SandslashPicFront: ; 2dc6b (b:5c6b)
-	INCBIN "pic/bmon/sandslash.pic"
-SandslashPicBack: ; 2de04 (b:5e04)
-	INCBIN "pic/monback/sandslashb.pic"
-OmanytePicFront: ; 2de9d (b:5e9d)
-	INCBIN "pic/bmon/omanyte.pic"
-OmanytePicBack: ; 2df76 (b:5f76)
-	INCBIN "pic/monback/omanyteb.pic"
-OmastarPicFront: ; 2dfd3 (b:5fd3)
-	INCBIN "pic/bmon/omastar.pic"
-OmastarPicBack: ; 2e18b (b:618b)
-	INCBIN "pic/monback/omastarb.pic"
-JigglypuffPicFront: ; 2e22f (b:622f)
-	INCBIN "pic/bmon/jigglypuff.pic"
-JigglypuffPicBack: ; 2e30f (b:630f)
-	INCBIN "pic/monback/jigglypuffb.pic"
-WigglytuffPicFront: ; 2e348 (b:6348)
-	INCBIN "pic/bmon/wigglytuff.pic"
-WigglytuffPicBack: ; 2e4bf (b:64bf)
-	INCBIN "pic/monback/wigglytuffb.pic"
-EeveePicFront: ; 2e531 (b:6531)
-	INCBIN "pic/bmon/eevee.pic"
-EeveePicBack: ; 2e625 (b:6625)
-	INCBIN "pic/monback/eeveeb.pic"
-FlareonPicFront: ; 2e68d (b:668d)
-	INCBIN "pic/bmon/flareon.pic"
-FlareonPicBack: ; 2e806 (b:6806)
-	INCBIN "pic/monback/flareonb.pic"
-JolteonPicFront: ; 2e88f (b:688f)
-	INCBIN "pic/bmon/jolteon.pic"
-JolteonPicBack: ; 2ea0a (b:6a0a)
-	INCBIN "pic/monback/jolteonb.pic"
-VaporeonPicFront: ; 2eaae (b:6aae)
-	INCBIN "pic/bmon/vaporeon.pic"
-VaporeonPicBack: ; 2ec02 (b:6c02)
-	INCBIN "pic/monback/vaporeonb.pic"
-MachopPicFront: ; 2ec9f (b:6c9f)
-	INCBIN "pic/bmon/machop.pic"
-MachopPicBack: ; 2eda2 (b:6da2)
-	INCBIN "pic/monback/machopb.pic"
-ZubatPicFront: ; 2ee0c (b:6e0c)
-	INCBIN "pic/bmon/zubat.pic"
-ZubatPicBack: ; 2ef17 (b:6f17)
-	INCBIN "pic/monback/zubatb.pic"
-EkansPicFront: ; 2ef6b (b:6f6b)
-	INCBIN "pic/bmon/ekans.pic"
-EkansPicBack: ; 2f06d (b:706d)
-	INCBIN "pic/monback/ekansb.pic"
-ParasPicFront: ; 2f0b4 (b:70b4)
-	INCBIN "pic/bmon/paras.pic"
-ParasPicBack: ; 2f177 (b:7177)
-	INCBIN "pic/monback/parasb.pic"
+PersianPicFront: ; 32d1e (c:6d1e)
+	INCBIN "pic/bmon/persian.pic"
+PersianPicBack: ; 32f04 (c:6f04)
+	INCBIN "pic/monback/persianb.pic"
+PsyduckPicFront: ; 29c0a (a:5c0a)
+	INCBIN "pic/bmon/psyduck.pic"
+PsyduckPicBack: ; 29d3e (a:5d3e)
+	INCBIN "pic/monback/psyduckb.pic"
+GolduckPicFront: ; 31108 (c:5108)
+	INCBIN "pic/bmon/golduck.pic"
+GolduckPicBack: ; 312c2 (c:52c2)
+	INCBIN "pic/monback/golduckb.pic"
+MankeyPicFront: ; 2aa11 (a:6a11)
+	INCBIN "pic/bmon/mankey.pic"
+MankeyPicBack: ; 2ab16 (a:6b16)
+	INCBIN "pic/monback/mankeyb.pic"
+PrimeapePicFront: ; 30247 (c:4247)
+	INCBIN "pic/bmon/primeape.pic"
+PrimeapePicBack: ; 30408 (c:4408)
+	INCBIN "pic/monback/primeapeb.pic"
+GrowlithePicFront: ; 28000 (a:4000)
+	INCBIN "pic/bmon/growlithe.pic"
+GrowlithePicBack: ; 28101 (a:4101)
+	INCBIN "pic/monback/growlitheb.pic"
+ArcaninePicFront: ; 266ff (9:66ff)
+	INCBIN "pic/bmon/arcanine.pic"
+ArcaninePicBack: ; 2693d (9:693d)
+	INCBIN "pic/monback/arcanineb.pic"
+PoliwagPicFront: ; 2b875 (a:7875)
+	INCBIN "pic/bmon/poliwag.pic"
+PoliwagPicBack: ; 2b947 (a:7947)
+	INCBIN "pic/monback/poliwagb.pic"
 PoliwhirlPicFront: ; 2f1ed (b:71ed)
 	INCBIN "pic/bmon/poliwhirl.pic"
 PoliwhirlPicBack: ; 2f35e (b:735e)
@@ -44711,20 +45660,99 @@ PoliwrathPicFront: ; 2f3c1 (b:73c1)
 	INCBIN "pic/bmon/poliwrath.pic"
 PoliwrathPicBack: ; 2f52c (b:752c)
 	INCBIN "pic/monback/poliwrathb.pic"
-WeedlePicFront: ; 2f57d (b:757d)
-	INCBIN "pic/bmon/weedle.pic"
-WeedlePicBack: ; 2f624 (b:7624)
-	INCBIN "pic/monback/weedleb.pic"
-KakunaPicFront: ; 2f677 (b:7677)
-	INCBIN "pic/bmon/kakuna.pic"
-KakunaPicBack: ; 2f736 (b:7736)
-	INCBIN "pic/monback/kakunab.pic"
-BeedrillPicFront: ; 2f788 (b:7788)
-	INCBIN "pic/bmon/beedrill.pic"
-BeedrillPicBack: ; 2f980 (b:7980)
-	INCBIN "pic/monback/beedrillb.pic"
-FossilKabutopsPic: ; 2f9e8 (b:79e8)
-	INCBIN "pic/bmon/fossilkabutops.pic"
+AbraPicFront: ; 333cc (c:73cc)
+	INCBIN "pic/bmon/abra.pic"
+AbraPicBack: ; 334cf (c:74cf)
+	INCBIN "pic/monback/abrab.pic"
+KadabraPicFront: ; 28830 (a:4830)
+	INCBIN "pic/bmon/kadabra.pic"
+KadabraPicBack: ; 289b9 (a:49b9)
+	INCBIN "pic/monback/kadabrab.pic"
+AlakazamPicFront: ; 3355a (c:755a)
+	INCBIN "pic/bmon/alakazam.pic"
+AlakazamPicBack: ; 33779 (c:7779)
+	INCBIN "pic/monback/alakazamb.pic"
+MachopPicFront: ; 2ec9f (b:6c9f)
+	INCBIN "pic/bmon/machop.pic"
+MachopPicBack: ; 2eda2 (b:6da2)
+	INCBIN "pic/monback/machopb.pic"
+MachokePicFront: ; 28e85 (a:4e85)
+	INCBIN "pic/bmon/machoke.pic"
+MachokePicBack: ; 29063 (a:5063)
+	INCBIN "pic/monback/machokeb.pic"
+MachampPicFront: ; 30e93 (c:4e93)
+	INCBIN "pic/bmon/machamp.pic"
+MachampPicBack: ; 3108c (c:508c)
+	INCBIN "pic/monback/machampb.pic"
+BellsproutPicFront: ; 36d00 (d:6d00)
+	INCBIN "pic/bmon/bellsprout.pic"
+BellsproutPicBack: ; 36dba (d:6dba)
+	INCBIN "pic/monback/bellsproutb.pic"
+WeepinbellPicFront: ; 36e30 (d:6e30)
+	INCBIN "pic/bmon/weepinbell.pic"
+WeepinbellPicBack: ; 36f6f (d:6f6f)
+	INCBIN "pic/monback/weepinbellb.pic"
+VictreebelPicFront: ; 36fea (d:6fea)
+	INCBIN "pic/bmon/victreebel.pic"
+VictreebelPicBack: ; 371b2 (d:71b2)
+	INCBIN "pic/monback/victreebelb.pic"
+TentacoolPicFront: ; 26e2a (9:6e2a)
+	INCBIN "pic/bmon/tentacool.pic"
+TentacoolPicBack: ; 26f1c (9:6f1c)
+	INCBIN "pic/monback/tentacoolb.pic"
+TentacruelPicFront: ; 34455 (d:4455)
+	INCBIN "pic/bmon/tentacruel.pic"
+TentacruelPicBack: ; 345c3 (d:45c3)
+	INCBIN "pic/monback/tentacruelb.pic"
+GeodudePicFront: ; 3564f (d:564f)
+	INCBIN "pic/bmon/geodude.pic"
+GeodudePicBack: ; 35729 (d:5729)
+	INCBIN "pic/monback/geodudeb.pic"
+	
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 
 DisplayEffectiveness: ; 2fb7b (b:7b7b)
 	ld a, [$D05B]
@@ -44936,122 +45964,518 @@ UnnamedText_2ff37: ; 2ff37 (b:7f37)
 ; 0x2ff37 + 5 bytes
 
 SECTION "bankC",ROMX,BANK[$C]
+
+GravelerPicFront: ; 28a4c (a:4a4c)
+	INCBIN "pic/bmon/graveler.pic"
+GravelerPicBack: ; 28c00 (a:4c00)
+	INCBIN "pic/monback/gravelerb.pic"
+GolemPicFront: ; 29f74 (a:5f74)
+	INCBIN "pic/bmon/golem.pic"
+GolemPicBack: ; 2a0f2 (a:60f2)
+	INCBIN "pic/monback/golemb.pic"
+PonytaPicFront: ; 34ab1 (d:4ab1)
+	INCBIN "pic/bmon/ponyta.pic"
+PonytaPicBack: ; 34e32 (d:4e32)
+	INCBIN "pic/monback/ponytab.pic"
+RapidashPicFront: ; 34c10 (d:4c10)
+	INCBIN "pic/bmon/rapidash.pic"
+RapidashPicBack: ; 34eba (d:4eba)
+	INCBIN "pic/monback/rapidashb.pic"
+SlowpokePicFront: ; 286a0 (a:46a0)
+	INCBIN "pic/bmon/slowpoke.pic"
+SlowpokePicBack: ; 287c2 (a:47c2)
+	INCBIN "pic/monback/slowpokeb.pic"
+SlowbroPicFront: ; 24d0a (9:4d0a)
+	INCBIN "pic/bmon/slowbro.pic"
+SlowbroPicBack: ; 24f87 (9:4f87)
+	INCBIN "pic/monback/slowbrob.pic"
+MagnemitePicFront: ; 35b87 (d:5b87)
+	INCBIN "pic/bmon/magnemite.pic"
+MagnemitePicBack: ; 35c0d (d:5c0d)
+	INCBIN "pic/monback/magnemiteb.pic"
+MagnetonPicFront: ; 2a588 (a:6588)
+	INCBIN "pic/bmon/magneton.pic"
+MagnetonPicBack: ; 2a723 (a:6723)
+	INCBIN "pic/monback/magnetonb.pic"
+FarfetchdPicFront: ; 2b0e9 (a:70e9)
+	INCBIN "pic/bmon/farfetchd.pic"
+FarfetchdPicBack: ; 2b2c6 (a:72c6)
+	INCBIN "pic/monback/farfetchdb.pic"
+DoduoPicFront: ; 2b72c (a:772c)
+	INCBIN "pic/bmon/doduo.pic"
+DoduoPicBack: ; 2b80d (a:780d)
+	INCBIN "pic/monback/doduob.pic"
 DodrioPicFront: ; 30000 (c:4000)
 	INCBIN "pic/bmon/dodrio.pic"
 DodrioPicBack: ; 301a2 (c:41a2)
 	INCBIN "pic/monback/dodriob.pic"
-PrimeapePicFront: ; 30247 (c:4247)
-	INCBIN "pic/bmon/primeape.pic"
-PrimeapePicBack: ; 30408 (c:4408)
-	INCBIN "pic/monback/primeapeb.pic"
-DugtrioPicFront: ; 30480 (c:4480)
-	INCBIN "pic/bmon/dugtrio.pic"
-DugtrioPicBack: ; 3062a (c:462a)
-	INCBIN "pic/monback/dugtriob.pic"
-VenomothPicFront: ; 306a9 (c:46a9)
-	INCBIN "pic/bmon/venomoth.pic"
-VenomothPicBack: ; 30841 (c:4841)
-	INCBIN "pic/monback/venomothb.pic"
+SeelPicFront: ; 2ab84 (a:6b84)
+	INCBIN "pic/bmon/seel.pic"
+SeelPicBack: ; 2ace8 (a:6ce8)
+	INCBIN "pic/monback/seelb.pic"
 DewgongPicFront: ; 30899 (c:4899)
 	INCBIN "pic/bmon/dewgong.pic"
 DewgongPicBack: ; 309e2 (c:49e2)
 	INCBIN "pic/monback/dewgongb.pic"
-CaterpiePicFront: ; 30a49 (c:4a49)
-	INCBIN "pic/bmon/caterpie.pic"
-CaterpiePicBack: ; 30ae1 (c:4ae1)
-	INCBIN "pic/monback/caterpieb.pic"
-MetapodPicFront: ; 30b3a (c:4b3a)
-	INCBIN "pic/bmon/metapod.pic"
-MetapodPicBack: ; 30bc8 (c:4bc8)
-	INCBIN "pic/monback/metapodb.pic"
-ButterfreePicFront: ; 30c37 (c:4c37)
-	INCBIN "pic/bmon/butterfree.pic"
-ButterfreePicBack: ; 30e0e (c:4e0e)
-	INCBIN "pic/monback/butterfreeb.pic"
-MachampPicFront: ; 30e93 (c:4e93)
-	INCBIN "pic/bmon/machamp.pic"
-MachampPicBack: ; 3108c (c:508c)
-	INCBIN "pic/monback/machampb.pic"
-GolduckPicFront: ; 31108 (c:5108)
-	INCBIN "pic/bmon/golduck.pic"
-GolduckPicBack: ; 312c2 (c:52c2)
-	INCBIN "pic/monback/golduckb.pic"
-HypnoPicFront: ; 3135d (c:535d)
-	INCBIN "pic/bmon/hypno.pic"
-HypnoPicBack: ; 31552 (c:5552)
-	INCBIN "pic/monback/hypnob.pic"
-GolbatPicFront: ; 315e0 (c:55e0)
-	INCBIN "pic/bmon/golbat.pic"
-GolbatPicBack: ; 3180a (c:580a)
-	INCBIN "pic/monback/golbatb.pic"
-MewtwoPicFront: ; 3187f (c:587f)
-	INCBIN "pic/bmon/mewtwo.pic"
-MewtwoPicBack: ; 31a85 (c:5a85)
-	INCBIN "pic/monback/mewtwob.pic"
-SnorlaxPicFront: ; 31b19 (c:5b19)
-	INCBIN "pic/bmon/snorlax.pic"
-SnorlaxPicBack: ; 31ce5 (c:5ce5)
-	INCBIN "pic/monback/snorlaxb.pic"
-MagikarpPicFront: ; 31d31 (c:5d31)
-	INCBIN "pic/bmon/magikarp.pic"
-MagikarpPicBack: ; 31ec3 (c:5ec3)
-	INCBIN "pic/monback/magikarpb.pic"
+GrimerPicFront: ; 25973 (9:5973)
+	INCBIN "pic/bmon/grimer.pic"
+GrimerPicBack: ; 25ab0 (9:5ab0)
+	INCBIN "pic/monback/grimerb.pic"
 MukPicFront: ; 31f56 (c:5f56)
 	INCBIN "pic/bmon/muk.pic"
 MukPicBack: ; 3215f (c:615f)
 	INCBIN "pic/monback/mukb.pic"
-KinglerPicFront: ; 321ec (c:61ec)
-	INCBIN "pic/bmon/kingler.pic"
-KinglerPicBack: ; 323de (c:63de)
-	INCBIN "pic/monback/kinglerb.pic"
+ShellderPicFront: ; 26cb6 (9:6cb6)
+	INCBIN "pic/bmon/shellder.pic"
+ShellderPicBack: ; 26dc3 (9:6dc3)
+	INCBIN "pic/monback/shellderb.pic"
 CloysterPicFront: ; 3247f (c:647f)
 	INCBIN "pic/bmon/cloyster.pic"
 CloysterPicBack: ; 326ab (c:66ab)
 	INCBIN "pic/monback/cloysterb.pic"
-ElectrodePicFront: ; 32760 (c:6760)
-	INCBIN "pic/bmon/electrode.pic"
-ElectrodePicBack: ; 32827 (c:6827)
-	INCBIN "pic/monback/electrodeb.pic"
-ClefablePicFront: ; 3288c (c:688c)
-	INCBIN "pic/bmon/clefable.pic"
-ClefablePicBack: ; 329b8 (c:69b8)
-	INCBIN "pic/monback/clefableb.pic"
-WeezingPicFront: ; 32a44 (c:6a44)
-	INCBIN "pic/bmon/weezing.pic"
-WeezingPicBack: ; 32c76 (c:6c76)
-	INCBIN "pic/monback/weezingb.pic"
-PersianPicFront: ; 32d1e (c:6d1e)
-	INCBIN "pic/bmon/persian.pic"
-PersianPicBack: ; 32f04 (c:6f04)
-	INCBIN "pic/monback/persianb.pic"
-MarowakPicFront: ; 32f8f (c:6f8f)
-	INCBIN "pic/bmon/marowak.pic"
-MarowakPicBack: ; 33101 (c:7101)
-	INCBIN "pic/monback/marowakb.pic"
+GastlyPicFront: ; 26f77 (9:6f77)
+	INCBIN "pic/bmon/gastly.pic"
+GastlyPicBack: ; 27190 (9:7190)
+	INCBIN "pic/monback/gastlyb.pic"
 HaunterPicFront: ; 3318a (c:718a)
 	INCBIN "pic/bmon/haunter.pic"
 HaunterPicBack: ; 33345 (c:7345)
 	INCBIN "pic/monback/haunterb.pic"
-AbraPicFront: ; 333cc (c:73cc)
-	INCBIN "pic/bmon/abra.pic"
-AbraPicBack: ; 334cf (c:74cf)
-	INCBIN "pic/monback/abrab.pic"
-AlakazamPicFront: ; 3355a (c:755a)
-	INCBIN "pic/bmon/alakazam.pic"
-AlakazamPicBack: ; 33779 (c:7779)
-	INCBIN "pic/monback/alakazamb.pic"
-PidgeottoPicFront: ; 3380a (c:780a)
-	INCBIN "pic/bmon/pidgeotto.pic"
-PidgeottoPicBack: ; 3395b (c:795b)
-	INCBIN "pic/monback/pidgeottob.pic"
-PidgeotPicFront: ; 339c2 (c:79c2)
-	INCBIN "pic/bmon/pidgeot.pic"
-PidgeotPicBack: ; 33b79 (c:7b79)
-	INCBIN "pic/monback/pidgeotb.pic"
-StarmiePicFront: ; 33c1c (c:7c1c)
-	INCBIN "pic/bmon/starmie.pic"
-StarmiePicBack: ; 33dac (c:7dac)
-	INCBIN "pic/monback/starmieb.pic"
+GengarPicFront: ; 25b76 (9:5b76)
+	INCBIN "pic/bmon/gengar.pic"
+GengarPicBack: ; 25cc6 (9:5cc6)
+	INCBIN "pic/monback/gengarb.pic"
+OnixPicFront: ; 28164 (a:4164)
+	INCBIN "pic/bmon/onix.pic"
+OnixPicBack: ; 28300 (a:4300)
+	INCBIN "pic/monback/onixb.pic"
+DrowzeePicFront: ; 29da9 (a:5da9)
+	INCBIN "pic/bmon/drowzee.pic"
+DrowzeePicBack: ; 29f05 (a:5f05)
+	INCBIN "pic/monback/drowzeeb.pic"
+HypnoPicFront: ; 3135d (c:535d)
+	INCBIN "pic/bmon/hypno.pic"
+HypnoPicBack: ; 31552 (c:5552)
+	INCBIN "pic/monback/hypnob.pic"
+KrabbyPicFront: ; 2c777 (b:4777)
+	INCBIN "pic/bmon/krabby.pic"
+KrabbyPicBack: ; 2c8b0 (b:48b0)
+	INCBIN "pic/monback/krabbyb.pic"
+	
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	
 RedPicBack: ; 33e0a (c:7e0a)
 	INCBIN "pic/trainer/redb.pic"
 OldManPic: ; 33e9a (c:7e9a)
@@ -45103,114 +46527,353 @@ Func_33f57: ; 33f57 (c:7f57)
 	ret
 ; 33f90 (c:7f90)
 SECTION "bankD",ROMX,BANK[$D]
-BulbasaurPicFront: ; 34000 (d:4000)
-	INCBIN "pic/bmon/bulbasaur.pic"
-BulbasaurPicBack: ; 340e5 (d:40e5)
-	INCBIN "pic/monback/bulbasaurb.pic"
-VenusaurPicFront: ; 34162 (d:4162)
-	INCBIN "pic/bmon/venusaur.pic"
-VenusaurPicBack: ; 34397 (d:4397)
-	INCBIN "pic/monback/venusaurb.pic"
-TentacruelPicFront: ; 34455 (d:4455)
-	INCBIN "pic/bmon/tentacruel.pic"
-TentacruelPicBack: ; 345c3 (d:45c3)
-	INCBIN "pic/monback/tentacruelb.pic"
-GoldeenPicFront: ; 3466f (d:466f)
-	INCBIN "pic/bmon/goldeen.pic"
-GoldeenPicBack: ; 34796 (d:4796)
-	INCBIN "pic/monback/goldeenb.pic"
-SeakingPicFront: ; 34803 (d:4803)
-	INCBIN "pic/bmon/seaking.pic"
-SeakingPicBack: ; 34a03 (d:4a03)
-	INCBIN "pic/monback/seakingb.pic"
-PonytaPicFront: ; 34ab1 (d:4ab1)
-	INCBIN "pic/bmon/ponyta.pic"
-RapidashPicFront: ; 34c10 (d:4c10)
-	INCBIN "pic/bmon/rapidash.pic"
-PonytaPicBack: ; 34e32 (d:4e32)
-	INCBIN "pic/monback/ponytab.pic"
-RapidashPicBack: ; 34eba (d:4eba)
-	INCBIN "pic/monback/rapidashb.pic"
-RattataPicFront: ; 34f6a (d:4f6a)
-	INCBIN "pic/bmon/rattata.pic"
-RattataPicBack: ; 35041 (d:5041)
-	INCBIN "pic/monback/rattatab.pic"
-RaticatePicFront: ; 3507a (d:507a)
-	INCBIN "pic/bmon/raticate.pic"
-RaticatePicBack: ; 3520d (d:520d)
-	INCBIN "pic/monback/raticateb.pic"
-NidorinoPicFront: ; 35282 (d:5282)
-	INCBIN "pic/bmon/nidorino.pic"
-NidorinoPicBack: ; 353f0 (d:53f0)
-	INCBIN "pic/monback/nidorinob.pic"
-NidorinaPicFront: ; 3548b (d:548b)
-	INCBIN "pic/bmon/nidorina.pic"
-NidorinaPicBack: ; 355c8 (d:55c8)
-	INCBIN "pic/monback/nidorinab.pic"
-GeodudePicFront: ; 3564f (d:564f)
-	INCBIN "pic/bmon/geodude.pic"
-GeodudePicBack: ; 35729 (d:5729)
-	INCBIN "pic/monback/geodudeb.pic"
-PorygonPicFront: ; 35784 (d:5784)
-	INCBIN "pic/bmon/porygon.pic"
-PorygonPicBack: ; 358d1 (d:58d1)
-	INCBIN "pic/monback/porygonb.pic"
-AerodactylPicFront: ; 35931 (d:5931)
-	INCBIN "pic/bmon/aerodactyl.pic"
-AerodactylPicBack: ; 35aec (d:5aec)
-	INCBIN "pic/monback/aerodactylb.pic"
-MagnemitePicFront: ; 35b87 (d:5b87)
-	INCBIN "pic/bmon/magnemite.pic"
-MagnemitePicBack: ; 35c0d (d:5c0d)
-	INCBIN "pic/monback/magnemiteb.pic"
-CharmanderPicFront: ; 35c5c (d:5c5c)
-	INCBIN "pic/bmon/charmander.pic"
-CharmanderPicBack: ; 35d5c (d:5d5c)
-	INCBIN "pic/monback/charmanderb.pic"
-SquirtlePicFront: ; 35db8 (d:5db8)
-	INCBIN "pic/bmon/squirtle.pic"
-SquirtlePicBack: ; 35e8f (d:5e8f)
-	INCBIN "pic/monback/squirtleb.pic"
-CharmeleonPicFront: ; 35f0c (d:5f0c)
-	INCBIN "pic/bmon/charmeleon.pic"
-CharmeleonPicBack: ; 36048 (d:6048)
-	INCBIN "pic/monback/charmeleonb.pic"
-WartortlePicFront: ; 360b1 (d:60b1)
-	INCBIN "pic/bmon/wartortle.pic"
-WartortlePicBack: ; 361f1 (d:61f1)
-	INCBIN "pic/monback/wartortleb.pic"
-CharizardPicFront: ; 36286 (d:6286)
-	INCBIN "pic/bmon/charizard.pic"
-CharizardPicBack: ; 36495 (d:6495)
-	INCBIN "pic/monback/charizardb.pic"
+
+KinglerPicFront: ; 321ec (c:61ec)
+	INCBIN "pic/bmon/kingler.pic"
+KinglerPicBack: ; 323de (c:63de)
+	INCBIN "pic/monback/kinglerb.pic"
+VoltorbPicFront: ; 24911 (9:4911)
+	INCBIN "pic/bmon/voltorb.pic"
+VoltorbPicBack: ; 2499a (9:499a)
+	INCBIN "pic/monback/voltorbb.pic"
+ElectrodePicFront: ; 32760 (c:6760)
+	INCBIN "pic/bmon/electrode.pic"
+ElectrodePicBack: ; 32827 (c:6827)
+	INCBIN "pic/monback/electrodeb.pic"
+ExeggcutePicFront: ; 256d7 (9:56d7)
+	INCBIN "pic/bmon/exeggcute.pic"
+ExeggcutePicBack: ; 258f0 (9:58f0)
+	INCBIN "pic/monback/exeggcuteb.pic"
+ExeggutorPicFront: ; 251d6 (9:51d6)
+	INCBIN "pic/bmon/exeggutor.pic"
+ExeggutorPicBack: ; 253f8 (9:53f8)
+	INCBIN "pic/monback/exeggutorb.pic"
+CubonePicFront: ; 260a8 (9:60a8)
+	INCBIN "pic/bmon/cubone.pic"
+CubonePicBack: ; 26196 (9:6196)
+	INCBIN "pic/monback/cuboneb.pic"
+MarowakPicFront: ; 32f8f (c:6f8f)
+	INCBIN "pic/bmon/marowak.pic"
+MarowakPicBack: ; 33101 (c:7101)
+	INCBIN "pic/monback/marowakb.pic"
+HitmonleePicFront: ; 292bf (a:52bf)
+	INCBIN "pic/bmon/hitmonlee.pic"
+HitmonleePicBack: ; 2945e (a:545e)
+	INCBIN "pic/monback/hitmonleeb.pic"
+HitmonchanPicFront: ; 294bc (a:54bc)
+	INCBIN "pic/bmon/hitmonchan.pic"
+HitmonchanPicBack: ; 29643 (a:5643)
+	INCBIN "pic/monback/hitmonchanb.pic"
+LickitungPicFront: ; 254a7 (9:54a7)
+	INCBIN "pic/bmon/lickitung.pic"
+LickitungPicBack: ; 2563e (9:563e)
+	INCBIN "pic/monback/lickitungb.pic"
+KoffingPicFront: ; 2a7a6 (a:67a6)
+	INCBIN "pic/bmon/koffing.pic"
+KoffingPicBack: ; 2a974 (a:6974)
+	INCBIN "pic/monback/koffingb.pic"
+WeezingPicFront: ; 32a44 (c:6a44)
+	INCBIN "pic/bmon/weezing.pic"
+WeezingPicBack: ; 32c76 (c:6c76)
+	INCBIN "pic/monback/weezingb.pic"
+RhyhornPicFront: ; 26208 (9:6208)
+	INCBIN "pic/bmon/rhyhorn.pic"
+RhyhornPicBack: ; 2640f (9:640f)
+	INCBIN "pic/monback/rhyhornb.pic"
+RhydonPicFront: ; 24000 (9:4000)
+	INCBIN "pic/bmon/rhydon.pic"
+	
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	
+FossilKabutopsPic: ; 2f9e8 (b:79e8)
+	INCBIN "pic/bmon/fossilkabutops.pic"
 FossilAerodactylPic: ; 36536 (d:6536)
 	INCBIN "pic/bmon/fossilaerodactyl.pic"
 GhostPic: ; 366b5 (d:66b5)
 	INCBIN "pic/other/ghost.pic"
-OddishPicFront: ; 3680b (d:680b)
-	INCBIN "pic/bmon/oddish.pic"
-OddishPicBack: ; 368a9 (d:68a9)
-	INCBIN "pic/monback/oddishb.pic"
-GloomPicFront: ; 36941 (d:6941)
-	INCBIN "pic/bmon/gloom.pic"
-GloomPicBack: ; 36a78 (d:6a78)
-	INCBIN "pic/monback/gloomb.pic"
-VileplumePicFront: ; 36b21 (d:6b21)
-	INCBIN "pic/bmon/vileplume.pic"
-VileplumePicBack: ; 36c82 (d:6c82)
-	INCBIN "pic/monback/vileplumeb.pic"
-BellsproutPicFront: ; 36d00 (d:6d00)
-	INCBIN "pic/bmon/bellsprout.pic"
-BellsproutPicBack: ; 36dba (d:6dba)
-	INCBIN "pic/monback/bellsproutb.pic"
-WeepinbellPicFront: ; 36e30 (d:6e30)
-	INCBIN "pic/bmon/weepinbell.pic"
-WeepinbellPicBack: ; 36f6f (d:6f6f)
-	INCBIN "pic/monback/weepinbellb.pic"
-VictreebelPicFront: ; 36fea (d:6fea)
-	INCBIN "pic/bmon/victreebel.pic"
-VictreebelPicBack: ; 371b2 (d:71b2)
-	INCBIN "pic/monback/victreebelb.pic"
+	nop
+RhydonPicBack: ; 24202 (9:4202)
+	INCBIN "pic/monback/rhydonb.pic"
+ChanseyPicFront: ; 28cae (a:4cae)
+	INCBIN "pic/bmon/chansey.pic"
+ChanseyPicBack: ; 28e21 (a:4e21)
+	INCBIN "pic/monback/chanseyb.pic"
+TangelaPicFront: ; 27b39 (9:7b39)
+	INCBIN "pic/bmon/tangela.pic"
+TangelaPicBack: ; 27ce7 (9:7ce7)
+	INCBIN "pic/monback/tangelab.pic"
+KangaskhanPicFront: ; 2429a (9:429a)
+	INCBIN "pic/bmon/kangaskhan.pic"
+KangaskhanPicBack: ; 244a6 (9:44a6)
+	INCBIN "pic/monback/kangaskhanb.pic"
+HorseaPicFront: ; 2d7c1 (b:57c1)
+	INCBIN "pic/bmon/horsea.pic"
+	
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 
 Unknown_37244: ; 37244 (d:7244)
 INCBIN "baserom.gbc",$37244,$37247 - $37244
@@ -45567,6 +47230,11 @@ UnnamedText_37e83: ; 37e83 (d:7e83)
 	TX_FAR _UnnamedText_37e83
 	db $50
 ; 0x37e83 + 5 bytes
+
+	nop
+	
+HorseaPicBack: ; 2d873 (b:5873)
+	INCBIN "pic/monback/horseab.pic"
 
 SECTION "bankE",ROMX,BANK[$E]
 
@@ -47603,7 +49271,7 @@ DugtrioBaseStats: ; 38956 (e:4956)
 
 	db 50 ; catch rate
 	db 153 ; base exp yield
-	db $66 ; sprite dimensions
+	db $77 ; sprite dimensions
 
 	dw DugtrioPicFront
 	dw DugtrioPicBack
@@ -48935,7 +50603,7 @@ DewgongBaseStats: ; 38d46 (e:4d46)
 
 	db 75 ; catch rate
 	db 176 ; base exp yield
-	db $66 ; sprite dimensions
+	db $77 ; sprite dimensions
 
 	dw DewgongPicFront
 	dw DewgongPicBack
@@ -49120,7 +50788,7 @@ GastlyBaseStats: ; 38dd2 (e:4dd2)
 
 	db 190 ; catch rate
 	db 95 ; base exp yield
-	db $77 ; sprite dimensions
+	db $66 ; sprite dimensions
 
 	dw GastlyPicFront
 	dw GastlyPicBack
@@ -63302,8 +64970,9 @@ Func_3ec92: ; 3ec92 (f:6c92)
 .asm_3ec9e
 	ld a, BANK(RedPicBack)
 	call UncompressSpriteFromDE
-	ld a, $3
-	call Predef ; indirect jump to ScaleSpriteByTwo (2fe40 (b:7e40))
+	call LoadBackSpriteUnzoomed
+	nop
+	nop
 	ld hl, W_OAMBUFFER
 	xor a
 	ld [H_DOWNARROWBLINKCNT1], a ; $FF00+$8b
@@ -63335,8 +65004,12 @@ Func_3ec92: ; 3ec92 (f:6c92)
 	ld e, a
 	dec b
 	jr nz, .asm_3ecb2
-	ld de, $9310
-	call InterlaceMergeSpriteBuffers
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 	ld a, $a
 	ld [$0], a
 	xor a
@@ -64011,16 +65684,21 @@ LoadMonBackSprite: ; 3f103 (f:7103)
 	call ClearScreenArea
 	ld hl,  W_MONHBACKSPRITE - W_MONHEADER
 	call UncompressMonSprite
-	ld a, $3
-	call Predef ; indirect jump to ScaleSpriteByTwo (2fe40 (b:7e40))
-	ld de, $9310
-	call InterlaceMergeSpriteBuffers ; combine the two buffers to a single 2bpp sprite
+	call LoadBackSpriteUnzoomed
 	ld hl, $8000
 	ld de, $9310
 	ld c, (2*SPRITEBUFFERSIZE)/16 ; count of 16-byte chunks to be copied
 	ld a, [H_LOADEDROMBANK]
 	ld b, a
 	jp CopyVideoData
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 
 ; known jump sources: 3d69f (f:569f), 3d6a4 (f:56a4), 3d6ca (f:56ca), 3d6d9 (f:56d9), 3d790 (f:5790), 3d7c5 (f:57c5), 3d7ff (f:57ff), 3e016 (f:6016), 3e701 (f:6701), 3e706 (f:6706), 3e73e (f:673e), 3e74d (f:674d), 3e815 (f:6815), 3e84a (f:684a), 3e882 (f:6882)
 Func_3f132: ; 3f132 (f:7132)
@@ -65390,6 +67068,13 @@ Func_3fbbc: ; 3fbbc (f:7bbc)
 	pop de
 	pop hl
 	ret
+	
+LoadBackSpriteUnzoomed:
+	ld a, $66
+	ld de, $9310
+	push de
+	jp LoadUncompressedBackSprite
+	
 ; 3fbc8 (f:7bc8)
 SECTION "bank10",ROMX,BANK[$10]
 
@@ -77220,12 +78905,54 @@ BurglarPic: ; 4cc91 (13:4c91)
 	INCBIN "pic/trainer/burglar.pic"
 EngineerPic: ; 4ce0a (13:4e0a)
 	INCBIN "pic/trainer/engineer.pic"
+JugglerPic: ; 4d97d (13:597d)
+	INCBIN "pic/trainer/juggler.pic"
 FisherPic: ; 4cf87 (13:4f87)
 	INCBIN "pic/trainer/fisher.pic"
 SwimmerPic: ; 4d133 (13:5133)
 	INCBIN "pic/trainer/swimmer.pic"
 CueBallPic: ; 4d24f (13:524f)
 	INCBIN "pic/trainer/cueball.pic"
+	
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	
 GamblerPic: ; 4d421 (13:5421)
 	INCBIN "pic/trainer/gambler.pic"
 BeautyPic: ; 4d5df (13:55df)
@@ -77234,8 +78961,6 @@ PsychicPic: ; 4d728 (13:5728)
 	INCBIN "pic/trainer/psychic.pic"
 RockerPic: ; 4d843 (13:5843)
 	INCBIN "pic/trainer/rocker.pic"
-JugglerPic: ; 4d97d (13:597d)
-	INCBIN "pic/trainer/juggler.pic"
 TamerPic: ; 4db4e (13:5b4e)
 	INCBIN "pic/trainer/tamer.pic"
 BirdKeeperPic: ; 4dcdb (13:5cdb)
@@ -77287,6 +79012,822 @@ AgathaPic: ; 4fa71 (13:7a71)
 	INCBIN "pic/trainer/agatha.pic"
 LancePic: ; 4fba2 (13:7ba2)
 	INCBIN "pic/trainer/lance.pic"
+	
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 
 BattleCenterM_h: ; 0x4fd04 to 0x4fd10 (12 bytes) (id=239)
 	db $15 ; tileset
@@ -98688,10 +101229,11 @@ Func_7033e: ; 7033e (1c:433e)
 	ld de, RedPicBack ; $7e0a
 	ld a, BANK(RedPicBack)
 	call UncompressSpriteFromDE
-	ld a, $3
-	call Predef ; indirect jump to ScaleSpriteByTwo (2fe40 (b:7e40))
+	call LoadHoFPlayerBackSprite
 	ld de, $9310
-	call InterlaceMergeSpriteBuffers
+	push de
+	jp LoadUncompressedBackSprite
+	nop
 	ld c, $1
 
 ; known jump sources: 702b8 (1c:42b8), 702ce (1c:42ce)
@@ -101829,27 +104371,37 @@ INCBIN "baserom.gbc",$71f73,$71f8f - $71f73
 Unknown_71f8f: ; 71f8f (1c:5f8f)
 INCBIN "baserom.gbc",$71f8f,$71f97 - $71f8f
 
-DeterminePaletteIDOLD: ; 71f97 (1c:5f97)
-	bit 3, a                 ; bit 3 of battle status 3 (unused?)
-	ld a, PAL_GREYMON
-	ret nz
-	ld a, [hl]
-Func_71f9d: ; 71f9d (1c:5f9d)
-	ld [$D11E], a
-	and a
-	jr z, .idZero
-	push bc
-	ld a, $3A
-	call Predef               ; turn Pokemon ID number into Pokedex number
-	pop bc
-	ld a, [$D11E]
-.idZero
-	ld e, a
-	ld d, $00
-	ld hl, MonsterPalettes   ; not just for Pokemon, Trainers use it too
-	add hl, de
-	ld a, [hl]
-	ret
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 
 ; known jump sources: 12cf3 (4:6cf3)
 Func_71fb6: ; 71fb6 (1c:5fb6)
@@ -102539,14 +105091,13 @@ TrainerPalettes: ; 726ba (1c:66ba)
 	nop
 	nop
 	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
+	
+LoadHoFPlayerBackSprite:
+	ld hl, $D031
+	ld [hl], $00
+	ld a, $66
+	ret
+	
 	nop
 	nop
 	nop
@@ -128565,6 +131116,151 @@ MoveNames: ; b0000 (2c:4000)
 	db "SUBSTITUTE@"
 	db "STRUGGLE@"
 
+SECTION "bank2D",ROMX,BANK[$2D]
+
+SeadraPicFront: ; 2d8c4 (b:58c4)
+	INCBIN "pic/bmon/seadra.pic"
+SeadraPicBack: ; 2da2b (b:5a2b)
+	INCBIN "pic/monback/seadrab.pic"
+GoldeenPicFront: ; 3466f (d:466f)
+	INCBIN "pic/bmon/goldeen.pic"
+GoldeenPicBack: ; 34796 (d:4796)
+	INCBIN "pic/monback/goldeenb.pic"
+SeakingPicFront: ; 34803 (d:4803)
+	INCBIN "pic/bmon/seaking.pic"
+SeakingPicBack: ; 34a03 (d:4a03)
+	INCBIN "pic/monback/seakingb.pic"
+StaryuPicFront: ; 274e0 (9:74e0)
+	INCBIN "pic/bmon/staryu.pic"
+StaryuPicBack: ; 275ec (9:75ec)
+	INCBIN "pic/monback/staryub.pic"
+StarmiePicFront: ; 33c1c (c:7c1c)
+	INCBIN "pic/bmon/starmie.pic"
+StarmiePicBack: ; 33dac (c:7dac)
+	INCBIN "pic/monback/starmieb.pic"
+MrMimePicFront: ; 290f3 (a:50f3)
+	INCBIN "pic/bmon/mr.mime.pic"
+MrMimePicBack: ; 29247 (a:5247)
+	INCBIN "pic/monback/mr.mimeb.pic"
+ScytherPicFront: ; 2721c (9:721c)
+	INCBIN "pic/bmon/scyther.pic"
+ScytherPicBack: ; 2743c (9:743c)
+	INCBIN "pic/monback/scytherb.pic"
+JynxPicFront: ; 2b98e (a:798e)
+	INCBIN "pic/bmon/jynx.pic"
+JynxPicBack: ; 2bb42 (a:7b42)
+	INCBIN "pic/monback/jynxb.pic"
+ElectabuzzPicFront: ; 2a367 (a:6367)
+	INCBIN "pic/bmon/electabuzz.pic"
+ElectabuzzPicBack: ; 2a4ef (a:64ef)
+	INCBIN "pic/monback/electabuzzb.pic"
+MagmarPicFront: ; 2a161 (a:6161)
+	INCBIN "pic/bmon/magmar.pic"
+MagmarPicBack: ; 2a2bf (a:62bf)
+	INCBIN "pic/monback/magmarb.pic"
+PinsirPicFront: ; 278da (9:78da)
+	INCBIN "pic/bmon/pinsir.pic"
+PinsirPicBack: ; 27aaa (9:7aaa)
+	INCBIN "pic/monback/pinsirb.pic"
+TaurosPicFront: ; 2ae7e (a:6e7e)
+	INCBIN "pic/bmon/tauros.pic"
+TaurosPicBack: ; 2b054 (a:7054)
+	INCBIN "pic/monback/taurosb.pic"
+MagikarpPicFront: ; 31d31 (c:5d31)
+	INCBIN "pic/bmon/magikarp.pic"
+MagikarpPicBack: ; 31ec3 (c:5ec3)
+	INCBIN "pic/monback/magikarpb.pic"
+GyaradosPicFront: ; 269d4 (9:69d4)
+	INCBIN "pic/bmon/gyarados.pic"
+GyaradosPicBack: ; 26c25 (9:6c25)
+	INCBIN "pic/monback/gyaradosb.pic"
+LaprasPicFront: ; 264c1 (9:64c1)
+	INCBIN "pic/bmon/lapras.pic"
+LaprasPicBack: ; 2667c (9:667c)
+	INCBIN "pic/monback/laprasb.pic"
+DittoPicFront: ; 2c514 (b:4514)
+	INCBIN "pic/bmon/ditto.pic"
+DittoPicBack: ; 2c5bd (b:45bd)
+	INCBIN "pic/monback/dittob.pic"
+EeveePicFront: ; 2e531 (b:6531)
+	INCBIN "pic/bmon/eevee.pic"
+EeveePicBack: ; 2e625 (b:6625)
+	INCBIN "pic/monback/eeveeb.pic"
+VaporeonPicFront: ; 2eaae (b:6aae)
+	INCBIN "pic/bmon/vaporeon.pic"
+VaporeonPicBack: ; 2ec02 (b:6c02)
+	INCBIN "pic/monback/vaporeonb.pic"
+JolteonPicFront: ; 2e88f (b:688f)
+	INCBIN "pic/bmon/jolteon.pic"
+JolteonPicBack: ; 2ea0a (b:6a0a)
+	INCBIN "pic/monback/jolteonb.pic"
+FlareonPicFront: ; 2e68d (b:668d)
+	INCBIN "pic/bmon/flareon.pic"
+FlareonPicBack: ; 2e806 (b:6806)
+	INCBIN "pic/monback/flareonb.pic"
+PorygonPicFront: ; 35784 (d:5784)
+	INCBIN "pic/bmon/porygon.pic"
+PorygonPicBack: ; 358d1 (d:58d1)
+	INCBIN "pic/monback/porygonb.pic"
+OmanytePicFront: ; 2de9d (b:5e9d)
+	INCBIN "pic/bmon/omanyte.pic"
+OmanytePicBack: ; 2df76 (b:5f76)
+	INCBIN "pic/monback/omanyteb.pic"
+OmastarPicFront: ; 2dfd3 (b:5fd3)
+	INCBIN "pic/bmon/omastar.pic"
+OmastarPicBack: ; 2e18b (b:618b)
+	INCBIN "pic/monback/omastarb.pic"
+KabutoPicFront: ; 2d464 (b:5464)
+	INCBIN "pic/bmon/kabuto.pic"
+KabutoPicBack: ; 2d529 (b:5529)
+	INCBIN "pic/monback/kabutob.pic"
+KabutopsPicFront: ; 2d583 (b:5583)
+	INCBIN "pic/bmon/kabutops.pic"
+KabutopsPicBack: ; 2d73c (b:573c)
+	INCBIN "pic/monback/kabutopsb.pic"
+
+SECTION "bank2E",ROMX,BANK[$2E]
+
+AerodactylPicFront: ; 35931 (d:5931)
+	INCBIN "pic/bmon/aerodactyl.pic"
+AerodactylPicBack: ; 35aec (d:5aec)
+	INCBIN "pic/monback/aerodactylb.pic"
+SnorlaxPicFront: ; 31b19 (c:5b19)
+	INCBIN "pic/bmon/snorlax.pic"
+SnorlaxPicBack: ; 31ce5 (c:5ce5)
+	INCBIN "pic/monback/snorlaxb.pic"
+ArticunoPicFront: ; 2c000 (b:4000)
+	INCBIN "pic/bmon/articuno.pic"
+ArticunoPicBack: ; 2c238 (b:4238)
+	INCBIN "pic/monback/articunob.pic"
+ZapdosPicFront: ; 2c29d (b:429d)
+	INCBIN "pic/bmon/zapdos.pic"
+ZapdosPicBack: ; 2c484 (b:4484)
+	INCBIN "pic/monback/zapdosb.pic"
+MoltresPicFront: ; 2bbac (a:7bac)
+	INCBIN "pic/bmon/moltres.pic"
+MoltresPicBack: ; 2be02 (a:7e02)
+	INCBIN "pic/monback/moltresb.pic"
+DratiniPicFront: ; 2d151 (b:5151)
+	INCBIN "pic/bmon/dratini.pic"
+DratiniPicBack: ; 2d234 (b:5234)
+	INCBIN "pic/monback/dratinib.pic"
+DragonairPicFront: ; 2d297 (b:5297)
+	INCBIN "pic/bmon/dragonair.pic"
+DragonairPicBack: ; 2d3d9 (b:53d9)
+	INCBIN "pic/monback/dragonairb.pic"
+DragonitePicFront: ; 2b4aa (a:74aa)
+	INCBIN "pic/bmon/dragonite.pic"
+DragonitePicBack: ; 2b67f (a:767f)
+	INCBIN "pic/monback/dragoniteb.pic"
+MewtwoPicFront: ; 3187f (c:587f)
+	INCBIN "pic/bmon/mewtwo.pic"
+MewtwoPicBack: ; 31a85 (c:5a85)
+	INCBIN "pic/monback/mewtwob.pic"
+MewPicFront: ; 4112 (1:4112)
+	INCBIN "pic/bmon/mew.pic"
+MewPicBack: ; 4205 (1:4205)
+	INCBIN "pic/monback/mewb.pic"
 	
 SECTION "bank2F",ROMX,BANK[$2F]
 	
