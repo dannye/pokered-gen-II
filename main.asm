@@ -14556,9 +14556,8 @@ OakSpeech: ; 6115 (1:6115)
 	call Function62CE
 	xor a
 	ld [$FFD7],a
-	ld a,[$D732]
-	bit 1,a ; XXX when is bit 1 set?
-	jp nz,Function61BC ; easter egg: skip the intro
+	ld a, PAL_OAK
+	call GotPaletteID
 	ld de,ProfOakPic
 	ld bc,$1300
 	call IntroPredef3B   ; displays Oak pic?
@@ -14567,6 +14566,7 @@ OakSpeech: ; 6115 (1:6115)
 	call PrintText      ; prints text box
 	call GBFadeOut2
 	call ClearScreen
+	call GetNidoPalID
 	ld a,NIDORINO
 	ld [$D0B5],a    ; pic displayed is stored at this location
 	ld [$CF91],a
@@ -14578,7 +14578,7 @@ OakSpeech: ; 6115 (1:6115)
 	ld hl,OakSpeechText2
 	call PrintText      ; Prints text box
 	call GBFadeOut2
-	call ClearScreen
+	call GetRedPalID
 	ld de,RedPicFront
 	ld bc,$0400     ; affects the position of the player pic
 	call IntroPredef3B      ; displays player pic?
@@ -14587,7 +14587,7 @@ OakSpeech: ; 6115 (1:6115)
 	call PrintText
 	call Func_695d ; brings up NewName/Red/etc menu
 	call GBFadeOut2
-	call ClearScreen
+	call GetRivalPalID
 	ld de,Rival1Pic
 	ld bc,$1300
 	call IntroPredef3B ; displays rival pic
@@ -14597,7 +14597,7 @@ OakSpeech: ; 6115 (1:6115)
 	call Func_69a4
 Function61BC: ; 61bc (1:61bc)
 	call GBFadeOut2
-	call ClearScreen
+	call GetRedPalID
 	ld de,RedPicFront
 	ld bc,$0400
 	call IntroPredef3B
@@ -15496,7 +15496,7 @@ Func_695d: ; 695d (1:695d)
 	ld a, [$cf4b]
 	cp $50
 	jr z, .asm_697a
-	call ClearScreen
+	call GetRedPalID
 	call Delay3
 	ld de, RedPicFront ; $6ede
 	ld b, $4
@@ -15530,7 +15530,7 @@ Func_69a4: ; 69a4 (1:69a4)
 	ld a, [$cf4b]
 	cp $50
 	jr z, .asm_69c1
-	call ClearScreen
+	call GetRivalPalID
 	call Delay3
 	ld de, Rival1Pic ; $6049
 	ld b, $13
@@ -18123,6 +18123,22 @@ Func_7c18: ; 7c18 (1:7c18)
 	ld [$cc3c], a
 	ret
 ; 0x7c49
+
+GetNidoPalID:
+	ld a, PAL_NIDORINO
+	jr GotPaletteID
+GetRedPalID:
+	call ClearScreen
+	ld a, PAL_HERO
+	jr GotPaletteID
+GetRivalPalID:
+	call ClearScreen
+	ld a, PAL_GARY1
+GotPaletteID:
+	push af
+	ld hl, SendIntroPal
+	ld b, BANK(SendIntroPal)
+	jp Bankswitch
 
 SECTION "bank2",ROMX,BANK[$2]
 
@@ -42286,7 +42302,7 @@ Func_214e8: ; 214e8 (8:54e8)
 	call PlaceString
 	ld a, $1
 	ld [H_AUTOBGTRANSFERENABLED], a ; $FF00+$ba
-	call Delay3
+	call PCBoxOWPal
 	call HandleMenuInput
 	bit 1, a
 	jp nz, Func_21588
@@ -44376,6 +44392,11 @@ INCBIN "baserom.gbc",$22322,$22325 - $22322
 
 Unknown_22325: ; 22325 (8:6325)
 INCBIN "baserom.gbc",$22325,$23f52 - $22325
+
+PCBoxOWPal:
+	call Delay3
+	ld b, $09
+	jp GoPAL_SET
 
 SECTION "bank9",ROMX,BANK[$9]
 
@@ -59489,7 +59510,7 @@ Func_3c64f: ; 3c64f (f:464f)
 ; known jump sources: 3c55a (f:455a), 3c734 (f:4734)
 Func_3c664: ; 3c664 (f:4664)
 	ld hl, $cf1e
-	ld e, $30
+	ld e, $00
 	call Func_3ce90
 	ld hl, Func_3a857
 	ld b, BANK(Func_3a857)
@@ -67092,8 +67113,8 @@ DisplayPokedexMenu_: ; 40000 (10:4000)
 	ld [$d11e],a
 	ld [$ffb7],a
 .setUpGraphics
-	ld b,$08
-	call GoPAL_SET
+	ld b,$1C
+	call DexPalBankswitch
 	ld hl,LoadPokedexTilePatterns
 	ld b,BANK(LoadPokedexTilePatterns)
 	call Bankswitch
@@ -70385,6 +70406,10 @@ OTString67E5: ; 427e5 (10:67e5)
 	db $4E
 	db "OT/",$4E
 	db $73,"№",$F2,"@"
+	
+DexPalBankswitch:
+	ld hl, SendDexPal
+	jp Bankswitch
 
 SECTION "bank11",ROMX,BANK[$11]
 
@@ -83855,9 +83880,8 @@ Func_525af: ; 525af (14:65af)
 	ld [W_PLAYERMONNUMBER], a ; $cc2f
 	ld [$d078], a
 	ld [$d35d], a
-	ld hl, $cf1d
-	ld [hli], a
-	ld [hl], a
+	call HealthBarPal
+	ld a, $00
 	ld hl, $ccd3
 	ld b, $3c
 .asm_525e1
@@ -84500,6 +84524,12 @@ UnnamedText_52a3d: ; 52a3d (14:6a3d)
 	TX_FAR _UnnamedText_52a3d
 	db $50
 ; 0x52a3d + 5 bytes
+HealthBarPal:
+	ld a, $02
+	ld hl, $CF1D
+	ld [hli], a
+	ld [hl], a
+	ret
 
 SECTION "bank15",ROMX,BANK[$15]
 
@@ -105011,7 +105041,7 @@ Func_72689: ; 72689 (1c:6689)
 	ld hl, MonsterPalettes
 	cp a, $00
 	jr nz, .getPalID
-	ld a, $EB ; trainer pal id
+	ld a, PAL_HERO
 	ret
 .getPalID
 	ld e, a
@@ -105082,52 +105112,38 @@ TrainerPalettes: ; 726ba (1c:66ba)
 	db PAL_AGATHA
 	db PAL_LANCE
 	
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
+PCBoxPal:
+	call TextBoxBorder
+SendDexPal:
+	ld hl, PCDexPalPacket
+	jp SendSGBPacket
 	
 LoadHoFPlayerBackSprite:
-	ld hl, $D031
+	ld hl, W_TRAINERCLASS
 	ld [hl], $00
 	ld a, $66
 	ret
 	
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
+SendIntroPal:
+	ld bc, $0010
+	ld de, $CF2D
+	ld hl, Unknown_72428
+	call CopyData
+	pop bc
+	pop de
+	pop af
+	push de
+	push bc
+	ld hl, $CF2E
+	ld [hld], a
+	jp SendSGBPacket
+
+PCDexPalPacket:
+db $51, $21
 	
 CopyPalTable
 	jr nz,.yes
-	jp $6188 ; no
+	jp Func_72188 ; no
 .yes
 	ld a,BANK(SuperPalettes)
 	ld bc,$1000
@@ -105750,7 +105766,7 @@ Func_7393f: ; 7393f (1c:793f)
 	ld hl, W_SCREENTILESBUFFER
 	ld b, $2
 	ld c, $9
-	call TextBoxBorder
+	call PCBoxPal
 	ld hl, UnnamedText_739d4 ; $79d4
 	call PrintText
 	FuncCoord 11, 0 ; $c3ab
