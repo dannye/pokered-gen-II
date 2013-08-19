@@ -16645,7 +16645,7 @@ StartMenuPokemonText: ; 7197 (1:7197)
 db "POKéMON@"
 
 StartMenuItemText: ; 719f (1:719f)
-db "ITEM@"
+db "PACK@"
 
 StartMenuSaveText: ; 71a4 (1:71a4)
 db "SAVE@"
@@ -17092,7 +17092,7 @@ JapaneseMainMenuText: ; 7448 (1:7448)
 
 BattleMenuText: ; 7455 (1:7455)
 	db "FIGHT ",$E1,$E2,$4E
-	db "ITEM  RUN@"
+	db "PACK  RUN@"
 
 SafariZoneBattleMenuText: ; 7468 (1:7468)
 	db "BALL",$F1,"       BAIT",$4E
