@@ -12396,7 +12396,7 @@ Func_4ca5: ; 4ca5 (1:4ca5)
 	inc l
 	inc l
 	ld a, [$FF00+$8f]
-	ld de, Unknown_4d85 ; $4d85
+	ld de, DiagonalLines ; $4d85
 	add a
 	add e
 	ld e, a
@@ -12433,8 +12433,10 @@ Func_4d72: ; 4d72 (1:4d72)
 .asm_4d84
 	ret
 
-Unknown_4d85: ; 4d85 (1:4d85)
-INCBIN "baserom.gbc",$4d85,$4de1 - $4d85
+DiagonalLines: ; 4d85 (1:4d85)
+INCBIN "gfx/diagonal_lines.2bpp"
+
+INCBIN "baserom.gbc",$4da5,$4de1 - $4da5
 
 ; known jump sources: 24f7 (0:24f7)
 PickupItem: ; 4de1 (1:4de1)
@@ -29362,7 +29364,8 @@ PokemonLogoGraphics: ; 11380 (4:5380)
 FontGraphics: ; 11a80 (4:5a80)
 	INCBIN "gfx/font.1bpp"
 
-INCBIN "baserom.gbc",$11e80,$11ea0 - $11e80
+ABTiles: ; 11e80 (4:5e80)
+	INCBIN "gfx/AB.2bpp"
 
 HpBarAndStatusGraphics: ; 11ea0 (4:5ea0)
 	INCBIN "gfx/hp_bar_and_status.2bpp"
@@ -29377,22 +29380,22 @@ BattleHudTiles3: ; 120b0 (4:60b0)
 INCBIN "gfx/battle_hud3.1bpp"
 
 NintendoCopyrightLogoGraphics: ; 120c8 (4:60c8)
-INCBIN "baserom.gbc",$120c8,$121f8 - $120c8
+INCBIN "gfx/copyright.2bpp"
 
 GamefreakLogoGraphics: ; 121f8 (4:61f8)
-INCBIN "baserom.gbc",$121f8,$12288 - $121f8
+INCBIN "gfx/gamefreak.2bpp"
 
 TextBoxGraphics: ; 12288 (4:6288)
 	INCBIN "gfx/text_box.2bpp"
 
 PokedexTileGraphics: ; 12488 (4:6488)
-INCBIN "baserom.gbc",$12488,$125a8 - $12488
+INCBIN "gfx/pokedex.2bpp"
 
 WorldMapTileGraphics: ; 125a8 (4:65a8)
 INCBIN "gfx/town_map.2bpp"
 
 PlayerCharacterTitleGraphics: ; 126a8 (4:66a8)
-INCBIN "baserom.gbc",$126a8,$128d8 - $126a8
+INCBIN "gfx/player_title.2bpp"
 
 ; known jump sources: 1388d (4:788d)
 Func_128d8: ; 128d8 (4:68d8)
@@ -30870,7 +30873,7 @@ DrawTrainerInfo: ; 1349a (4:749a)
 	ld bc,$0080
 	push bc
 	call TrainerInfo_FarCopyData
-	ld hl,UnknownGFX_2fc28 ; $7c28
+	ld hl,BlankLeaderNames ; $7c28
 	ld de,$9600
 	ld bc,$0170
 	call TrainerInfo_FarCopyData
@@ -31620,8 +31623,7 @@ GenRandom_: ; 13a8f (4:7a8f)
 SECTION "bank5",ROMX,BANK[$5]
 
 RedCyclingSprite: ; 14000 (5:4000)
-INCBIN "baserom.gbc",$14000,$14180 - $14000
-
+	INCBIN "gfx/sprites/cycling.2bpp" ; was $14000
 RedSprite: ; 14180 (5:4180)
 	INCBIN "gfx/sprites/red.2bpp" ; was $14180
 BlueSprite: ; 14300 (5:4300)
@@ -32753,7 +32755,7 @@ Func_17c47: ; 17c47 (5:7c47)
 	ld a, [hl]
 	add $8
 	ld c, a
-	ld de, Unknown_17cb5 ; $7cb5
+	ld de, EmotionBubbles ; $7cb5
 	xor a
 	call WriteOAMBlock
 	ld c, $3c
@@ -32766,8 +32768,8 @@ Func_17c47: ; 17c47 (5:7c47)
 Unknown_17caf: ; 17caf (5:7caf)
 INCBIN "baserom.gbc",$17caf,$17cb5 - $17caf
 
-Unknown_17cb5: ; 17cb5 (5:7cb5)
-INCBIN "baserom.gbc",$17cb5,$17d7d - $17cb5
+EmotionBubbles: ; 17cb5 (5:7cb5)
+INCBIN "gfx/emotion_bubbles.2bpp"
 
 ; known jump sources: 71c87 (1c:5c87)
 Func_17d7d: ; 17d7d (5:7d7d)
@@ -36945,8 +36947,8 @@ INCBIN "baserom.gbc",$1a6cf,$1a6f0 - $1a6cf
 ; known jump sources: 1a6c6 (6:66c6)
 Func_1a6f0: ; 1a6f0 (6:66f0)
 	ld hl, $8ff0
-	ld de, Unknown_1a708 ; $6708
-	ld bc, (BANK(Unknown_1a708) << 8) + $01
+	ld de, LedgeHoppingShadow ; $6708
+	ld bc, (BANK(LedgeHoppingShadow) << 8) + $01
 	call CopyVideoDataDouble
 	ld a, $9
 	ld bc, $5448
@@ -36954,8 +36956,8 @@ Func_1a6f0: ; 1a6f0 (6:66f0)
 	call WriteOAMBlock
 	ret
 
-Unknown_1a708: ; 1a708 (6:6708)
-INCBIN "baserom.gbc",$1a708,$1a710 - $1a708
+LedgeHoppingShadow: ; 1a708 (6:6708)
+INCBIN "gfx/ledge_hopping_shadow.1bpp"
 
 Unknown_1a710: ; 1a710 (6:6710)
 INCBIN "baserom.gbc",$1a710,$1bcc8 - $1a710
@@ -45797,14 +45799,14 @@ UnnamedText_2fb93: ; 2fb93 (b:7b93)
 ; 0x2fb93 + 5 bytes
 
 TrainerInfoTextBoxTileGraphics: ; 2fb98 (b:7b98)
-INCBIN "baserom.gbc",$2fb98,$2fc28 - $2fb98
+INCBIN "gfx/trainer_info.2bpp"
 
 ; mostly empty, last tile contains circle
-UnknownGFX_2fc28: ; 2fc28 (b:7c28)
-INCBIN "baserom.gbc",$2fc28,$2fd98 - $2fc28
+BlankLeaderNames: ; 2fc28 (b:7c28)
+INCBIN "gfx/blank_leader_names.2bpp"
 
 BadgeNumbersTileGraphics: ; 2fd98 (b:7d98)
-INCBIN "baserom.gbc",$2fd98,$2fe18 - $2fd98
+INCBIN "gfx/badge_numbers.2bpp"
 
 ; known jump sources: e530 (3:6530)
 Func_2fe18: ; 2fe18 (b:7e18)
@@ -55589,15 +55591,15 @@ Func_3a948: ; 3a948 (e:6948)
 
 ; four tiles: pokeball, black pokeball (status ailment), crossed out pokeball (faited) and pokeball slot (no mon)
 PokeballTileGraphics: ; 3a97e (e:697e)
-INCBIN "baserom.gbc",$3a97e,$3a9be - $3a97e
+INCBIN "gfx/pokeball.2bpp"
 
 ; tiles for gameboy and link cable graphics used for trading sequence animation
 TradingAnimationGraphics: ; 3a9be (e:69be)
-INCBIN "baserom.gbc",$3a9be,$3acce - $3a9be
+INCBIN "gfx/trade.2bpp"
 
 ; 4 tiles for actual wire transfer animation (pokeball wandering inside wire)
 TradingAnimationGraphics2: ; 3acce (e:6cce)
-INCBIN "baserom.gbc",$3acce,$3ad0e - $3acce
+INCBIN "gfx/trade2.2bpp"
 
 ; known jump sources: df11 (3:5f11), 17da3 (5:7da3)
 Func_3ad0e: ; 3ad0e (e:6d0e)
@@ -70225,25 +70227,25 @@ INCBIN "baserom.gbc",$41849,$41852 - $41849
 
 ; known jump sources: 418ad (10:58ad)
 Func_41852: ; 41852 (10:5852)
-	ld hl, Unknown_41a99 ; $5a99
+	ld hl, FightIntroBackMon ; $5a99
 	ld de, $9000
 	ld bc, $600
-	ld a, BANK(Unknown_41a99)
+	ld a, BANK(FightIntroBackMon)
 	call FarCopyData2
-	ld hl, Unknown_41959 ; $5959
+	ld hl, GameFreakIntro ; $5959
 	ld de, $9600
 	ld bc, $140
-	ld a, BANK(Unknown_41959)
+	ld a, BANK(GameFreakIntro)
 	call FarCopyData2
-	ld hl, Unknown_41959 ; $5959
+	ld hl, GameFreakIntro ; $5959
 	ld de, $8800
 	ld bc, $140
-	ld a, BANK(Unknown_41959)
+	ld a, BANK(GameFreakIntro)
 	call FarCopyData2
-	ld hl, Unknown_42099 ; $6099
+	ld hl, FightIntroFrontMon ; $6099
 	ld de, $8000
 	ld bc, $6c0
-	ld a, BANK(Unknown_42099)
+	ld a, BANK(FightIntroFrontMon)
 	jp FarCopyData2
 
 ; known jump sources: 41688 (10:5688)
@@ -70328,14 +70330,13 @@ INCBIN "baserom.gbc",$41947,$41950 - $41947
 Unknown_41950: ; 41950 (10:5950)
 INCBIN "baserom.gbc",$41950,$41959 - $41950
 
-Unknown_41959: ; 41959 (10:5959)
-INCBIN "baserom.gbc",$41959,$41a99 - $41959
+GameFreakIntro: ; 41959 (10:5959)
+INCBIN "gfx/gamefreak_intro.2bpp"
 
-Unknown_41a99: ; 41a99 (10:5a99)
-INCBIN "baserom.gbc",$41a99,$42099 - $41a99
+FightIntroBackMon: ; 41a99 (10:5a99)
+INCBIN "gfx/intro_fight.2bpp"
 
-Unknown_42099: ; 42099 (10:6099)
-INCBIN "baserom.gbc",$42099,$420d9 - $42099
+FightIntroFrontMon: ; 42099 (10:6099)
 
 IF _RED
 	INCBIN "gfx/red/introfight.2bpp"
@@ -71861,24 +71862,24 @@ Func_44fd7: ; 44fd7 (11:4fd7)
 
 Unknown_45023: ; 45023 (11:5023)
 ; 0x45023 XXX: it looks to me this is probably data for copying tiles into memory, maybe to mix and match a few tilesets, but I don't really know for sure
-	dw UnknownGFX_45087       ;address from within tileset graphics
+	dw SpinnerArrowAnimTiles       ;address from within tileset graphics
 	db 1                      ;number of tiles to copy?
-	db BANK(UnknownGFX_45087) ;bank of tileset graphics
+	db BANK(SpinnerArrowAnimTiles) ;bank of tileset graphics
 	dw $9200                  ;where to load in VRAM
 	
-	dw UnknownGFX_45087 + $10
+	dw SpinnerArrowAnimTiles + $10
 	db 1
-	db BANK(UnknownGFX_45087)
+	db BANK(SpinnerArrowAnimTiles)
 	dw $9210
 	
-	dw UnknownGFX_45087 + $20
+	dw SpinnerArrowAnimTiles + $20
 	db 1
-	db BANK(UnknownGFX_45087)
+	db BANK(SpinnerArrowAnimTiles)
 	dw $9300
 	
-	dw UnknownGFX_45087 + $30
+	dw SpinnerArrowAnimTiles + $30
 	db 1
-	db BANK(UnknownGFX_45087)
+	db BANK(SpinnerArrowAnimTiles)
 	dw $9310
 	
 	dw Tset16_GFX + $200
@@ -71902,24 +71903,24 @@ Unknown_45023: ; 45023 (11:5023)
 	dw $9310
 	
 Unknown_45053: ; 45053 (11:5053)
-	dw UnknownGFX_45087 + $10
+	dw SpinnerArrowAnimTiles + $10
 	db 1
-	db BANK(UnknownGFX_45087)
+	db BANK(SpinnerArrowAnimTiles)
 	dw $93C0
 	
-	dw UnknownGFX_45087 + $30
+	dw SpinnerArrowAnimTiles + $30
 	db 1
-	db BANK(UnknownGFX_45087)
+	db BANK(SpinnerArrowAnimTiles)
 	dw $93D0
 	
-	dw UnknownGFX_45087
+	dw SpinnerArrowAnimTiles
 	db 1
-	db BANK(UnknownGFX_45087)
+	db BANK(SpinnerArrowAnimTiles)
 	dw $94C0
 	
-	dw UnknownGFX_45087 + $20
+	dw SpinnerArrowAnimTiles + $20
 	db 1
-	db BANK(UnknownGFX_45087)
+	db BANK(SpinnerArrowAnimTiles)
 	dw $94D0
 	
 	dw Tset05_GFX + $3C0
@@ -71945,9 +71946,9 @@ Unknown_45053: ; 45053 (11:5053)
 Unknown_45083: ; 45083 (11:5083)
 INCBIN "baserom.gbc",$45083,$45087 - $45083
 
-; four tiles apparently forming a 2x2 diamond shaped pattern
-UnknownGFX_45087: ; 45087 (11:5087)
-INCBIN "baserom.gbc",$45087,$450c7 - $45087
+; these tiles are the animation for the tiles that push the player in dungeons like Rocket HQ
+SpinnerArrowAnimTiles: ; 45087 (11:5087)
+INCBIN "gfx/spinner_arrow.2bpp"
 
 RocketHideout2Texts: ; 450c7 (11:50c7)
 	dw RocketHideout2Text1, Predef5CText, Predef5CText, Predef5CText, Predef5CText
@@ -74700,8 +74701,6 @@ Route4HiddenObjects: ; 470a4 (11:70a4)
 	db $03,$28,GREAT_BALL
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
-
-INCBIN "baserom.gbc",$470ab,$48000 - $470ab
 
 SECTION "bank12",ROMX,BANK[$12]
 
@@ -88487,10 +88486,10 @@ DisplayDiploma: ; 566e2 (15:66e2)
 	ld hl, $d730
 	set 6, [hl]
 	call DisableLCD
-	ld hl, UnknownGFX_2fc28 + $160 ; $7d88 ; circle tile
+	ld hl, BlankLeaderNames + $160 ; $7d88 ; circle tile
 	ld de, $9700
 	ld bc, $0010
-	ld a, BANK(UnknownGFX_2fc28)
+	ld a, BANK(BlankLeaderNames)
 	call FarCopyData2
 	ld hl, W_SCREENTILESBUFFER
 	ld bc, $1012
@@ -100893,9 +100892,9 @@ Func_70000: ; 70000 (1c:4000)
 	ld hl, $8a10
 	ld bc, (BANK(AnimationTileset2) << 8) + $01
 	call CopyVideoData
-	ld de, Unknown_70190 ; $4190
+	ld de, FallingStar ; $4190
 	ld hl, $8a20
-	ld bc, (BANK(Unknown_70190) << 8) + $01
+	ld bc, (BANK(FallingStar) << 8) + $01
 	call CopyVideoData
 	ld hl, Unknown_70140 ; $4140
 	ld de, $c360
@@ -101049,8 +101048,8 @@ INCBIN "baserom.gbc",$70140,$70180 - $70140
 Unknown_70180: ; 70180 (1c:4180)
 INCBIN "baserom.gbc",$70180,$70190 - $70180
 
-Unknown_70190: ; 70190 (1c:4190)
-INCBIN "baserom.gbc",$70190,$701a0 - $70190
+FallingStar: ; 70190 (1c:4190)
+INCBIN "gfx/falling_star.2bpp"
 
 ; known jump sources: 74061 (1d:4061)
 Func_701a0: ; 701a0 (1c:41a0)
@@ -101372,9 +101371,9 @@ Func_70423: ; 70423 (1c:4423)
 
 ; known jump sources: 7027 (1:7027)
 Func_70433: ; 70433 (1c:4433)
-	ld de, Unknown_704b7 ; $44b7
+	ld de, PokeCenterHealBall ; $44b7
 	ld hl, $87c0
-	ld bc, (BANK(Unknown_704b7) << 8) + $03
+	ld bc, (BANK(PokeCenterHealBall) << 8) + $03
 	call CopyVideoData
 	ld hl, $cfcb
 	ld a, [hl]
@@ -101435,8 +101434,8 @@ Func_70433: ; 70433 (1c:4433)
 	ld [hl], a
 	jp UpdateSprites
 
-Unknown_704b7: ; 704b7 (1c:44b7)
-INCBIN "baserom.gbc",$704b7,$704d7 - $704b7
+PokeCenterHealBall: ; 704b7 (1c:44b7)
+INCBIN "gfx/pokecenter_ball.2bpp"
 
 Unknown_704d7: ; 704d7 (1c:44d7)
 INCBIN "baserom.gbc",$704d7,$704f3 - $704d7
@@ -102171,12 +102170,12 @@ INCBIN "baserom.gbc",$70a44,$70a4d - $70a44
 ; known jump sources: 709b3 (1c:49b3)
 Func_70a4d: ; 70a4d (1c:4a4d)
 	ld hl, $8ff0
-	ld de, Unknown_70a59 ; $4a59
-	ld bc, (BANK(Unknown_70a59) << 8) + $01
+	ld de, BattleTransitionTile ; $4a59
+	ld bc, (BANK(BattleTransitionTile) << 8) + $01
 	jp CopyVideoData
 
-Unknown_70a59: ; 70a59 (1c:4a59)
-INCBIN "baserom.gbc",$70a59,$70a69 - $70a59
+BattleTransitionTile: ; 70a59 (1c:4a59)
+INCBIN "gfx/battle_transition.2bpp"
 
 ; known jump sources: 70a9f (1c:4a9f), 70bc2 (1c:4bc2), 70c0a (1c:4c0a), 70ca7 (1c:4ca7), 70cd5 (1c:4cd5), 70d4d (1c:4d4d)
 Func_70a69: ; 70a69 (1c:4a69)
@@ -102722,8 +102721,8 @@ Func_70e3e: ; 70e3e (1c:4e3e)
 	ld bc, $10
 	call CopyData
 	ld hl, $8040
-	ld de, Unknown_70f40 ; $4f40
-	ld bc, (BANK(Unknown_70f40) << 8) + $04
+	ld de, TownMapCursor ; $4f40
+	ld bc, (BANK(TownMapCursor) << 8) + $04
 	call CopyVideoDataDouble
 	xor a
 	ld [W_WHICHTRADE], a ; $cd3d
@@ -102811,8 +102810,8 @@ asm_70e92: ; 70e92 (1c:4e92)
 Unknown_70f11: ; 70f11 (1c:4f11)
 INCBIN "baserom.gbc",$70f11,$70f40 - $70f11
 
-Unknown_70f40: ; 70f40 (1c:4f40)
-INCBIN "baserom.gbc",$70f40,$70f60 - $70f40
+TownMapCursor: ; 70f40 (1c:4f40)
+INCBIN "gfx/town_map_cursor.1bpp"
 
 ; known jump sources: 4010a (10:410a)
 Func_70f60: ; 70f60 (1c:4f60)
@@ -102851,9 +102850,9 @@ Func_70f90: ; 70f90 (1c:4f90)
 	ld hl, $8040
 	ld bc, (BANK(BirdSprite) << 8) + $0c
 	call CopyVideoData
-	ld de, Unknown_71093 ; $5093
+	ld de, TownMapUpArrow ; $5093
 	ld hl, $8ed0
-	ld bc, (BANK(Unknown_71093) << 8) + $01
+	ld bc, (BANK(TownMapUpArrow) << 8) + $01
 	call CopyVideoDataDouble
 	call Func_71070
 	ld hl, $cfcb
@@ -102988,8 +102987,8 @@ Func_71070: ; 71070 (1c:5070)
 	ld [hl], $ff
 	ret
 
-Unknown_71093: ; 71093 (1c:5093)
-INCBIN "baserom.gbc",$71093,$7109b - $71093
+TownMapUpArrow: ; 71093 (1c:5093)
+INCBIN "gfx/up_arrow.1bpp"
 
 ; known jump sources: 70e3e (1c:4e3e), 70f60 (1c:4f60), 70f93 (1c:4f93)
 Func_7109b: ; 7109b (1c:509b)
@@ -103044,7 +103043,7 @@ Func_7109b: ; 7109b (1c:509b)
 ; 71100 (1c:5100)
 CompressedMap: ; 71100 (1c:5100)
 ; you can decompress this file with the redrle program in the extras/ dir
-	INCBIN "baserom.gbc",$71100,$711AB-$71100
+	INCBIN "gfx/town_map.rle"
 
 ; known jump sources: 70eeb (1c:4eeb), 70f82 (1c:4f82)
 Func_711ab: ; 711ab (1c:51ab)
@@ -103843,7 +103842,8 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_SNAKE, SPRITE_MON				;Dragonite/Mewtwo
 	dn SPRITE_MON, 0						;Mew/Padding
 
-INCBIN "baserom.gbc",$71959,$71ad9 - $71959
+MonOverworldSprites:
+	INCBIN "gfx/mon_ow_sprites.2bpp"
 
 Predef54: ; 71ad9 (1c:5ad9)
 ; trigger the trade offer/action specified by W_WHICHTRADE
@@ -111357,10 +111357,10 @@ dw AnimationTileset1
 db $FF
 
 AnimationTileset1: ; 781fe (1e:41fe)
-INCBIN "baserom.gbc",$781fe,$786ee - $781fe
+INCBIN "gfx/attack_anim_1.2bpp"
 
 AnimationTileset2: ; 786ee (1e:46ee)
-INCBIN "baserom.gbc",$786ee,$78bde - $786ee
+INCBIN "gfx/attack_anim_2.2bpp"
 
 IF _RED
 	INCBIN "gfx/red/slotmachine2.2bpp"
@@ -113475,12 +113475,12 @@ Func_79fc0: ; 79fc0 (1e:5fc0)
 
 ; known jump sources: 79fc7 (1e:5fc7)
 Func_79fd4: ; 79fd4 (1e:5fd4)
-	ld de, Unknown_79fdd ; $5fdd
-	ld bc, (BANK(Unknown_79fdd) << 8) + $01
+	ld de, RedFishingTiles ; $5fdd
+	ld bc, (BANK(RedFishingTiles) << 8) + $01
 	jp CopyVideoData
 
-Unknown_79fdd: ; 79fdd (1e:5fdd)
-INCBIN "baserom.gbc",$79fdd,$7a07d - $79fdd
+RedFishingTiles: ; 79fdd (1e:5fdd)
+INCBIN "gfx/red_fishing.2bpp"
 
 Unknown_7a07d: ; 7a07d (1e:607d)
 INCBIN "baserom.gbc",$7a07d,$7a76d - $7a07d
