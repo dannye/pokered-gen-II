@@ -104050,7 +104050,7 @@ Func_71ddf: ; 71ddf (1c:5ddf)
 	jr c, .asm_71e64
 	ld a, $1
 .asm_71e64
-	call Func_72666
+	call Func_72696
 	push af
 	ld hl, $cf2e
 	ld a, [$cf25]
@@ -104070,7 +104070,7 @@ Func_71ddf: ; 71ddf (1c:5ddf)
 	ld bc, $10
 	call CopyData
 	ld a, [$cf91]
-	call Func_72666
+	call Func_72696
 	ld hl, $cf30
 	ld [hl], a
 	ld hl, $cf2d
@@ -104146,7 +104146,7 @@ INCBIN "baserom.gbc",$71e9f,$71ea6 - $71e9f
 	ld a, $1e
 	jr nz, .asm_71f31
 	ld a, [$cf1d]
-	call Func_72666
+	call Func_72696
 .asm_71f31
 	ld [$cf2e], a
 	ld hl, $cf2d
@@ -104788,74 +104788,6 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_DRAGONITE
 	db PAL_MEWTWO
 	db PAL_MEW
-
-DeterminePaletteIDFront: ; 72660 (1c:6660)
-	bit 3, a                 ; bit 3 of battle status 3 (unused?)
-	ld a, PAL_GREYMON
-	ret nz
-	ld a, [hl]
-Func_72666: ; 72666 (1c:6666)
-	ld [$D11E], a
-	and a
-	jr z, .idZero
-	push bc
-	ld a, $3A
-	call Predef               ; turn Pokemon ID number into Pokedex number
-	pop bc
-	ld a, [$D11E]
-.idZero
-	ld hl, MonsterPalettes
-	cp a, $00
-	jr nz, .getPalID
-	ld a, [$D031]
-	ld hl, TrainerPalettes
-.getPalID
-	ld e, a
-	ld d, $00
-
-	add hl, de
-	ld a, [hl]
-	ret	
-	
-DeterminePaletteIDBack: ; 72689 (1c:6689)
-	bit 3, a                 ; bit 3 of battle status 3 (unused?)
-	ld a, PAL_GREYMON
-	ret nz
-	ld a, [hl]
-Func_72689: ; 72689 (1c:6689)
-	ld [$D11E], a
-	and a
-	jr z, .idZero
-	push bc
-	ld a, $3A
-	call Predef               ; turn Pokemon ID number into Pokedex number
-	pop bc
-	ld a, [$D11E]
-.idZero
-	ld hl, MonsterPalettes
-	cp a, $00
-	jr nz, .getPalID
-	ld a, PAL_HERO
-	ret
-.getPalID
-	ld e, a
-	ld d, $00
-	add hl, de
-	ld a, [hl]
-	ret
-
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	
 TrainerPalettes: ; 726ba (1c:66ba)
 	db PAL_HERO
 	db PAL_YOUNGSTER
@@ -104905,19 +104837,81 @@ TrainerPalettes: ; 726ba (1c:66ba)
 	db PAL_CHANNELER
 	db PAL_AGATHA
 	db PAL_LANCE
-	
-PCBoxPal:
-	call TextBoxBorder
-SendDexPal:
-	ld hl, PCDexPalPacket
-	jp SendSGBPacket
-	
+
+DeterminePaletteIDFront: ; 72690 (1c:6690)
+	bit 3, a                 ; bit 3 of battle status 3 (unused?)
+	ld a, PAL_GREYMON
+	ret nz
+	ld a, [hl]
+Func_72696: ; 72696 (1c:6696)
+	ld [$D11E], a
+	and a
+	jr z, .idZero
+	push bc
+	ld a, $3A
+	call Predef               ; turn Pokemon ID number into Pokedex number
+	pop bc
+	ld a, [$D11E]
+.idZero
+	ld hl, MonsterPalettes
+	cp a, $00
+	jr nz, .getPalID
+	ld a, [$D031]
+	ld hl, TrainerPalettes
+.getPalID
+	ld e, a
+	ld d, $00
+
+	add hl, de
+	ld a, [hl]
+	ret	
+
+DeterminePaletteIDBack: ; 726B9 (1c:66B9)
+	bit 3, a                 ; bit 3 of battle status 3 (unused?)
+	ld a, PAL_GREYMON
+	ret nz
+	ld a, [hl]
+	ld [$D11E], a
+	and a
+	jr z, .idZero
+	push bc
+	ld a, $3A
+	call Predef               ; turn Pokemon ID number into Pokedex number
+	pop bc
+	ld a, [$D11E]
+.idZero
+	ld hl, MonsterPalettes
+	cp a, $00
+	jr nz, .getPalID
+	ld a, PAL_HERO
+	ret
+.getPalID
+	ld e, a
+	ld d, $00
+	add hl, de
+	ld a, [hl]
+	ret
+
+CopyPalTable:
+	jr nz,.yes
+	jp Func_72188 ; no
+.yes
+	ld a,BANK(SuperPalettes)
+	ld bc,$1000
+	jp FarCopyData
+
 LoadHoFPlayerBackSprite:
 	ld hl, W_TRAINERCLASS
 	ld [hl], $00
 	ld a, $66
 	ret
-	
+
+PCBoxPal:
+	call TextBoxBorder
+SendDexPal:
+	ld hl, PCDexPalPacket
+	jp SendSGBPacket
+
 SendIntroPal:
 	ld bc, $0010
 	ld de, $CF2D
@@ -104934,14 +104928,18 @@ SendIntroPal:
 
 PCDexPalPacket:
 db $51, $21
-	
-CopyPalTable
-	jr nz,.yes
-	jp Func_72188 ; no
-.yes
-	ld a,BANK(SuperPalettes)
-	ld bc,$1000
-	jp FarCopyData
+
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 	nop
 	nop
 	nop
