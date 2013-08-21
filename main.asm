@@ -78733,46 +78733,6 @@ SwimmerPic: ; 4d133 (13:5133)
 	INCBIN "pic/trainer/swimmer.pic"
 CueBallPic: ; 4d24f (13:524f)
 	INCBIN "pic/trainer/cueball.pic"
-	
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	
 GamblerPic: ; 4d421 (13:5421)
 	INCBIN "pic/trainer/gambler.pic"
 BeautyPic: ; 4d5df (13:55df)
@@ -78833,6 +78793,44 @@ AgathaPic: ; 4fa71 (13:7a71)
 LancePic: ; 4fba2 (13:7ba2)
 	INCBIN "pic/trainer/lance.pic"
 	
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 	nop
 	nop
 	nop
