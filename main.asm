@@ -46605,254 +46605,6 @@ RhyhornPicBack:
 	INCBIN "pic/monback/rhyhornb.pic"
 RhydonPicFront:
 	INCBIN "pic/bmon/rhydon.pic"
-	
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	
-FossilKabutopsPic:
-	INCBIN "pic/bmon/fossilkabutops.pic"
-FossilAerodactylPic:
-	INCBIN "pic/bmon/fossilaerodactyl.pic"
-GhostPic:
-	INCBIN "pic/other/ghost.pic"
-	nop
 RhydonPicBack:
 	INCBIN "pic/monback/rhydonb.pic"
 ChanseyPicFront:
@@ -46869,7 +46621,54 @@ KangaskhanPicBack:
 	INCBIN "pic/monback/kangaskhanb.pic"
 HorseaPicFront:
 	INCBIN "pic/bmon/horsea.pic"
+HorseaPicBack:
+	INCBIN "pic/monback/horseab.pic"
+FossilKabutopsPic:
+	INCBIN "pic/bmon/fossilkabutops.pic"
+FossilAerodactylPic:
+	INCBIN "pic/bmon/fossilaerodactyl.pic"
+GhostPic:
+	INCBIN "pic/other/ghost.pic"
 	
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 	nop
 	nop
 	nop
@@ -47255,9 +47054,6 @@ UnnamedText_37e83: ; 37e83 (d:7e83)
 ; 0x37e83 + 5 bytes
 
 	nop
-	
-HorseaPicBack:
-	INCBIN "pic/monback/horseab.pic"
 
 SECTION "bankE",ROMX,BANK[$E]
 
