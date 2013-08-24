@@ -55214,7 +55214,7 @@ Func_3a85d: ; 3a85d (e:685d)
 
 ; known jump sources: 3a84c (e:684c)
 Func_3a869: ; 3a869 (e:6869)
-	call Func_3a902
+	call PlayerPartyUpdated
 	ld hl, W_PARTYMON1_NUM ; $d16b (aliases: W_PARTYMON1DATA)
 	ld de, W_NUMINPARTY ; $d163
 	call Func_3a8a6
@@ -55320,6 +55320,7 @@ Func_3a8e1: ; 3a8e1 (e:68e1)
 ; known jump sources: 3a869 (e:6869), 3cd71 (f:4d71)
 Func_3a902: ; 3a902 (e:6902)
 	ld hl, Unknown_3a916 ; $6916
+PartyUpdateDone:
 	ld de, $cd3f
 	ld bc, $3
 	call CopyData
@@ -55339,13 +55340,14 @@ Func_3a919: ; 3a919 (e:6919)
 	call CopyData
 	FuncCoord 1, 2 ; $c3c9
 	ld hl, Coord
-	ld de, $1
+	jp EnemyHealthBarUpdated
 	jr asm_3a930
 
 Unknown_3a92d: ; 3a92d (e:692d)
 INCBIN "baserom.gbc",$3a92d,$3a930 - $3a92d
 asm_3a930: ; 3a930 (e:6930)
 	ld [hl], $73
+HealthBarUpdateDone:
 	ld bc, $14
 	add hl, bc
 	ld a, [$cd40]
@@ -58401,6 +58403,18 @@ BankswitchEtoF: ; 3bbe1 (e:7be1)
 	jp Bankswitch
 ; 0x3bbe6
 
+PlayerPartyUpdated:
+	ld hl, PartyTileMap
+	jp PartyUpdateDone
+	
+PartyTileMap:
+	db $73, $75, $6F
+
+EnemyHealthBarUpdated:
+	ld de, $0001
+	ld [hl], $72
+	jp HealthBarUpdateDone
+
 SECTION "bankF",ROMX,BANK[$F]
 
 ; These are move effects (second value from the Moves table in bank $E).
@@ -60270,7 +60284,9 @@ Func_3cd60: ; 3cd60 (f:4d60)
 	ld de, W_PLAYERMONNAME
 	FuncCoord 10, 7 ; $c436
 	ld hl, Coord
-	call Func_3ce9c
+	nop
+	nop
+	nop
 	call PlaceString
 	ld hl, W_PLAYERMONID
 	ld de, $cf98
@@ -60338,7 +60354,7 @@ Func_3cdec: ; 3cdec (f:4dec)
 	ld hl, Coord
 	call Func_3ce9c
 	call PlaceString
-	FuncCoord 4, 1 ; $c3b8
+	FuncCoord 6, 1 ; $c3b8
 	ld hl, Coord
 	push hl
 	inc hl
