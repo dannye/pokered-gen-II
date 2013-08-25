@@ -58411,8 +58411,33 @@ PartyTileMap:
 	db $73, $75, $6F
 
 EnemyHealthBarUpdated:
-	ld de, $0001
 	ld [hl], $72
+	ld a, [W_ISINBATTLE]
+	dec a
+	jr  nz, .noBattle
+	push hl
+	ld a, [$CFE5]
+	ld [$D11E], a
+	ld hl, IndexToPokedex
+	ld b, BANK(IndexToPokedex)
+	call Bankswitch
+	ld a, [$D11E]
+	dec a
+	ld c, a
+	ld a, $10
+	ld b, $2
+	ld hl, W_OWNEDPOKEMON
+	call Predef
+	ld a, c
+	and a
+	jr z, .notOwned
+	FuncCoord 1, 1
+	ld hl, Coord
+	ld [hl], $E9
+.notOwned
+	pop hl
+.noBattle
+	ld de, $0001
 	jp HealthBarUpdateDone
 
 SECTION "bankF",ROMX,BANK[$F]
