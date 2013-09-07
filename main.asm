@@ -105666,7 +105666,7 @@ SendDexPal:
 SendIntroPal:
 	ld bc, $0010
 	ld de, $CF2D
-	ld hl, Unknown_72428
+	ld hl, PalPacket_72428
 	call CopyData
 	pop bc
 	pop de
