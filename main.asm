@@ -105594,24 +105594,10 @@ DeterminePaletteIDFront: ; 72690 (1c:6690)
 Func_72696: ; 72696 (1c:6696)
 	ld [$D11E], a
 	and a
-	jr z, .idZero
-	push bc
-	ld a, $3A
-	call Predef               ; turn Pokemon ID number into Pokedex number
-	pop bc
-	ld a, [$D11E]
-.idZero
-	ld hl, MonsterPalettes
-	cp a, $00
-	jr nz, .getPalID
 	ld a, [$D031]
 	ld hl, TrainerPalettes
-.getPalID
-	ld e, a
-	ld d, $00
-	add hl, de
-	ld a, [hl]
-	ret	
+	jr z, GetTrainerPalID
+	jr GetMonPalID
 
 DeterminePaletteIDBack: ; 726B9 (1c:66B9)
 	bit 3, a                 ; bit 3 of battle status 3 (unused?)
@@ -105620,19 +105606,16 @@ DeterminePaletteIDBack: ; 726B9 (1c:66B9)
 	ld a, [hl]
 	ld [$D11E], a
 	and a
-	jr z, .idZero
+	ld a, PAL_HERO
+	ret z
+GetMonPalID
 	push bc
 	ld a, $3A
 	call Predef               ; turn Pokemon ID number into Pokedex number
 	pop bc
 	ld a, [$D11E]
-.idZero
 	ld hl, MonsterPalettes
-	cp a, $00
-	jr nz, .getPalID
-	ld a, PAL_HERO
-	ret
-.getPalID
+GetTrainerPalID
 	ld e, a
 	ld d, $00
 	add hl, de
@@ -105679,6 +105662,33 @@ CopyPalPacket:
 	ld de, $CF2D
 	jp CopyData
 
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
 	nop
 	nop
 	nop
