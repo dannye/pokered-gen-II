@@ -105609,7 +105609,6 @@ Func_72696: ; 72696 (1c:6696)
 .getPalID
 	ld e, a
 	ld d, $00
-
 	add hl, de
 	ld a, [hl]
 	ret	
@@ -105659,7 +105658,7 @@ PCBoxPal:
 SendDexPal:
 	ld hl, PalPacket_72428
 	call CopyPalPacket
-	ld a, $21
+	ld a, PAL_REDBAR
 	jr SetPalID
 
 SendIntroPal:
@@ -131833,7 +131832,7 @@ SECTION "bank2F",ROMX,BANK[$2F]
 	
 	; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
-		RGB 31, 31, 31
+	RGB 31, 31, 31
 	RGB 22, 25, 19
 	RGB 16, 21, 30
 	RGB 00, 00, 00
