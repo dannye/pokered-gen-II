@@ -62153,9 +62153,13 @@ EnemyHealthBarUpdated:
 	jp HealthBarUpdateDone
 
 SaveMonIDs:
-	ld a, [W_ENEMYMONID]
-	ld [$dee3], a
 	ld hl, W_PLAYERMONID
+	ld a, [H_WHOSETURN]
+	and a
+	ret nz
+	ld a, [W_PLAYERBATTSTATUS3]
+	bit 3, a
+	ret nz
 	ld a, [hl]
 	ld [$dee2], a
 	ret
@@ -109663,9 +109667,6 @@ TrainerPalettes: ; 726ba (1c:66ba)
 	db PAL_LANCE
 
 DeterminePaletteIDFront:
-	bit 3, a                 ; bit 3 of battle status 3 (unused?)
-	ld a, [$dee3]
-	jr nz, Func_72696
 	ld a, [hl]
 Func_72696:
 	ld [$D11E], a
