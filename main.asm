@@ -61923,7 +61923,7 @@ UnnamedText_3baac: ; 3baac (e:7aac)
 	db "@"
 
 Func_3bab1: ; 3bab1 (e:7ab1)
-	ld hl, W_PLAYERMONID
+	call SaveMonIDs
 	ld de, $cfe5
 	ld bc, W_ENEMYBATTSTATUS3 ; $d069
 	ld a, [W_ENEMYBATTSTATUS1] ; $d067
@@ -62143,6 +62143,14 @@ EnemyHealthBarUpdated:
 .noBattle
 	ld de, $0001
 	jp HealthBarUpdateDone
+
+SaveMonIDs:
+	ld a, [W_ENEMYMONID]
+	ld [$dee3], a
+	ld hl, W_PLAYERMONID
+	ld a, [hl]
+	ld [$dee2], a
+	ret
 
 SECTION "bankF",ROMX,BANK[$F]
 
@@ -109646,12 +109654,12 @@ TrainerPalettes: ; 726ba (1c:66ba)
 	db PAL_AGATHA
 	db PAL_LANCE
 
-DeterminePaletteIDFront: ; 72690 (1c:6690)
+DeterminePaletteIDFront:
 	bit 3, a                 ; bit 3 of battle status 3 (unused?)
-	ld a, PAL_GREYMON
-	ret nz
+	ld a, [$dee3]
+	jr nz, Func_72696
 	ld a, [hl]
-Func_72696: ; 72696 (1c:6696)
+Func_72696:
 	ld [$D11E], a
 	and a
 	ld a, [$D031]
@@ -109659,23 +109667,24 @@ Func_72696: ; 72696 (1c:6696)
 	jr z, GetTrainerPalID
 	jr GetMonPalID
 
-DeterminePaletteIDBack: ; 726B9 (1c:66B9)
+DeterminePaletteIDBack:
 	bit 3, a                 ; bit 3 of battle status 3 (unused?)
-	ld a, PAL_GREYMON
-	ret nz
+	ld a, [$dee2]
+	jr nz, .skip
 	ld a, [hl]
+.skip
 	ld [$D11E], a
 	and a
 	ld a, PAL_HERO
 	ret z
-GetMonPalID
+GetMonPalID:
 	push bc
 	ld a, $3A
 	call Predef               ; turn Pokemon ID number into Pokedex number
 	pop bc
 	ld a, [$D11E]
 	ld hl, MonsterPalettes
-GetTrainerPalID
+GetTrainerPalID:
 	ld e, a
 	ld d, $00
 	add hl, de
@@ -109712,7 +109721,7 @@ SendIntroPal:
 	pop af
 	push de
 	push bc
-SetPalID
+SetPalID:
 	ld hl, $CF2E
 	ld [hld], a
 	jp SendSGBPacket
@@ -109722,7 +109731,7 @@ CopyPalPacket:
 	ld de, $CF2D
 	jp CopyData
 
-	ds $87
+	ds $83
 
 BorderPalettes: ; 72788 (1c:6788)
 IF _RED
