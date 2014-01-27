@@ -61931,7 +61931,7 @@ UnnamedText_3baac: ; 3baac (e:7aac)
 	db "@"
 
 Func_3bab1: ; 3bab1 (e:7ab1)
-	call SaveMonIDs
+	ld hl, W_PLAYERMONID
 	ld de, $cfe5
 	ld bc, W_ENEMYBATTSTATUS3 ; $d069
 	ld a, [W_ENEMYBATTSTATUS1] ; $d067
@@ -62151,18 +62151,6 @@ EnemyHealthBarUpdated:
 .noBattle
 	ld de, $0001
 	jp HealthBarUpdateDone
-
-SaveMonIDs:
-	ld hl, W_PLAYERMONID
-	ld a, [H_WHOSETURN]
-	and a
-	ret nz
-	ld a, [W_PLAYERBATTSTATUS3]
-	bit 3, a
-	ret nz
-	ld a, [hl]
-	ld [$dee2], a
-	ret
 
 SECTION "bankF",ROMX,BANK[$F]
 
@@ -109677,11 +109665,14 @@ Func_72696:
 	jr GetMonPalID
 
 DeterminePaletteIDBack:
-	bit 3, a                 ; bit 3 of battle status 3 (unused?)
-	ld a, [$dee2]
-	jr nz, .skip
-	ld a, [hl]
+	bit 3, a
+	jr z, .skip
+	ld hl, W_PARTYMON1DATA
+	ld a, [wPlayerMonNumber]
+	ld bc, $2c
+	call AddNTimes
 .skip
+	ld a, [hl]
 	ld [$D11E], a
 	and a
 	ld a, PAL_HERO
@@ -109740,7 +109731,7 @@ CopyPalPacket:
 	ld de, $CF2D
 	jp CopyData
 
-	ds $83
+	ds $7a
 
 BorderPalettes: ; 72788 (1c:6788)
 IF _RED
