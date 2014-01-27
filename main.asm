@@ -8947,20 +8947,15 @@ LoadTextBoxTilePatterns: ; 36a0 (0:36a0)
 
 ; copies HP bar and status display tile patterns into VRAM
 LoadHpBarAndStatusTilePatterns: ; 36c0 (0:36c0)
-	ld a,[rLCDC]
-	bit 7,a ; is the LCD enabled?
-	jr nz,.lcdEnabled
-.lcdDisabled
-	ld hl,HpBarAndStatusGraphics
-	ld de,$9620
-	ld bc,$01e0
-	ld a,BANK(HpBarAndStatusGraphics)
-	jp FarCopyData2 ; if LCD is off, transfer all at once
-.lcdEnabled
 	ld de,HpBarAndStatusGraphics
 	ld hl,$9620
 	ld bc,(BANK(HpBarAndStatusGraphics) << 8 | $1e)
-	jp CopyVideoData ; if LCD is on, transfer during V-blank
+	call GoodCopyVideoData
+	ld de,EXPBarGraphics
+	ld hl,$8c00
+	ld bc,(BANK(EXPBarGraphics) << 8 | $9)
+	jp GoodCopyVideoData
+	ds $8
 
 ;Fills memory range with the specified byte.
 ;input registers a = fill_byte, bc = length, hl = address
@@ -10610,6 +10605,25 @@ PointerTable_3f22: ; 3f22 (0:3f22)
 	dw BookOrSculptureText                  ; id = 40
 	dw ElevatorText                         ; id = 41
 	dw PokemonStuffText                     ; id = 42
+
+GoodCopyVideoData:
+	ld a,[rLCDC]
+	bit 7,a ; is the LCD enabled?
+	jp nz, CopyVideoData ; if LCD is on, transfer during V-blank
+	ld a, b
+	push hl
+	push de
+	ld h, 0
+	ld l, c
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	add hl, hl
+	ld b, h
+	ld c, l
+	pop hl
+	pop de
+	jp FarCopyData2 ; if LCD is off, transfer all at once
 
 SECTION "bank1",ROMX,Bank[$1]
 
@@ -34257,6 +34271,9 @@ GenRandom_: ; 13a8f (4:7a8f)
 	sbc b
 	ld [H_RAND2],a
 	ret
+
+EXPBarGraphics:
+	INCBIN "gfx/exp_bar.2bpp"
 
 SECTION "bank5",ROMX,BANK[$5]
 
@@ -62685,10 +62702,8 @@ Func_3cd60: ; 3cd60 (f:4d60)
 	ld de, W_PLAYERMONNAME
 	FuncCoord 10, 7 ; $c436
 	ld hl, Coord
-	nop
-	nop
-	nop
 	call PlaceString
+	call PrintEXPBar
 	ld hl, W_PLAYERMONID
 	ld de, $cf98
 	ld bc, $c
@@ -69493,6 +69508,176 @@ LoadBackSpriteUnzoomed:
 	ld de, $9310
 	push de
 	jp LoadUncompressedBackSprite
+
+PrintEXPBar:
+	call CalcEXPBarPixelLength
+	ld a, [$ff98] ; pixel length
+	ld [$dee2], a
+	ld b, a
+	ld c, $08
+	FuncCoord 17,11
+	ld hl, Coord
+.loop
+	ld a, b
+	sub c
+	jr nc, .skip
+	ld c, b
+	jr .loop
+.skip
+	ld b, a 
+	ld a, $c0
+	add c
+.loop2
+	ld [hld], a
+	ld a, l
+	cp $85
+	ret z
+	ld a, b
+	and a
+	jr nz, .loop
+	ld a, $c0
+	jr .loop2
+
+CalcEXPBarPixelLength:
+	ld a, [$deec]
+	and a
+	jr z, .start
+	dec a
+	ld [$deec], a
+	ld a, $40
+	ld [$ff98], a
+	ret
+	
+.start
+	; get the base exp needed for the current level
+	ld a, [W_PLAYERMONID]
+	ld [$d0b5], a
+	call GetMonHeader
+	ld a, [W_PLAYERMONLEVEL]
+	ld d, a
+	ld hl, CalcExperience
+	ld b, BANK(CalcExperience)
+	call Bankswitch
+	ld a, [$FF00+$96]
+	ld [$dee3], a
+	ld a, [$FF00+$97]
+	ld [$dee4], a
+	ld a, [$FF00+$98]
+	ld [$dee5], a
+	
+	; get the exp needed to gain a level
+	ld a, [W_PLAYERMONLEVEL]
+	ld d, a
+	inc d
+	ld hl, CalcExperience
+	ld b, BANK(CalcExperience)
+	call Bankswitch
+	
+	; get the address of the active Pokemon's current experience in hl
+	ld hl, W_PARTYMON1DATA
+	ld a, [wPlayerMonNumber]
+	ld bc, $2c
+	call AddNTimes
+	ld bc, $0e
+	add hl, bc
+	
+	; current exp - base exp
+	ld a, [$dee3]
+	ld b, a
+	ld a, [hli]
+	sub b
+	ld [$dee6], a
+	ld a, [$dee4]
+	ld b, a
+	ld a, [hli]
+	sub b
+	ld [$dee7], a
+	jr nc, .noCarry1
+	ld a, [$dee6]
+	dec a
+	ld [$dee6], a
+.noCarry1
+	ld a, [$dee5]
+	ld b, a
+	ld a, [hl]
+	sub b
+	ld [$dee8], a
+	jr nc, .noCarry2
+	ld a, [$dee7]
+	dec a
+	ld [$dee7], a
+.noCarry2
+	
+	; exp needed - base exp
+	ld a, [$dee3]
+	ld b, a
+	ld a, [$ff96]
+	sub b
+	ld [$dee9], a
+	ld a, [$dee4]
+	ld b, a
+	ld a, [$ff97]
+	sub b
+	ld [$deea], a
+	jr nc, .noCarry3
+	ld a, [$dee9]
+	dec a
+	ld [$dee9], a
+.noCarry3
+	ld a, [$dee5]
+	ld b, a
+	ld a, [$ff98]
+	sub b
+	ld [$deeb], a
+	jr nc, .noCarry4
+	ld a, [$deea]
+	dec a
+	ld [$deea], a
+.noCarry4
+	
+	; make the divisor an 8-bit number
+	ld a, [$dee9]
+	and a
+	jr z, .twoBytes
+	ld a, [$deea]
+	ld [$deeb], a
+	ld a, [$dee9]
+	ld [$deea], a
+	ld a, [$dee7]
+	ld [$dee8], a
+	ld a, [$dee6]
+	ld [$dee7], a
+	xor a
+	ld [$dee9], a
+	ld [$dee6], a
+.twoBytes
+	ld a, [$deea]
+	and a
+	jr z, .oneByte
+	ld [$deeb], a
+	ld a, [$dee7]
+	ld [$dee8], a
+	xor a
+	ld [$deea], a
+	ld [$dee7], a
+.oneByte
+	
+	; current exp * (8 tiles * 8 pixels)
+	ld a, [$dee6]
+	ld [$ff96], a
+	ld a, [$dee7]
+	ld [$ff97], a
+	ld a, [$dee8]
+	ld [$ff98], a
+	ld a, $40
+	ld [$ff99], a
+	call Multiply
+	
+	; product / needed exp = pixel length
+	ld a, [$deeb]
+	ld [$ff99], a
+	ld b, $04
+	jp Divide
 
 SECTION "bank10",ROMX,BANK[$10]
 
@@ -87266,7 +87451,7 @@ Func_5525f: ; 5525f (15:525f)
 	call PrintText
 	xor a
 	ld [$cc49], a
-	call LoadMonData
+	call AnimateEXPBar
 	pop hl
 	ld bc, $13
 	add hl, bc
@@ -87367,7 +87552,7 @@ Func_5525f: ; 5525f (15:525f)
 	call PrintText
 	xor a
 	ld [$cc49], a
-	call LoadMonData
+	call AnimateEXPBarAgain
 	ld d, $1
 	ld hl, PrintStatsBox
 	ld b, BANK(PrintStatsBox)
@@ -90931,6 +91116,66 @@ CheckPlayerIsInFrontOfSprite: ; 569e3 (15:69e3)
 .done
 	ld [wTrainerSpriteOffset], a ; $cd3d
 	ret
+
+AnimateEXPBarAgain:
+	xor a
+	ld [$dee2], a
+	FuncCoord 17,11
+	ld hl, Coord
+	ld a, $c0
+	ld c, $08
+.loop
+	ld [hld], a
+	dec c
+	jr nz, .loop
+AnimateEXPBar:
+	call LoadMonData
+	ld a, [wPlayerMonNumber]
+	ld b, a
+	ld a, [wWhichPokemon]
+	cp b
+	ret nz
+	ld a, $8d
+	call PlaySoundWaitForCurrent
+	ld hl, CalcEXPBarPixelLength
+	ld b, BANK(CalcEXPBarPixelLength)
+	call Bankswitch
+	ld a, [$dee2]
+	ld b, a
+	ld a, [$ff98]
+	sub b
+	and a
+	jr z, .done
+	ld b, a
+	FuncCoord 17,11
+	ld hl, Coord
+.loop1
+	ld a, [hl]
+	cp $c8
+	jr nz, .loop2
+	dec hl
+	jr .loop1
+.loop2
+	inc a
+	ld [hl], a
+	call Delay3
+	dec b
+	jr z, .done
+	ld a, [hl]
+	cp $c8
+	jr nz, .loop2
+	dec hl
+	ld a, l
+	cp $85
+	ld a, [hl]
+	jr nz, .loop2
+	xor a
+	ld [$dee2], a
+	inc a
+	ld [$deec], a
+.done
+	ld c, $20
+	jp DelayFrames
 
 SECTION "bank16",ROMX,BANK[$16]
 
