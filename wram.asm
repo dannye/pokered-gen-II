@@ -1454,4 +1454,19 @@ W_BOXMON1NAME: ; de06
 W_BOXMON2NAME: ; de11
 	ds 11 * 19
 
-; dee2
+wEXPBarPixelLength: ; dee2
+	ds 1
+
+wEXPBarBaseEXP: ; dee3
+	ds 3
+
+wEXPBarCurEXP: ; dee6
+	ds 3
+
+wEXPBarNeededEXP: ; dee9
+	ds 3
+
+wEXPBarKeepFullFlag: ; deec
+	ds 1
+
+; deed

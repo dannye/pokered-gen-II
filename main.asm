@@ -69511,8 +69511,8 @@ LoadBackSpriteUnzoomed:
 
 PrintEXPBar:
 	call CalcEXPBarPixelLength
-	ld a, [$ff98] ; pixel length
-	ld [$dee2], a
+	ld a, [H_QUOTIENT + 3] ; pixel length
+	ld [wEXPBarPixelLength], a
 	ld b, a
 	ld c, $08
 	FuncCoord 17,11
@@ -69539,13 +69539,12 @@ PrintEXPBar:
 	jr .loop2
 
 CalcEXPBarPixelLength:
-	ld a, [$deec]
-	and a
+	ld hl, wEXPBarKeepFullFlag
+	bit 0, [hl]
 	jr z, .start
-	dec a
-	ld [$deec], a
+	res 0, [hl]
 	ld a, $40
-	ld [$ff98], a
+	ld [H_QUOTIENT + 3], a
 	ret
 	
 .start
@@ -69558,12 +69557,16 @@ CalcEXPBarPixelLength:
 	ld hl, CalcExperience
 	ld b, BANK(CalcExperience)
 	call Bankswitch
-	ld a, [$FF00+$96]
-	ld [$dee3], a
-	ld a, [$FF00+$97]
-	ld [$dee4], a
-	ld a, [$FF00+$98]
-	ld [$dee5], a
+	ld hl, H_MULTIPLICAND
+	ld de, wEXPBarBaseEXP
+	ld a, [hli]
+	ld [de], a
+	inc de
+	ld a, [hli]
+	ld [de], a
+	inc de
+	ld a, [hl]
+	ld [de], a
 	
 	; get the exp needed to gain a level
 	ld a, [W_PLAYERMONLEVEL]
@@ -69573,111 +69576,118 @@ CalcEXPBarPixelLength:
 	ld b, BANK(CalcExperience)
 	call Bankswitch
 	
-	; get the address of the active Pokemon's current experience in hl
-	ld hl, W_PARTYMON1DATA
-	ld a, [wPlayerMonNumber]
-	ld bc, $2c
-	call AddNTimes
-	ld bc, $0e
-	add hl, bc
+	; get the address of the active Pokemon's current experience
+	ld bc, W_PARTYMON1_EXP - W_PARTYMON1DATA
+	call BattleMonPartyAttr
 	
 	; current exp - base exp
-	ld a, [$dee3]
-	ld b, a
-	ld a, [hli]
-	sub b
-	ld [$dee6], a
-	ld a, [$dee4]
-	ld b, a
-	ld a, [hli]
-	sub b
-	ld [$dee7], a
-	jr nc, .noCarry1
-	ld a, [$dee6]
-	dec a
-	ld [$dee6], a
-.noCarry1
-	ld a, [$dee5]
-	ld b, a
-	ld a, [hl]
-	sub b
-	ld [$dee8], a
-	jr nc, .noCarry2
-	ld a, [$dee7]
-	dec a
-	ld [$dee7], a
-.noCarry2
+	ld b, h
+	ld c, l
+	ld hl, wEXPBarBaseEXP
+	ld de, wEXPBarCurEXP
+	call SubThreeByteNum
 	
 	; exp needed - base exp
-	ld a, [$dee3]
-	ld b, a
-	ld a, [$ff96]
-	sub b
-	ld [$dee9], a
-	ld a, [$dee4]
-	ld b, a
-	ld a, [$ff97]
-	sub b
-	ld [$deea], a
-	jr nc, .noCarry3
-	ld a, [$dee9]
-	dec a
-	ld [$dee9], a
-.noCarry3
-	ld a, [$dee5]
-	ld b, a
-	ld a, [$ff98]
-	sub b
-	ld [$deeb], a
-	jr nc, .noCarry4
-	ld a, [$deea]
-	dec a
-	ld [$deea], a
-.noCarry4
+	ld bc, H_MULTIPLICAND
+	ld hl, wEXPBarBaseEXP
+	ld de, wEXPBarNeededEXP
+	call SubThreeByteNum
 	
 	; make the divisor an 8-bit number
-	ld a, [$dee9]
+	ld hl, wEXPBarNeededEXP
+	ld de, wEXPBarCurEXP + 1
+	ld a, [hli]
 	and a
 	jr z, .twoBytes
-	ld a, [$deea]
-	ld [$deeb], a
-	ld a, [$dee9]
-	ld [$deea], a
-	ld a, [$dee7]
-	ld [$dee8], a
-	ld a, [$dee6]
-	ld [$dee7], a
+	ld a, [hli]
+	ld [hld], a
+	dec hl
+	ld a, [hli]
+	ld [hld], a
+	ld a, [de]
+	inc de
+	ld [de], a
+	dec de
+	dec de
+	ld a, [de]
+	inc de
+	ld [de], a
+	dec de
 	xor a
-	ld [$dee9], a
-	ld [$dee6], a
+	ld [hli], a
+	ld [de], a
+	inc de
 .twoBytes
-	ld a, [$deea]
+	ld a, [hl]
 	and a
 	jr z, .oneByte
-	ld [$deeb], a
-	ld a, [$dee7]
-	ld [$dee8], a
-	xor a
-	ld [$deea], a
-	ld [$dee7], a
+	srl a
+	ld [hli], a
+	ld a, [hl]
+	rr a
+	ld [hld], a
+	ld a, [de]
+	srl a
+	ld [de], a
+	inc de
+	ld a, [de]
+	rr a
+	ld [de], a
+	dec de
+	jr .twoBytes
 .oneByte
 	
 	; current exp * (8 tiles * 8 pixels)
-	ld a, [$dee6]
-	ld [$ff96], a
-	ld a, [$dee7]
-	ld [$ff97], a
-	ld a, [$dee8]
-	ld [$ff98], a
+	ld hl, H_MULTIPLICAND
+	ld de, wEXPBarCurEXP
+	ld a, [de]
+	inc de
+	ld [hli], a
+	ld a, [de]
+	inc de
+	ld [hli], a
+	ld a, [de]
+	ld [hl], a
 	ld a, $40
-	ld [$ff99], a
+	ld [H_MULTIPLIER], a
 	call Multiply
 	
 	; product / needed exp = pixel length
-	ld a, [$deeb]
-	ld [$ff99], a
+	ld a, [wEXPBarNeededEXP + 2]
+	ld [H_DIVISOR], a
 	ld b, $04
 	jp Divide
+
+; calculates the three byte number starting at [bc]
+; minus the three byte number starting at [hl]
+; and stores it into the three bytes starting at [de]
+; assumes that [hl] is smaller than [bc]
+SubThreeByteNum:
+	call .subByte
+	call .subByte
+.subByte
+	ld a, [bc]
+	inc bc
+	sub [hl]
+	inc hl
+	ld [de], a
+	jr nc, .noCarry
+	dec de
+	ld a, [de]
+	dec a
+	ld [de], a
+	inc de
+.noCarry
+	inc de
+	ret
+
+; return the address of the BattleMon's party struct attribute at bc in hl
+BattleMonPartyAttr:
+	ld hl, W_PARTYMON1DATA
+	add hl, bc
+	ld a, [wPlayerMonNumber]
+	ld bc, W_PARTYMON2DATA - W_PARTYMON1DATA
+	jp AddNTimes
 
 SECTION "bank10",ROMX,BANK[$10]
 
@@ -87463,7 +87473,7 @@ Func_5525f: ; 5525f (15:525f)
 	ld a, [hl]
 	cp d
 	jp z, Func_55436
-	ld a, [W_CURENEMYLVL] ; $d127
+	call KeepEXPBarFull
 	push af
 	push hl
 	ld a, d
@@ -91118,8 +91128,10 @@ CheckPlayerIsInFrontOfSprite: ; 569e3 (15:69e3)
 	ret
 
 AnimateEXPBarAgain:
+	call IsCurrentMonBattleMon
+	ret nz
 	xor a
-	ld [$dee2], a
+	ld [wEXPBarPixelLength], a
 	FuncCoord 17,11
 	ld hl, Coord
 	ld a, $c0
@@ -91130,19 +91142,16 @@ AnimateEXPBarAgain:
 	jr nz, .loop
 AnimateEXPBar:
 	call LoadMonData
-	ld a, [wPlayerMonNumber]
-	ld b, a
-	ld a, [wWhichPokemon]
-	cp b
+	call IsCurrentMonBattleMon
 	ret nz
-	ld a, $8d
+	ld a, (SFX_08_3d - $4000) / 3
 	call PlaySoundWaitForCurrent
 	ld hl, CalcEXPBarPixelLength
 	ld b, BANK(CalcEXPBarPixelLength)
 	call Bankswitch
-	ld a, [$dee2]
+	ld a, [wEXPBarPixelLength]
 	ld b, a
-	ld a, [$ff98]
+	ld a, [H_QUOTIENT + 3]
 	sub b
 	and a
 	jr z, .done
@@ -91158,7 +91167,7 @@ AnimateEXPBar:
 .loop2
 	inc a
 	ld [hl], a
-	call Delay3
+	call DelayFrame
 	dec b
 	jr z, .done
 	ld a, [hl]
@@ -91169,13 +91178,30 @@ AnimateEXPBar:
 	cp $85
 	ld a, [hl]
 	jr nz, .loop2
-	xor a
-	ld [$dee2], a
-	inc a
-	ld [$deec], a
 .done
+	ld bc, $08
+	FuncCoord 10,11
+	ld hl, Coord
+	ld de, $c5ee
+	call CopyData
 	ld c, $20
 	jp DelayFrames
+
+KeepEXPBarFull:
+	call IsCurrentMonBattleMon
+	ret nz
+	ld a, [wEXPBarKeepFullFlag]
+	set 0, a
+	ld [wEXPBarKeepFullFlag], a
+	ld a, [W_CURENEMYLVL] ; $d127
+	ret
+
+IsCurrentMonBattleMon:
+	ld a, [wPlayerMonNumber]
+	ld b, a
+	ld a, [wWhichPokemon]
+	cp b
+	ret
 
 SECTION "bank16",ROMX,BANK[$16]
 
