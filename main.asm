@@ -69515,6 +69515,7 @@ PrintEXPBar:
 	ld [wEXPBarPixelLength], a
 	ld b, a
 	ld c, $08
+	ld d, $08
 	FuncCoord 17,11
 	ld hl, Coord
 .loop
@@ -69529,8 +69530,7 @@ PrintEXPBar:
 	add c
 .loop2
 	ld [hld], a
-	ld a, l
-	cp $85
+	dec d
 	ret z
 	ld a, b
 	and a
@@ -69577,7 +69577,7 @@ CalcEXPBarPixelLength:
 	call Bankswitch
 	
 	; get the address of the active Pokemon's current experience
-	ld bc, W_PARTYMON1_EXP - W_PARTYMON1DATA
+	ld hl, W_PARTYMON1_EXP
 	call BattleMonPartyAttr
 	
 	; current exp - base exp
@@ -69681,10 +69681,8 @@ SubThreeByteNum:
 	inc de
 	ret
 
-; return the address of the BattleMon's party struct attribute at bc in hl
+; return the address of the BattleMon's party struct attribute in hl
 BattleMonPartyAttr:
-	ld hl, W_PARTYMON1DATA
-	add hl, bc
 	ld a, [wPlayerMonNumber]
 	ld bc, W_PARTYMON2DATA - W_PARTYMON1DATA
 	jp AddNTimes
@@ -91156,6 +91154,7 @@ AnimateEXPBar:
 	and a
 	jr z, .done
 	ld b, a
+	ld c, $08
 	FuncCoord 17,11
 	ld hl, Coord
 .loop1
@@ -91163,6 +91162,8 @@ AnimateEXPBar:
 	cp $c8
 	jr nz, .loop2
 	dec hl
+	dec c
+	jr z, .done
 	jr .loop1
 .loop2
 	inc a
@@ -91174,8 +91175,7 @@ AnimateEXPBar:
 	cp $c8
 	jr nz, .loop2
 	dec hl
-	ld a, l
-	cp $85
+	dec c
 	ld a, [hl]
 	jr nz, .loop2
 .done
