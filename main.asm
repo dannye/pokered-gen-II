@@ -91126,6 +91126,7 @@ CheckPlayerIsInFrontOfSprite: ; 569e3 (15:69e3)
 	ret
 
 AnimateEXPBarAgain:
+	call LoadMonData
 	call IsCurrentMonBattleMon
 	ret nz
 	xor a
@@ -91151,7 +91152,6 @@ AnimateEXPBar:
 	ld b, a
 	ld a, [H_QUOTIENT + 3]
 	sub b
-	and a
 	jr z, .done
 	ld b, a
 	ld c, $08
@@ -91171,13 +91171,7 @@ AnimateEXPBar:
 	call DelayFrame
 	dec b
 	jr z, .done
-	ld a, [hl]
-	cp $c8
-	jr nz, .loop2
-	dec hl
-	dec c
-	ld a, [hl]
-	jr nz, .loop2
+	jr .loop1
 .done
 	ld bc, $08
 	FuncCoord 10,11
