@@ -107220,7 +107220,7 @@ Func_7202b: ; 7202b (1c:602b)
 	di
 	call Func_72075
 	ei
-	ld a, $1
+	ld a, $2
 	ld [$cf2d], a
 	ld de, PalPacket_72508
 	ld hl, SGBBorderGraphics
@@ -107230,7 +107230,7 @@ Func_7202b: ; 7202b (1c:602b)
 	ld de, PalPacket_72518
 	ld hl, BorderPalettes
 	call Func_7210b
-	xor a
+	inc a
 	ld [$cf2d], a
 	ld de, PalPacket_724d8
 	ld hl, SuperPalettes
@@ -107331,8 +107331,8 @@ Func_7210b: ; 7210b (1c:610b)
 	ld [rBGP], a ; $FF00+$47
 	ld de, $8800
 	ld a, [$cf2d]
-	dec a
-	jr c, .asm_72122
+	and a
+	jr z, .asm_72122
 	call CopyPalTable
 	jr .asm_72128
 .asm_72122
@@ -107821,9 +107821,8 @@ GetTrainerPalID:
 	ret
 
 CopyPalTable:
-	jr nz,.yes
-	jp Func_72188 ; no
-.yes
+	dec a
+	jp nz, Func_72188
 	ld a,BANK(SuperPalettes)
 	ld bc,$1000
 	jp FarCopyData
@@ -107860,7 +107859,7 @@ CopyPalPacket:
 	ld de, $CF2D
 	jp CopyData
 
-	ds $7a
+	ds $7b
 
 BorderPalettes: ; 72788 (1c:6788)
 IF _RED
