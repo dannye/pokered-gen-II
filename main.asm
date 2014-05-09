@@ -10625,7 +10625,7 @@ GoodCopyVideoData:
 	pop de
 	jp FarCopyData2 ; if LCD is off, transfer all at once
 
-SECTION "bank1",ROMX,Bank[$1]
+SECTION "bank1",ROMX,BANK[$1]
 
 SpriteFacingAndAnimationTable: ; 4000 (1:4000)
 	dw SpriteFacingDownAndStanding, SpriteOAMParameters        ; facing down, walk animation frame 0
@@ -14670,7 +14670,7 @@ Func_60ca: ; 60ca (1:60ca)
 OakSpeech: ; 6115 (1:6115)
 	ld a,$FF
 	call PlaySound ; stop music
-	ld a, BANK(Func_9876)
+	ld a, BANK(Music_Routes2) ; bank of song
 	ld c,a
 	ld a, MUSIC_ROUTES2 ; song #
 	call PlayMusic  ; plays music
@@ -78219,7 +78219,6 @@ IndigoPlateauObject: ; 0x50936 (size=20)
 IndigoPlateauBlocks: ; 5094a (14:494a)
 	INCBIN "maps/indigoplateau.blk"
 
-GLOBAL SaffronCity_h
 SaffronCity_h: ; 0x509a4 to 0x509dc (56 bytes) (id=10)
 	db $00 ; tileset
 	db SAFFRON_CITY_HEIGHT, SAFFRON_CITY_WIDTH ; dimensions (y, x)
@@ -124879,8 +124878,8 @@ _TradeCenterMText1: ; 94b04 (25:4b04)
 	text "!"
 	done
 
-INCLUDE "text/mapRedsHouse1F.asm"
-INCLUDE "text/mapBluesHouse.asm"
+INCLUDE "text/maps/reds_house_1f.asm"
+INCLUDE "text/maps/blues_house.asm"
 
 _OaksLabGaryText1: ; 94d5b (25:4d5b)
 	text $53, ": Yo"
@@ -130437,7 +130436,7 @@ _UnnamedText_4fe44: ; a41d6 (29:41d6)
 	line "a #MON CENTER!"
 	done
 
-INCLUDE "text/mapPalletTown.asm"
+INCLUDE "text/maps/pallet_town.asm"
 
 _ViridianCityText1: ; a43cc (29:43cc)
 	text "Those # BALLs"
