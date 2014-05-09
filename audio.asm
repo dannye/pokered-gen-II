@@ -3,14 +3,7 @@ AUDIO_1 EQU $2
 AUDIO_2 EQU $8
 AUDIO_3 EQU $1f
 
-INCLUDE "macros.asm"
-INCLUDE "constants/music_constants.asm"
-INCLUDE "constants/trainer_constants.asm"
-
-; PC
-INCLUDE "hram.asm"
-INCLUDE "constants/move_constants.asm"
-
+INCLUDE "constants.asm"
 
 
 SECTION "Sound Effect Headers 1", ROMX, BANK[AUDIO_1]
@@ -548,7 +541,7 @@ Music8_OverwriteChannelPointer: ; 2231d (8:631d)
 SECTION "Audio Engine 3", ROMX, BANK[AUDIO_3]
 
 Func_7d13b:: ; 7d13b (1f:513b)
-	ld a, [$FF00+$dc]
+	ld a, [$ffdc]
 	ld c, $0
 	ld hl, OwnedMonValues
 .getSfxPointer
