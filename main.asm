@@ -6984,7 +6984,7 @@ DisplayStartMenu:: ; 2acd (0:2acd)
 	ld [$2000],a ; ROM bank 4
 	ld a,[$d700] ; walking/biking/surfing
 	ld [$d11a],a
-	ld a, (SFX_02_3f - $4000) / 3 ; Start menu sound
+	ld a, (SFX_02_3f - SFX_Headers_02) / 3 ; Start menu sound
 	call PlaySound
 
 RedisplayStartMenu:: ; 2adf (0:2adf)
@@ -7113,7 +7113,7 @@ AddAmountSoldToMoney:: ; 2b9e (0:2b9e)
 	ld a,$13
 	ld [$d125],a
 	call DisplayTextBoxID ; redraw money text box
-	ld a, (SFX_02_5a - $4000) / 3
+	ld a, (SFX_02_5a - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent ; play sound
 	jp WaitForSoundToFinish ; wait until sound is done playing
 
@@ -8261,7 +8261,7 @@ Func_32f9:: ; 32f9 (0:32f9)
 Func_32fe:: ; 32fe (0:32fe)
 	ld hl, Func_5685d
 asm_3301:: ; 3301 (0:3301)
-	ld b, $15
+	ld b, BANK(Func_567f9) ; BANK(Func_56819), BANK(Func_5683d), BANK(Func_5685d)
 	jp Bankswitch ; indirect jump to one of the four functions
 
 CheckForEngagingTrainers:: ; 3306 (0:3306)
@@ -13287,7 +13287,7 @@ Func_5530
 	ld a, $1
 	ld [$d11b], a
 	ld hl, Func_39bd5
-	ld b, $e
+	ld b, BANK(Func_39bd5)
 	call Bankswitch
 	ld hl, wEnemyMons
 	call Func_57d6
@@ -13346,7 +13346,7 @@ Func_5530
 	ld a, $4
 	ld [$d11b], a
 	ld hl, Func_39bd5
-	ld b, $e
+	ld b, BANK(Func_39bd5)
 	call Bankswitch
 	call Func_57d6
 	jp .asm_565b
@@ -13441,7 +13441,7 @@ Func_5530
 	ld a, $4
 	ld [$d11b], a
 	ld hl, Func_39bd5
-	ld b, $e
+	ld b, BANK(Func_39bd5)
 	call Bankswitch
 	call Func_57d6
 	call LoadScreenTilesFromBuffer1
@@ -15408,10 +15408,10 @@ Func_6596: ; 6596 (1:6596)
 	call Func_68eb
 	ld a, [$ceed]
 	cp $e5
-	ld de, Unknown_6885 ; $6885
+	ld de, Dakutens ; $6885
 	jr z, .asm_66e3
 	cp $e4
-	ld de, Unknown_68d6 ; $68d6
+	ld de, Handakutens ; $68d6
 	jr z, .asm_66e3
 	ld a, [$d07d]
 	cp $2
@@ -15614,60 +15614,20 @@ Func_6871: ; 6871 (1:6871)
 	ld [$ceed], a
 	ret
 
-Unknown_6885: ; 6885 (1:6885)
-	db $b6, $26
-	db $b7, $27
-	db $b8, $28
-	db $b9, $29
-	db $ba, $2a
-	db $bb, $2b
-	db $bc, $2c
-	db $bd, $2d
-	db $be, $2e
-	db $bf, $2f
-	db $c0, $30
-	db $c1, $31
-	db $c2, $32
-	db $c3, $33
-	db $c4, $34
-	db $ca, $3a
-	db $cb, $3b
-	db $cc, $3c
-	db $cd, $3d
-	db $ce, $3e
-	db $85, $05
-	db $86, $06
-	db $87, $07
-	db $88, $08
-	db $89, $09
-	db $8a, $0a
-	db $8b, $0b
-	db $8c, $0c
-	db $8d, $0d
-	db $8e, $0e
-	db $8f, $0f
-	db $90, $10
-	db $91, $11
-	db $92, $12
-	db $93, $13
-	db $99, $19
-	db $9a, $1a
-	db $9b, $1b
-	db $cd, $3d
-	db $9c, $1c
+Dakutens: ; 6885 (1:6885)
+	db "かが", "きぎ", "くぐ", "けげ", "こご"
+	db "さざ", "しじ", "すず", "せぜ", "そぞ"
+	db "ただ", "ちぢ", "つづ", "てで", "とど"
+	db "はば", "ひび", "ふぶ", "へべ", "ほぼ"
+	db "カガ", "キギ", "クグ", "ケゲ", "コゴ"
+	db "サザ", "シジ", "スズ", "セゼ", "ソゾ"
+	db "タダ", "チヂ", "ツヅ", "テデ", "トド"
+	db "ハバ", "ヒビ", "フブ", "へべ", "ホボ"
 	db $ff
 
-Unknown_68d6: ; 68d6 (1:68d6)
-	db $ca, $44
-	db $cb, $45
-	db $cc, $46
-	db $cd, $47
-	db $ce, $48
-	db $99, $40
-	db $9a, $41
-	db $9b, $42
-	db $cd, $47
-	db $9c, $43
+Handakutens: ; 68d6 (1:68d6)
+	db "はぱ", "ひぴ", "ふぷ", "へぺ", "ほぽ"
+	db "ハパ", "ヒピ", "フプ", "へぺ", "ホポ"
 	db $ff
 
 Func_68eb: ; 68eb (1:68eb)
@@ -15753,7 +15713,7 @@ Func_695d: ; 695d (1:695d)
 	call GetRedPalID
 	call Delay3
 	ld de, RedPicFront ; $6ede
-	ld b, $4
+	ld b, BANK(RedPicFront)
 	call IntroPredef3B
 .asm_6999
 	ld hl, UnnamedText_699f ; $699f
@@ -26099,7 +26059,7 @@ PlayedFluteHadEffectText: ; e215 (3:6215)
 ; play out-of-battle pokeflute music
 	ld a,$ff
 	call PlaySound ; turn off music
-	ld a, (SFX_02_5e - $4000) / 3
+	ld a, (SFX_02_5e - SFX_Headers_02) / 3
 	ld c, BANK(SFX_02_5e)
 	call PlayMusic ; play music
 .musicWaitLoop ; wait for music to finish playing
@@ -31262,7 +31222,7 @@ StartMenu_TrainerInfo: ; 13460 (4:7460)
 ; loads tile patterns and draws everything except for gym leader faces / badges
 DrawTrainerInfo: ; 1349a (4:749a)
 	ld de,RedPicFront
-	ld bc,$0401
+	ld bc,(BANK(RedPicFront) << 8) | $01
 	ld a,$3b
 	call Predef
 	call DisableLCD
@@ -32096,11 +32056,11 @@ Func_13a58: ; 13a58 (4:7a58)
 	jr nz, .asm_13a86
 	ld hl, W_RIVALNAME ; $d34a
 	ld a, [W_TRAINERCLASS] ; $d031
-	cp $19
+	cp SONY1
 	jr z, .asm_13a86
-	cp $2a
+	cp SONY2
 	jr z, .asm_13a86
-	cp $2b
+	cp SONY3
 	jr z, .asm_13a86
 	ld [$d0b5], a
 	ld a, TRAINER_NAME
@@ -38685,33 +38645,33 @@ OaksLabText41: ; 1d0fd (7:50fd)
 OaksLabText29: ; 1d102 (7:5102)
 OaksLabText2: ; 1d102 (7:5102)
 	db $8
-	ld a, $b1
+	ld a, SQUIRTLE
 	ld [$cd3d], a
 	ld a, $3
 	ld [$cd3e], a
-	ld a, $b0
+	ld a, CHARMANDER
 	ld b, $2
 	jr OaksLabScript_1d133 ; 0x1d111 $20
 
 OaksLabText30: ; 1d113 (7:5113)
 OaksLabText3: ; 1d113 (7:5113)
 	db $8
-	ld a, $99
+	ld a, BULBASAUR
 	ld [$cd3d], a
 	ld a, $4
 	ld [$cd3e], a
-	ld a, $b1
+	ld a, SQUIRTLE
 	ld b, $3
 	jr OaksLabScript_1d133 ; 0x1d122 $f
 
 OaksLabText31: ; 1d124 (7:5124)
 OaksLabText4: ; 1d124 (7:5124)
 	db $8
-	ld a, $b0
+	ld a, CHARMANDER
 	ld [$cd3d], a
 	ld a, $2
 	ld [$cd3e], a
-	ld a, $99
+	ld a, BULBASAUR
 	ld b, $4
 
 OaksLabScript_1d133: ; 1d133 (7:5133)
@@ -41989,7 +41949,7 @@ asm_1e9b0: ; 1e9b0 (7:69b0)
 	dec a
 	call PlaySound
 	ld c, BANK(SFX_02_5f)
-	ld a, (SFX_02_5f - $4000) / 3
+	ld a, (SFX_02_5f - SFX_Headers_02) / 3
 	call PlayMusic
 .asm_1e9c2
 	ld a, [$c02a]
@@ -56148,7 +56108,7 @@ UnnamedText_3bbdc: ; 3bbdc (e:7bdc)
 	db "@"
 
 BankswitchEtoF: ; 3bbe1 (e:7be1)
-	ld b, $f
+	ld b, BANK(BattleCore)
 	jp Bankswitch
 
 PlayerPartyUpdated:
@@ -56189,6 +56149,8 @@ EnemyHealthBarUpdated:
 	jp HealthBarUpdateDone
 
 SECTION "bankF",ROMX,BANK[$F]
+
+BattleCore:
 
 ; These are move effects (second value from the Moves table in bank $E).
 EffectsArray1: ; 3c000 (f:4000)
@@ -58540,7 +58502,7 @@ Func_3d119: ; 3d119 (f:5119)
 	call LoadMonFrontSprite
 	jr .asm_3d187
 .asm_3d182
-	ld b, $1e
+	ld b, BANK(AnimationSubstitute) ; BANK(AnimationMinimizeMon)
 	call Bankswitch
 .asm_3d187
 	jp Func_3d0e0
@@ -63069,7 +63031,7 @@ _LoadTrainerPic: ; 3f04b (f:704b)
 	ld d, a ; de contains pointer to trainer pic
 	ld a, [W_ISLINKBATTLE] ; $d12b
 	and a
-	ld a, Bank(YoungsterPic) ; this is where all the trainer pics are (not counting Red's)
+	ld a, Bank(TrainerPics) ; this is where all the trainer pics are (not counting Red's)
 	jr z, .loadSprite
 	ld a, Bank(RedPicFront)
 .loadSprite
@@ -77575,6 +77537,8 @@ SafariZoneSecretHouseBlocks: ; 4a37f (12:637f)
 
 SECTION "bank13",ROMX,BANK[$13]
 
+TrainerPics:
+
 YoungsterPic: ; 4c000 (13:4000)
 	INCBIN "pic/trainer/youngster.pic"
 BugCatcherPic: ; 4c0c6 (13:40c6)
@@ -88325,9 +88289,9 @@ Route12Script0: ; 59619 (16:5619)
 	ld a, $d
 	ld [H_DOWNARROWBLINKCNT2], a ; $ff8c
 	call DisplayTextID
-	ld a, $84
+	ld a, SNORLAX
 	ld [W_CUROPPONENT], a ; $d059
-	ld a, $1e
+	ld a, 30
 	ld [W_CURENEMYLVL], a ; $d127
 	ld a, $1d
 	ld [$cc4d], a
@@ -98827,8 +98791,8 @@ HoFMonInfoText: ; 70329 (1c:4329)
 	next "TYPE2/@"
 
 Func_7033e: ; 7033e (1c:433e)
-	ld de, Unknown_72ede ; $6ede
-	ld a, $4
+	ld de, RedPicFront ; $6ede
+	ld a, BANK(RedPicFront)
 	call UncompressSpriteFromDE
 	ld hl, S_SPRITEBUFFER1
 	ld de, $a000
@@ -103185,10 +103149,7 @@ IF _BLUE
 	INCBIN "gfx/blue/sgbborder.map"
 ENDC
 
-	ds $56
-
-Unknown_72ede: ; 72ede (1c:6ede)
-	ds $AA
+	ds $100
 
 IF _RED
 	RGB 30,29,29 ; PAL_SGB1
@@ -115703,7 +115664,7 @@ Func_7bf15: ; 7bf15 (1e:7f15)
 	ld [$ffaf], a
 	push bc
 	ld c, BANK(SFX_02_5b)
-	ld a, (SFX_02_5b - $4000) / 3
+	ld a, (SFX_02_5b - SFX_Headers_02) / 3
 	call PlayMusic
 	pop bc
 	ld c, $2
@@ -115715,7 +115676,7 @@ Func_7bf15: ; 7bf15 (1e:7f15)
 	ld a, $ff
 	call PlaySound
 	ld c, BANK(SFX_02_5f)
-	ld a, (SFX_02_5f - $4000) / 3
+	ld a, (SFX_02_5f - SFX_Headers_02) / 3
 	call PlayMusic
 .asm_7bf57
 	ld a, [$c02a]
