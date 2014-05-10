@@ -230,13 +230,13 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw ViridianHouse_h
 	dw ViridianGym_h
 	dw DiglettsCaveRoute2_h
-	dw ViridianForestexit_h
+	dw ViridianForestExit_h
 	dw Route2House_h
 	dw Route2Gate_h
 	dw ViridianForestEntrance_h ;id=50
 	dw ViridianForest_h
-	dw MuseumF1_h
-	dw MuseumF2_h
+	dw Museum1F_h
+	dw Museum2F_h
 	dw PewterGym_h
 	dw PewterHouse1_h
 	dw PewterMart_h
@@ -246,7 +246,7 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw MtMoon2_h ;id=60
 	dw MtMoon3_h
 	dw CeruleanHouseTrashed_h
-	dw CeruleanHouse_h
+	dw CeruleanHouse1_h
 	dw CeruleanPokecenter_h
 	dw CeruleanGym_h
 	dw BikeShop_h
@@ -358,8 +358,8 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw CinnabarMart_h
 	dw CinnabarMart_h ; unused
 	dw IndigoPlateauLobby_h
-	dw CopycatsHouseF1_h
-	dw CopycatsHouseF2_h
+	dw CopycatsHouse1F_h
+	dw CopycatsHouse2F_h
 	dw FightingDojo_h
 	dw SaffronGym_h
 	dw SaffronHouse1_h
@@ -369,7 +369,7 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw SaffronHouse2_h
 	dw Route15Gate_h
 	dw Route15GateUpstairs_h
-	dw Route16GateMap_h
+	dw Route16Gate_h
 	dw Route16GateUpstairs_h
 	dw Route16House_h
 	dw Route12House_h
@@ -414,7 +414,7 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw UnknownDungeon1_h
 	dw NameRater_h
 	dw CeruleanHouse2_h
-	dw Route16GateMap_h ; unused
+	dw Route16Gate_h ; unused
 	dw RockTunnel2_h
 	dw SilphCo9_h
 	dw SilphCo10_h
@@ -1133,10 +1133,10 @@ PlayMapChangeSound:: ; 08c9 (0:08c9)
 	ld a,[Coord] ; upper left tile of the 4x4 square the player's sprite is standing on
 	cp a,$0b ; door tile in tileset 0
 	jr nz,.didNotGoThroughDoor
-	ld a,$ad
+	ld a,(SFX_02_57 - SFX_Headers_02) / 3
 	jr .playSound
 .didNotGoThroughDoor
-	ld a,$b5
+	ld a,(SFX_02_5c - SFX_Headers_02) / 3
 .playSound
 	call PlaySound
 	ld a,[$d35d]
@@ -1676,9 +1676,9 @@ CollisionCheckOnLand:: ; 0bd1 (0:0bd1)
 	jr nc,.noCollision
 .collision
 	ld a,[$c02a]
-	cp a,$b4 ; check if collision sound is already playing
+	cp a,(SFX_02_5b - SFX_Headers_02) / 3 ; check if collision sound is already playing
 	jr z,.setCarry
-	ld a,$b4
+	ld a,(SFX_02_5b - SFX_Headers_02) / 3
 	call PlaySound ; play collision sound (if it's not already playing)
 .setCarry
 	scf
@@ -2390,9 +2390,9 @@ CollisionCheckOnWater:: ; 0fb7 (0:0fb7)
 	jr .loop
 .collision
 	ld a,[$c02a]
-	cp a,$b4 ; check if collision sound is already playing
+	cp a,(SFX_02_5b - SFX_Headers_02) / 3 ; check if collision sound is already playing
 	jr z,.setCarry
-	ld a,$b4
+	ld a,(SFX_02_5b - SFX_Headers_02) / 3
 	call PlaySound ; play collision sound (if it's not already playing)
 .setCarry
 	scf
@@ -9297,7 +9297,7 @@ ManualTextScroll:: ; 3898 (0:3898)
 	cp $4
 	jr z, .inLinkBattle
 	call WaitForTextScrollButtonPress
-	ld a, $90
+	ld a, (SFX_02_40 - SFX_Headers_02) / 3
 	jp PlaySound
 .inLinkBattle
 	ld c, $41
@@ -9830,7 +9830,7 @@ HandleMenuInputPokemonSelection:: ; 3ac2 (0:3ac2)
 	bit 5,[hl]
 	pop hl
 	jr nz,.skipPlayingSound
-	ld a,$90
+	ld a,(SFX_02_40 - SFX_Headers_02) / 3
 	call PlaySound ; play sound
 .skipPlayingSound
 	pop af
@@ -10961,7 +10961,7 @@ ENDC
 	ld d, a
 	cp $fd
 	jr nz, .asm_43d4
-	ld a, $bc
+	ld a, (SFX_1f_62 - SFX_Headers_1f) / 3
 	call PlaySound
 .asm_43d4
 	ld a, [hli]
@@ -10994,7 +10994,7 @@ ENDC
 	call LoadScreenTilesFromBuffer1
 	ld c, $24
 	call DelayFrames
-	ld a, $bd
+	ld a, (SFX_1f_63 - SFX_Headers_1f) / 3
 	call PlaySound
 	call PrintGameVersionOnTitleScreen
 	ld a, $90
@@ -14413,7 +14413,7 @@ DisplayOptionMenu: ; 5e8a (1:5e8a)
 	cp a,16 ; is the cursor on Cancel?
 	jr nz,.loop
 .exitMenu
-	ld a,$90
+	ld a,(SFX_02_40 - SFX_Headers_02) / 3
 	call PlaySound ; play sound
 	ret
 .eraseOldMenuCursor
@@ -14748,9 +14748,10 @@ Func_61bc: ; 61bc (1:61bc)
 	jr nz,.next
 	ld hl,OakSpeechText3
 	call PrintText
-.next	ld a,[H_LOADEDROMBANK]
+.next
+	ld a,[H_LOADEDROMBANK]
 	push af
-	ld a,$9C
+	ld a,(SFX_02_48 - SFX_Headers_02) / 3
 	call PlaySound
 	pop af
 	ld [H_LOADEDROMBANK],a
@@ -15440,7 +15441,7 @@ Func_6596: ; 6596 (1:6596)
 	ld a, [$ceed]
 	ld [hli], a
 	ld [hl], $50
-	ld a, $90
+	ld a, (SFX_02_40 - SFX_Headers_02) / 3
 	call PlaySound
 	ret
 .deleteLetter
@@ -16300,7 +16301,7 @@ DisplayPokemartDialogue_: ; 6c20 (1:6c20)
 	ld a,$01
 	ld [$cf0a],a
 .skipSettingFlag2
-	ld a,$b2
+	ld a,(SFX_02_5a - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent ; play sound
 	call WaitForSoundToFinish ; wait until sound is done playing
 	ld hl,PokemartBoughtItemText
@@ -16596,7 +16597,7 @@ UnnamedText_6fc8: ; 6fc8 (1:6fc8)
 	TX_FAR _UnnamedText_6fc8 ; 0xa2819
 	db $a
 	db $8
-	ld a, $ae
+	ld a, (SFX_02_58 - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent
 	ld hl, UnnamedText_6fd7 ; $6fd7
 	ret
@@ -16947,7 +16948,7 @@ Func_71e1: ; 71e1 (1:71e1)
 	ld b, BANK(SaveSAVtoSRAM)
 	call Bankswitch
 	call WaitForSoundToFinish
-	ld a, $b6
+	ld a, (SFX_02_5d - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent
 	ld hl, CableClubNPCText3 ; $72c2
 	call PrintText
@@ -17481,7 +17482,7 @@ DisplayYesNoTextBox: ; 7559 (1:7559)
 	pop af
 	pop hl
 	ld [wFlags_0xcd60], a
-	ld a, $90
+	ld a, (SFX_02_40 - SFX_Headers_02) / 3
 	call PlaySound
 	jr .asm_760f
 .asm_7603
@@ -17901,7 +17902,7 @@ Func_78e6: ; 78e6 (1:78e6)
 	ld a, [wFlags_0xcd60]
 	bit 3, a
 	jr nz, Func_790c
-	ld a, $99
+	ld a, (SFX_02_45 - SFX_Headers_02) / 3
 	call PlaySound
 	ld hl, UnnamedText_7b22 ; $7b22
 	call PrintText
@@ -17957,7 +17958,7 @@ Func_796d: ; 796d (1:796d)
 	ld a, [wFlags_0xcd60]
 	bit 3, a
 	jr nz, .asm_797c
-	ld a, $9a
+	ld a, (SFX_02_46 - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 .asm_797c
@@ -18020,7 +18021,7 @@ Func_79ab: ; 79ab (1:79ab)
 	ld hl, wNumBagItems ; $d31d
 	call RemoveItemFromInventory
 	call WaitForSoundToFinish
-	ld a, $ab
+	ld a, (SFX_02_55 - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 	ld hl, UnnamedText_7b36 ; $7b36
@@ -18074,7 +18075,7 @@ Func_7a28: ; 7a28 (1:7a28)
 	ld hl, wNumBoxItems ; $d53a
 	call RemoveItemFromInventory
 	call WaitForSoundToFinish
-	ld a, $ab
+	ld a, (SFX_02_55 - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 	ld hl, UnnamedText_7b4f ; $7b4f
@@ -18428,13 +18429,13 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; ViridianHouse
 	db MUSIC_GYM, BANK(Music_Gym) ; ViridianGym
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; DiglettsCaveRoute2
-	db MUSIC_CITIES1, BANK(Music_Cities1) ; ViridianForestexit
+	db MUSIC_CITIES1, BANK(Music_Cities1) ; ViridianForestExit
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route2House
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route2Gate
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; ViridianForestEntrance
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; ViridianForest
-	db MUSIC_CITIES1, BANK(Music_Cities1) ; MuseumF1
-	db MUSIC_CITIES1, BANK(Music_Cities1) ; MuseumF2
+	db MUSIC_CITIES1, BANK(Music_Cities1) ; Museum1F
+	db MUSIC_CITIES1, BANK(Music_Cities1) ; Museum2F
 	db MUSIC_GYM, BANK(Music_Gym) ; PewterGym
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; PewterHouse1
 	db MUSIC_POKECENTER, BANK(Music_Pokecenter) ; PewterMart
@@ -18444,7 +18445,7 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_DUNGEON3, BANK(Music_Dungeon3) ; MtMoon2
 	db MUSIC_DUNGEON3, BANK(Music_Dungeon3) ; MtMoon3
 	db MUSIC_CITIES2, BANK(Music_Cities2) ; CeruleanHouseTrashed
-	db MUSIC_CITIES2, BANK(Music_Cities2) ; CeruleanHouse
+	db MUSIC_CITIES2, BANK(Music_Cities2) ; CeruleanHouse1
 	db MUSIC_POKECENTER, BANK(Music_Pokecenter) ; CeruleanPokecenter
 	db MUSIC_GYM, BANK(Music_Gym) ; CeruleanGym
 	db MUSIC_CITIES2, BANK(Music_Cities2) ; BikeShop
@@ -18556,8 +18557,8 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_POKECENTER, BANK(Music_Pokecenter) ; CinnabarMart
 	db MUSIC_CINNABAR, BANK(Music_Cinnabar)
 	db MUSIC_INDIGO_PLATEAU, BANK(Music_IndigoPlateau) ; IndigoPlateauLobby
-	db MUSIC_CITIES1, BANK(Music_Cities1) ; CopycatsHouseF1
-	db MUSIC_CITIES1, BANK(Music_Cities1) ; CopycatsHouseF2
+	db MUSIC_CITIES1, BANK(Music_Cities1) ; CopycatsHouse1F
+	db MUSIC_CITIES1, BANK(Music_Cities1) ; CopycatsHouse2F
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; FightingDojo
 	db MUSIC_GYM, BANK(Music_Gym) ; SaffronGym
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; SaffronHouse1
@@ -18567,7 +18568,7 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; SaffronHouse2
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route15Gate
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route15GateUpstairs
-	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route16GateMap
+	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route16Gate
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route16GateUpstairs
 	db MUSIC_CELADON, BANK(Music_Celadon) ; Route16House
 	db MUSIC_CELADON, BANK(Music_Celadon) ; Route12House
@@ -18679,13 +18680,13 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(ViridianHouse_h)
 	db BANK(ViridianGym_h)
 	db BANK(DiglettsCaveRoute2_h)
-	db BANK(ViridianForestexit_h)
+	db BANK(ViridianForestExit_h)
 	db BANK(Route2House_h)
 	db BANK(Route2Gate_h)
 	db BANK(ViridianForestEntrance_h)
 	db BANK(ViridianForest_h)
-	db BANK(MuseumF1_h)
-	db BANK(MuseumF2_h)
+	db BANK(Museum1F_h)
+	db BANK(Museum2F_h)
 	db BANK(PewterGym_h)
 	db BANK(PewterHouse1_h)
 	db BANK(PewterMart_h)
@@ -18695,7 +18696,7 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(MtMoon2_h)
 	db BANK(MtMoon3_h)
 	db BANK(CeruleanHouseTrashed_h)
-	db BANK(CeruleanHouse_h)
+	db BANK(CeruleanHouse1_h)
 	db BANK(CeruleanPokecenter_h)
 	db BANK(CeruleanGym_h)
 	db BANK(BikeShop_h)
@@ -18807,8 +18808,8 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(CinnabarMart_h)
 	db BANK(CinnabarMart_h)
 	db BANK(IndigoPlateauLobby_h)
-	db BANK(CopycatsHouseF1_h)
-	db BANK(CopycatsHouseF2_h)
+	db BANK(CopycatsHouse1F_h)
+	db BANK(CopycatsHouse2F_h)
 	db BANK(FightingDojo_h)
 	db BANK(SaffronGym_h)
 	db BANK(SaffronHouse1_h)
@@ -18818,7 +18819,7 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(SaffronHouse2_h)
 	db BANK(Route15Gate_h)
 	db BANK(Route15GateUpstairs_h)
-	db BANK(Route16GateMap_h)
+	db BANK(Route16Gate_h)
 	db BANK(Route16GateUpstairs_h)
 	db BANK(Route16House_h)
 	db BANK(Route12House_h)
@@ -19554,7 +19555,7 @@ Func_c69c: ; c69c (3:469c)
 	ld b, $2
 	ld a, $1f
 	call Predef ; indirect jump to Func_480eb (480eb (12:40eb))
-	ld a, $97
+	ld a, (SFX_02_43 - SFX_Headers_02) / 3
 	call PlaySound
 .asm_c733
 	ld a, $14
@@ -20059,8 +20060,8 @@ MapHSA5: ; cbc2 (3:4bc2)
 	db MANSION_1,$02,Show
 	db MANSION_1,$03,Show
 MapHSB1: ; cbc8 (3:4bc8)
-	db FIGHTINGDOJO,$06,Show
-	db FIGHTINGDOJO,$07,Show
+	db FIGHTING_DOJO,$06,Show
+	db FIGHTING_DOJO,$07,Show
 MapHSB5: ; cbce (3:4bce)
 	db SILPH_CO_1F,$01,Hide
 MapHS53: ; cbd1 (3:4bd1)
@@ -24968,7 +24969,7 @@ ItemUseEvoStone: ; da5b (3:5a5b)
 	ld [$cf91],a
 	ld a,$01
 	ld [$ccd4],a
-	ld a,$8e
+	ld a,(SFX_02_3e - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent ; play sound
 	call WaitForSoundToFinish ; wait for sound to end
 	ld hl, Func_3ad0e
@@ -25247,7 +25248,7 @@ ItemUseMedicine: ; dabb (3:5abb)
 	ld a,[wWhichPokemon]
 	ld bc,2 * 20
 	call AddNTimes ; calculate coordinates of HP bar of pokemon that used Softboiled
-	ld a,$8d
+	ld a,(SFX_02_3d - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent ; play sound
 	ld a,[$fff6]
 	set 0,a
@@ -25398,7 +25399,7 @@ ItemUseMedicine: ; dabb (3:5abb)
 	jr c,.playStatusAilmentCuringSound
 	cp a,FULL_HEAL
 	jr z,.playStatusAilmentCuringSound
-	ld a,$8d ; HP healing sound
+	ld a,(SFX_02_3d - SFX_Headers_02) / 3 ; HP healing sound
 	call PlaySoundWaitForCurrent ; play sound
 	ld a,[$fff6]
 	set 0,a
@@ -25421,7 +25422,7 @@ ItemUseMedicine: ; dabb (3:5abb)
 	ld [$d07d],a
 	jr .showHealingItemMessage
 .playStatusAilmentCuringSound
-	ld a,$8e ; status ailment curing sound
+	ld a,(SFX_02_3e - SFX_Headers_02) / 3 ; status ailment curing sound
 	call PlaySoundWaitForCurrent ; play sound
 .showHealingItemMessage
 	xor a
@@ -25510,7 +25511,7 @@ ItemUseMedicine: ; dabb (3:5abb)
 	ld de,$cf4b
 	ld bc,10
 	call CopyData ; copy the stat's name to $cf4b
-	ld a,$8e
+	ld a,(SFX_02_3e - SFX_Headers_02) / 3
 	call PlaySound ; play sound
 	ld hl,VitaminStatRoseText
 	call PrintText
@@ -26172,7 +26173,7 @@ FishingInit: ; e2b4 (3:62b4)
 	call ItemUseReloadOverworldData
 	ld hl,ItemUseText00
 	call PrintText
-	ld a,$8e
+	ld a,(SFX_02_3e - SFX_Headers_02) / 3
 	call PlaySound ; play sound
 	ld c,80
 	call DelayFrames
@@ -26197,9 +26198,9 @@ ItemUseItemfinder: ; e2e1 (3:62e1)
 	jr nc,.printText ; if no hidden items
 	ld c,4
 .loop
-	ld a,$9e
+	ld a,(SFX_02_4a - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent ; play sound
-	ld a,$b2
+	ld a,(SFX_02_5a - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent ; play sound
 	dec c
 	jr nz,.loop
@@ -26303,7 +26304,7 @@ ItemUsePPRestore: ; e31e (3:631e)
 	ld bc,4
 	call CopyData ; copy party data to in-battle data
 .skipUpdatingInBattleData
-	ld a,$8e
+	ld a,(SFX_02_3e - SFX_Headers_02) / 3
 	call PlaySound
 	ld hl,PPRestoredText
 	call PrintText
@@ -26501,7 +26502,7 @@ ItemUseTMHM: ; e479 (3:6479)
 	and a ; can the pokemon learn the move?
 	jr nz,.checkIfAlreadyLearnedMove
 ; if the pokemon can't learn the move
-	ld a,$a5
+	ld a,(SFX_02_51 - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent ; play sound
 	ld hl,MonCannotLearnMachineMoveText
 	call PrintText
@@ -26544,7 +26545,7 @@ MonCannotLearnMachineMoveText: ; e55e (3:655e)
 PrintItemUseTextAndRemoveItem: ; e563 (3:6563)
 	ld hl,ItemUseText00
 	call PrintText
-	ld a,$8e
+	ld a,(SFX_02_3e - SFX_Headers_02) / 3
 	call PlaySound ; play sound
 	call WaitForTextScrollButtonPress ; wait for button press
 
@@ -27650,7 +27651,7 @@ asm_ef82: ; ef82 (3:6f82)
 	call Bankswitch
 	ld a, $1
 	ld [$cfcb], a
-	ld a, $ac
+	ld a, (SFX_02_56 - SFX_Headers_02) / 3
 	call PlaySound
 	ld a, $90
 	ld [$ffb0], a
@@ -28121,7 +28122,7 @@ Func_f225: ; f225 (3:7225)
 	ld de, MovementData_f2b3
 .asm_f29f
 	call MoveSprite
-	ld a, $a8
+	ld a, (SFX_02_53 - SFX_Headers_02) / 3
 	call PlaySound
 	ld hl, wFlags_0xcd60
 	set 1, [hl]
@@ -28154,7 +28155,7 @@ Func_f2b5: ; f2b5 (3:72b5)
 	ld [H_DOWNARROWBLINKCNT2], a ; $ff8c
 	call GetSpriteMovementByte2Pointer
 	ld [hl], $10
-	ld a, $ac
+	ld a, (SFX_02_56 - SFX_Headers_02) / 3
 	jp PlaySound
 
 Func_f2dd: ; f2dd (3:72dd)
@@ -31454,7 +31455,7 @@ Func_13625: ; 13625 (4:7625)
 	dec c
 	jr nz, .asm_13645
 	call WaitForSoundToFinish
-	ld a, $ae
+	ld a, (SFX_02_58 - SFX_Headers_02) / 3
 	jp PlaySound
 
 Func_13653: ; 13653 (4:7653)
@@ -33356,7 +33357,7 @@ UnnamedText_17e27: ; 17e27 (5:7e27)
 
 ActivatePC: ; 17e2c (5:7e2c)
 	call SaveScreenTilesToBuffer2  ;XXX: copy background from wTileMap to wTileMapBackup2
-	ld a, $99
+	ld a, (SFX_02_45 - SFX_Headers_02) / 3
 	call PlaySound  ;XXX: play sound or stop music
 	ld hl, UnnamedText_17f23  ;player turned on PC
 	call PrintText
@@ -33409,7 +33410,7 @@ PCMainMenu: ; 17e48 (5:7e48)
 	ld hl, wFlags_0xcd60
 	res 5, [hl]
 	set 3, [hl]
-	ld a, $9B
+	ld a, (SFX_02_47 - SFX_Headers_02) / 3
 	call PlaySound  ;XXX: play sound or stop music
 	call WaitForSoundToFinish  ;XXX: wait for sound to be done
 	ld hl, UnnamedText_17f32  ;accessed players pc
@@ -33419,7 +33420,7 @@ PCMainMenu: ; 17e48 (5:7e48)
 	call Bankswitch
 	jr ReloadMainMenu
 OaksPC: ; 17ec0 (5:7ec0)
-	ld a, $9B
+	ld a, (SFX_02_47 - SFX_Headers_02) / 3
 	call PlaySound  ;XXX: play sound or stop music
 	call WaitForSoundToFinish  ;XXX: wait for sound to be done
 	ld b, BANK(Func_1e915)
@@ -33427,7 +33428,7 @@ OaksPC: ; 17ec0 (5:7ec0)
 	call Bankswitch
 	jr ReloadMainMenu
 PKMNLeague: ; 17ed2 (5:7ed2)
-	ld a, $9B
+	ld a, (SFX_02_47 - SFX_Headers_02) / 3
 	call PlaySound  ;XXX: play sound or stop music
 	call WaitForSoundToFinish  ;XXX: wait for sound to be done
 	ld b, BANK(Func_7657e)
@@ -33435,7 +33436,7 @@ PKMNLeague: ; 17ed2 (5:7ed2)
 	call Bankswitch
 	jr ReloadMainMenu
 BillsPC: ; 17ee4 (5:7ee4)
-	ld a, $9B
+	ld a, (SFX_02_47 - SFX_Headers_02) / 3
 	call PlaySound    ;XXX: play sound or stop music
 	call WaitForSoundToFinish    ;XXX: wait for sound to be done
 	ld a, [$D7F1] ;has to do with having met Bill
@@ -33457,7 +33458,7 @@ ReloadMainMenu: ; 17f06 (5:7f06)
 	call UpdateSprites  ;XXX: moves sprites
 	jp PCMainMenu
 LogOff: ; 17f13 (5:7f13)
-	ld a, $9A
+	ld a, (SFX_02_46 - SFX_Headers_02) / 3
 	call PlaySound  ;XXX: play sound or stop music
 	call WaitForSoundToFinish  ;XXX: wait for sound to be done
 	ld hl, wFlags_0xcd60
@@ -33531,7 +33532,7 @@ CeladonCityObject: ; 0x18022 (size=189)
 	db $1b, $c, $0, CELADON_GYM
 	db $13, $1c, $0, GAME_CORNER
 	db $13, $27, $0, CELADON_MART_5 ; beta warp! no longer used
-	db $13, $21, $0, CELADONPRIZE_ROOM
+	db $13, $21, $0, CELADON_PRIZE_ROOM
 	db $1b, $1f, $0, CELADON_DINER
 	db $1b, $23, $0, CELADON_HOUSE
 	db $1b, $2b, $0, CELADON_HOTEL
@@ -33559,19 +33560,19 @@ CeladonCityObject: ; 0x18022 (size=189)
 	db SPRITE_ROCKET, $e + 4, $2a + 4, $fe, $2, $9 ; person
 
 	; warp-to
-	EVENT_DISP $19, $d, $8 ; CELADON_MART_1
-	EVENT_DISP $19, $d, $a ; CELADON_MART_1
-	EVENT_DISP $19, $9, $18 ; CELADON_MANSION_1
-	EVENT_DISP $19, $3, $18 ; CELADON_MANSION_1
-	EVENT_DISP $19, $3, $19 ; CELADON_MANSION_1
-	EVENT_DISP $19, $9, $29 ; CELADON_POKECENTER
-	EVENT_DISP $19, $1b, $c ; CELADON_GYM
-	EVENT_DISP $19, $13, $1c ; GAME_CORNER
-	EVENT_DISP $19, $13, $27 ; CELADON_MART_5
-	EVENT_DISP $19, $13, $21 ; CELADONPRIZE_ROOM
-	EVENT_DISP $19, $1b, $1f ; CELADON_DINER
-	EVENT_DISP $19, $1b, $23 ; CELADON_HOUSE
-	EVENT_DISP $19, $1b, $2b ; CELADON_HOTEL
+	EVENT_DISP CELADON_CITY_WIDTH, $d, $8 ; CELADON_MART_1
+	EVENT_DISP CELADON_CITY_WIDTH, $d, $a ; CELADON_MART_1
+	EVENT_DISP CELADON_CITY_WIDTH, $9, $18 ; CELADON_MANSION_1
+	EVENT_DISP CELADON_CITY_WIDTH, $3, $18 ; CELADON_MANSION_1
+	EVENT_DISP CELADON_CITY_WIDTH, $3, $19 ; CELADON_MANSION_1
+	EVENT_DISP CELADON_CITY_WIDTH, $9, $29 ; CELADON_POKECENTER
+	EVENT_DISP CELADON_CITY_WIDTH, $1b, $c ; CELADON_GYM
+	EVENT_DISP CELADON_CITY_WIDTH, $13, $1c ; GAME_CORNER
+	EVENT_DISP CELADON_CITY_WIDTH, $13, $27 ; CELADON_MART_5
+	EVENT_DISP CELADON_CITY_WIDTH, $13, $21 ; CELADON_PRIZE_ROOM
+	EVENT_DISP CELADON_CITY_WIDTH, $1b, $1f ; CELADON_DINER
+	EVENT_DISP CELADON_CITY_WIDTH, $1b, $23 ; CELADON_HOUSE
+	EVENT_DISP CELADON_CITY_WIDTH, $1b, $2b ; CELADON_HOTEL
 
 CeladonCityBlocks: ; 180df (6:40df)
 	INCBIN "maps/celadoncity.blk"
@@ -33605,9 +33606,9 @@ PalletTownObject: ; 0x182c3 (size=58)
 	db SPRITE_FISHER2, $e + 4, $b + 4, $fe, $0, $3 ; person
 
 	; warp-to
-	EVENT_DISP $a, $5, $5 ; REDS_HOUSE_1F
-	EVENT_DISP $a, $5, $d ; BLUES_HOUSE
-	EVENT_DISP $a, $b, $c ; OAKS_LAB
+	EVENT_DISP PALLET_TOWN_WIDTH, $5, $5 ; REDS_HOUSE_1F
+	EVENT_DISP PALLET_TOWN_WIDTH, $5, $d ; BLUES_HOUSE
+	EVENT_DISP PALLET_TOWN_WIDTH, $b, $c ; OAKS_LAB
 
 PalletTownBlocks: ; 182fd (6:42fd)
 	INCBIN "maps/pallettown.blk"
@@ -33650,11 +33651,11 @@ ViridianCityObject: ; 0x18384 (size=104)
 	db SPRITE_GAMBLER, $5 + 4, $11 + 4, $fe, $2, $7 ; person
 
 	; warp-to
-	EVENT_DISP $14, $19, $17 ; VIRIDIAN_POKECENTER
-	EVENT_DISP $14, $13, $1d ; VIRIDIAN_MART
-	EVENT_DISP $14, $f, $15 ; VIRIDIAN_SCHOOL
-	EVENT_DISP $14, $9, $15 ; VIRIDIAN_HOUSE
-	EVENT_DISP $14, $7, $20 ; VIRIDIAN_GYM
+	EVENT_DISP VIRIDIAN_CITY_WIDTH, $19, $17 ; VIRIDIAN_POKECENTER
+	EVENT_DISP VIRIDIAN_CITY_WIDTH, $13, $1d ; VIRIDIAN_MART
+	EVENT_DISP VIRIDIAN_CITY_WIDTH, $f, $15 ; VIRIDIAN_SCHOOL
+	EVENT_DISP VIRIDIAN_CITY_WIDTH, $9, $15 ; VIRIDIAN_HOUSE
+	EVENT_DISP VIRIDIAN_CITY_WIDTH, $7, $20 ; VIRIDIAN_GYM
 
 ViridianCityBlocks: ; 183ec (6:43ec)
 	INCBIN "maps/viridiancity.blk"
@@ -33699,13 +33700,13 @@ PewterCityObject: ; 0x18577 (size=111)
 	db SPRITE_BUG_CATCHER, $10 + 4, $23 + 4, $ff, $d0, $5 ; person
 
 	; warp-to
-	EVENT_DISP $14, $7, $e ; MUSEUM_1F
-	EVENT_DISP $14, $5, $13 ; MUSEUM_1F
-	EVENT_DISP $14, $11, $10 ; PEWTER_GYM
-	EVENT_DISP $14, $d, $1d ; PEWTER_HOUSE_1
-	EVENT_DISP $14, $11, $17 ; PEWTER_MART
-	EVENT_DISP $14, $1d, $7 ; PEWTER_HOUSE_2
-	EVENT_DISP $14, $19, $d ; PEWTER_POKECENTER
+	EVENT_DISP PEWTER_CITY_WIDTH, $7, $e ; MUSEUM_1F
+	EVENT_DISP PEWTER_CITY_WIDTH, $5, $13 ; MUSEUM_1F
+	EVENT_DISP PEWTER_CITY_WIDTH, $11, $10 ; PEWTER_GYM
+	EVENT_DISP PEWTER_CITY_WIDTH, $d, $1d ; PEWTER_HOUSE_1
+	EVENT_DISP PEWTER_CITY_WIDTH, $11, $17 ; PEWTER_MART
+	EVENT_DISP PEWTER_CITY_WIDTH, $1d, $7 ; PEWTER_HOUSE_2
+	EVENT_DISP PEWTER_CITY_WIDTH, $19, $d ; PEWTER_POKECENTER
 
 PewterCityBlocks: ; 185e6 (6:45e6)
 	INCBIN "maps/pewtercity.blk"
@@ -33758,16 +33759,16 @@ CeruleanCityObject: ; 0x18786 (size=170)
 	db SPRITE_GUARD, $c + 4, $1b + 4, $ff, $d0, $b ; person
 
 	; warp-to
-	EVENT_DISP $14, $b, $1b ; TRASHED_HOUSE
-	EVENT_DISP $14, $f, $d ; CERULEAN_HOUSE
-	EVENT_DISP $14, $11, $13 ; CERULEAN_POKECENTER
-	EVENT_DISP $14, $13, $1e ; CERULEAN_GYM
-	EVENT_DISP $14, $19, $d ; BIKE_SHOP
-	EVENT_DISP $14, $19, $19 ; CERULEAN_MART
-	EVENT_DISP $14, $b, $4 ; UNKNOWN_DUNGEON_1
-	EVENT_DISP $14, $9, $1b ; TRASHED_HOUSE
-	EVENT_DISP $14, $b, $9 ; CERULEAN_HOUSE_3
-	EVENT_DISP $14, $9, $9 ; CERULEAN_HOUSE_3
+	EVENT_DISP CERULEAN_CITY_WIDTH, $b, $1b ; TRASHED_HOUSE
+	EVENT_DISP CERULEAN_CITY_WIDTH, $f, $d ; CERULEAN_HOUSE
+	EVENT_DISP CERULEAN_CITY_WIDTH, $11, $13 ; CERULEAN_POKECENTER
+	EVENT_DISP CERULEAN_CITY_WIDTH, $13, $1e ; CERULEAN_GYM
+	EVENT_DISP CERULEAN_CITY_WIDTH, $19, $d ; BIKE_SHOP
+	EVENT_DISP CERULEAN_CITY_WIDTH, $19, $19 ; CERULEAN_MART
+	EVENT_DISP CERULEAN_CITY_WIDTH, $b, $4 ; UNKNOWN_DUNGEON_1
+	EVENT_DISP CERULEAN_CITY_WIDTH, $9, $1b ; TRASHED_HOUSE
+	EVENT_DISP CERULEAN_CITY_WIDTH, $b, $9 ; CERULEAN_HOUSE_3
+	EVENT_DISP CERULEAN_CITY_WIDTH, $9, $9 ; CERULEAN_HOUSE_3
 
 CeruleanCityBlocks: ; 18830 (6:4830)
 	INCBIN "maps/ceruleancity.blk"
@@ -33813,15 +33814,15 @@ VermilionCityObject: ; 0x189ba (size=133)
 	db SPRITE_SAILOR, $1b + 4, $19 + 4, $fe, $2, $6 ; person
 
 	; warp-to
-	EVENT_DISP $14, $3, $b ; VERMILION_POKECENTER
-	EVENT_DISP $14, $d, $9 ; POKEMON_FAN_CLUB
-	EVENT_DISP $14, $d, $17 ; VERMILION_MART
-	EVENT_DISP $14, $13, $c ; VERMILION_GYM
-	EVENT_DISP $14, $13, $17 ; VERMILION_HOUSE_1
-	EVENT_DISP $14, $1f, $12 ; VERMILION_DOCK
-	EVENT_DISP $14, $1f, $13 ; VERMILION_DOCK
-	EVENT_DISP $14, $d, $f ; VERMILION_HOUSE_3
-	EVENT_DISP $14, $3, $7 ; VERMILION_HOUSE_2
+	EVENT_DISP VERMILION_CITY_WIDTH, $3, $b ; VERMILION_POKECENTER
+	EVENT_DISP VERMILION_CITY_WIDTH, $d, $9 ; POKEMON_FAN_CLUB
+	EVENT_DISP VERMILION_CITY_WIDTH, $d, $17 ; VERMILION_MART
+	EVENT_DISP VERMILION_CITY_WIDTH, $13, $c ; VERMILION_GYM
+	EVENT_DISP VERMILION_CITY_WIDTH, $13, $17 ; VERMILION_HOUSE_1
+	EVENT_DISP VERMILION_CITY_WIDTH, $1f, $12 ; VERMILION_DOCK
+	EVENT_DISP VERMILION_CITY_WIDTH, $1f, $13 ; VERMILION_DOCK
+	EVENT_DISP VERMILION_CITY_WIDTH, $d, $f ; VERMILION_HOUSE_3
+	EVENT_DISP VERMILION_CITY_WIDTH, $3, $7 ; VERMILION_HOUSE_2
 
 VermilionCityBlocks: ; 18a3f (6:4a3f)
 	INCBIN "maps/vermilioncity.blk"
@@ -33844,9 +33845,9 @@ FuchsiaCityObject: ; 0x18bd4 (size=178)
 	db $1b, $b, $0, FUCHSIA_HOUSE_1
 	db $1b, $13, $0, FUCHSIA_POKECENTER
 	db $1b, $1b, $0, FUCHSIA_HOUSE_2
-	db $3, $12, $0, SAFARIZONEENTRANCE
+	db $3, $12, $0, SAFARI_ZONE_ENTRANCE
 	db $1b, $5, $0, FUCHSIA_GYM
-	db $d, $16, $0, FUCHSIAMEETINGROOM
+	db $d, $16, $0, FUCHSIA_MEETING_ROOM
 	db $1b, $1f, $1, FUCHSIA_HOUSE_3
 	db $18, $1f, $0, FUCHSIA_HOUSE_3
 
@@ -33879,15 +33880,15 @@ FuchsiaCityObject: ; 0x18bd4 (size=178)
 	db SPRITE_OMANYTE, $5 + 4, $6 + 4, $ff, $ff, $a ; person
 
 	; warp-to
-	EVENT_DISP $14, $d, $5 ; FUCHSIA_MART
-	EVENT_DISP $14, $1b, $b ; FUCHSIA_HOUSE_1
-	EVENT_DISP $14, $1b, $13 ; FUCHSIA_POKECENTER
-	EVENT_DISP $14, $1b, $1b ; FUCHSIA_HOUSE_2
-	EVENT_DISP $14, $3, $12 ; SAFARIZONEENTRANCE
-	EVENT_DISP $14, $1b, $5 ; FUCHSIA_GYM
-	EVENT_DISP $14, $d, $16 ; FUCHSIAMEETINGROOM
-	EVENT_DISP $14, $1b, $1f ; FUCHSIA_HOUSE_3
-	EVENT_DISP $14, $18, $1f ; FUCHSIA_HOUSE_3
+	EVENT_DISP FUCHSIA_CITY_WIDTH, $d, $5 ; FUCHSIA_MART
+	EVENT_DISP FUCHSIA_CITY_WIDTH, $1b, $b ; FUCHSIA_HOUSE_1
+	EVENT_DISP FUCHSIA_CITY_WIDTH, $1b, $13 ; FUCHSIA_POKECENTER
+	EVENT_DISP FUCHSIA_CITY_WIDTH, $1b, $1b ; FUCHSIA_HOUSE_2
+	EVENT_DISP FUCHSIA_CITY_WIDTH, $3, $12 ; SAFARI_ZONE_ENTRANCE
+	EVENT_DISP FUCHSIA_CITY_WIDTH, $1b, $5 ; FUCHSIA_GYM
+	EVENT_DISP FUCHSIA_CITY_WIDTH, $d, $16 ; FUCHSIA_MEETING_ROOM
+	EVENT_DISP FUCHSIA_CITY_WIDTH, $1b, $1f ; FUCHSIA_HOUSE_3
+	EVENT_DISP FUCHSIA_CITY_WIDTH, $18, $1f ; FUCHSIA_HOUSE_3
 
 FuchsiaCityBlocks: ; 18c86 (6:4c86)
 	INCBIN "maps/fuchsiacity.blk"
@@ -34534,7 +34535,7 @@ PewterCityScriptPointers: ; 19243 (6:5243)
 
 PewterCityScript0: ; 19251 (6:5251)
 	xor a
-	ld [W_MUSEUMF1CURSCRIPT], a
+	ld [W_MUSEUM1FCURSCRIPT], a
 	ld hl, $d754
 	res 0, [hl]
 	call PewterCityScript_1925e
@@ -36086,9 +36087,9 @@ IndigoPlateauLobbyObject: ; 0x19c95 (size=58)
 	db SPRITE_CABLE_CLUB_WOMAN, $6 + 4, $d + 4, $ff, $d0, $5 ; person
 
 	; warp-to
-	EVENT_DISP $8, $b, $7
-	EVENT_DISP $8, $b, $8
-	EVENT_DISP $8, $0, $8 ; LORELEIS_ROOM
+	EVENT_DISP INDIGO_PLATEAU_LOBBY_WIDTH, $b, $7
+	EVENT_DISP INDIGO_PLATEAU_LOBBY_WIDTH, $b, $8
+	EVENT_DISP INDIGO_PLATEAU_LOBBY_WIDTH, $0, $8 ; LORELEIS_ROOM
 
 IndigoPlateauLobbyBlocks: ; 19ccf (6:5ccf)
 	INCBIN "maps/indigoplateaulobby.blk"
@@ -36326,13 +36327,13 @@ SilphCo4Object: ; 0x19e35 (size=111)
 	db SPRITE_BALL, $8 + 4, $5 + 4, $ff, $ff, $87, ESCAPE_ROPE ; item
 
 	; warp-to
-	EVENT_DISP $f, $0, $18 ; SILPH_CO_3F
-	EVENT_DISP $f, $0, $1a ; SILPH_CO_5F
-	EVENT_DISP $f, $0, $14 ; SILPH_CO_ELEVATOR
-	EVENT_DISP $f, $7, $b ; SILPH_CO_10F
-	EVENT_DISP $f, $3, $11 ; SILPH_CO_6F
-	EVENT_DISP $f, $f, $3 ; SILPH_CO_10F
-	EVENT_DISP $f, $b, $11 ; SILPH_CO_10F
+	EVENT_DISP SILPH_CO_4F_WIDTH, $0, $18 ; SILPH_CO_3F
+	EVENT_DISP SILPH_CO_4F_WIDTH, $0, $1a ; SILPH_CO_5F
+	EVENT_DISP SILPH_CO_4F_WIDTH, $0, $14 ; SILPH_CO_ELEVATOR
+	EVENT_DISP SILPH_CO_4F_WIDTH, $7, $b ; SILPH_CO_10F
+	EVENT_DISP SILPH_CO_4F_WIDTH, $3, $11 ; SILPH_CO_6F
+	EVENT_DISP SILPH_CO_4F_WIDTH, $f, $3 ; SILPH_CO_10F
+	EVENT_DISP SILPH_CO_4F_WIDTH, $b, $11 ; SILPH_CO_10F
 
 SilphCo4Blocks: ; 19ea4 (6:5ea4)
 	INCBIN "maps/silphco4.blk"
@@ -36596,13 +36597,13 @@ SilphCo5Object: ; 0x1a08d (size=137)
 	db SPRITE_CLIPBOARD, $6 + 4, $18 + 4, $ff, $ff, $b ; person
 
 	; warp-to
-	EVENT_DISP $f, $0, $18 ; SILPH_CO_6F
-	EVENT_DISP $f, $0, $1a ; SILPH_CO_4F
-	EVENT_DISP $f, $0, $14 ; SILPH_CO_ELEVATOR
-	EVENT_DISP $f, $3, $1b ; SILPH_CO_7F
-	EVENT_DISP $f, $f, $9 ; SILPH_CO_9F
-	EVENT_DISP $f, $5, $b ; SILPH_CO_3F
-	EVENT_DISP $f, $f, $3 ; SILPH_CO_3F
+	EVENT_DISP SILPH_CO_5F_WIDTH, $0, $18 ; SILPH_CO_6F
+	EVENT_DISP SILPH_CO_5F_WIDTH, $0, $1a ; SILPH_CO_4F
+	EVENT_DISP SILPH_CO_5F_WIDTH, $0, $14 ; SILPH_CO_ELEVATOR
+	EVENT_DISP SILPH_CO_5F_WIDTH, $3, $1b ; SILPH_CO_7F
+	EVENT_DISP SILPH_CO_5F_WIDTH, $f, $9 ; SILPH_CO_9F
+	EVENT_DISP SILPH_CO_5F_WIDTH, $5, $b ; SILPH_CO_3F
+	EVENT_DISP SILPH_CO_5F_WIDTH, $f, $3 ; SILPH_CO_3F
 
 SilphCo5Blocks: ; 1a116 (6:6116)
 	INCBIN "maps/silphco5.blk"
@@ -36865,11 +36866,11 @@ SilphCo6Object: ; 0x1a2fb (size=112)
 	db SPRITE_BALL, $f + 4, $2 + 4, $ff, $ff, $8a, X_ACCURACY ; item
 
 	; warp-to
-	EVENT_DISP $d, $0, $10 ; SILPH_CO_7F
-	EVENT_DISP $d, $0, $e ; SILPH_CO_5F
-	EVENT_DISP $d, $0, $12 ; SILPH_CO_ELEVATOR
-	EVENT_DISP $d, $3, $3 ; SILPH_CO_4F
-	EVENT_DISP $d, $3, $17 ; SILPH_CO_2F
+	EVENT_DISP SILPH_CO_6F_WIDTH, $0, $10 ; SILPH_CO_7F
+	EVENT_DISP SILPH_CO_6F_WIDTH, $0, $e ; SILPH_CO_5F
+	EVENT_DISP SILPH_CO_6F_WIDTH, $0, $12 ; SILPH_CO_ELEVATOR
+	EVENT_DISP SILPH_CO_6F_WIDTH, $3, $3 ; SILPH_CO_4F
+	EVENT_DISP SILPH_CO_6F_WIDTH, $3, $17 ; SILPH_CO_2F
 
 SilphCo6Blocks: ; 1a36b (6:636b)
 	INCBIN "maps/silphco6.blk"
@@ -37309,7 +37310,7 @@ Func_1a672: ; 1a672 (6:6672)
 	ld a, $2
 	ld [$cd38], a
 	call Func_1a6f0
-	ld a, $a2
+	ld a, (SFX_02_4e - SFX_Headers_02) / 3
 	call PlaySound
 	ret
 
@@ -37376,11 +37377,11 @@ CinnabarIslandObject: ; 0x1c022 (size=71)
 	db SPRITE_GAMBLER, $6 + 4, $e + 4, $ff, $ff, $2 ; person
 
 	; warp-to
-	EVENT_DISP $a, $3, $6 ; MANSION_1
-	EVENT_DISP $a, $3, $12 ; CINNABAR_GYM
-	EVENT_DISP $a, $9, $6 ; CINNABAR_LAB_1
-	EVENT_DISP $a, $b, $b ; CINNABAR_POKECENTER
-	EVENT_DISP $a, $b, $f ; CINNABAR_MART
+	EVENT_DISP CINNABAR_ISLAND_WIDTH, $3, $6 ; MANSION_1
+	EVENT_DISP CINNABAR_ISLAND_WIDTH, $3, $12 ; CINNABAR_GYM
+	EVENT_DISP CINNABAR_ISLAND_WIDTH, $9, $6 ; CINNABAR_LAB_1
+	EVENT_DISP CINNABAR_ISLAND_WIDTH, $b, $b ; CINNABAR_POKECENTER
+	EVENT_DISP CINNABAR_ISLAND_WIDTH, $b, $f ; CINNABAR_MART
 
 CinnabarIslandBlocks: ; 1c069 (7:4069)
 	INCBIN "maps/cinnabarisland.blk"
@@ -37426,7 +37427,7 @@ VermilionHouse1Blocks: ; 1c1de (7:41de)
 NameRaterBlocks: ; 1c1de (7:41de)
 LavenderHouse1Blocks: ; 1c1de (7:41de)
 LavenderHouse2Blocks: ; 1c1de (7:41de)
-CeruleanHouseBlocks: ; 1c1de (7:41de)
+CeruleanHouse1Blocks: ; 1c1de (7:41de)
 PewterHouse1Blocks: ; 1c1de (7:41de)
 PewterHouse2Blocks: ; 1c1de (7:41de)
 ViridianHouseBlocks: ; 0x1c1de 41DE size=16
@@ -37728,7 +37729,7 @@ CinnabarIslandScriptPointers: ; 1ca34 (7:4a34)
 	dw CinnabarIslandScript1
 
 CinnabarIslandScript0: ; 1ca38 (7:4a38)
-	ld b, $2b
+	ld b, SECRET_KEY
 	call IsItemInBag
 	ret nz
 	ld a, [$d361]
@@ -39128,8 +39129,8 @@ OaksLabObject: ; 0x1d40a (size=88)
 	db SPRITE_OAK_AIDE, $a + 4, $8 + 4, $ff, $ff, $b ; person
 
 	; warp-to
-	EVENT_DISP $5, $b, $4
-	EVENT_DISP $5, $b, $5
+	EVENT_DISP OAKS_LAB_WIDTH, $b, $4
+	EVENT_DISP OAKS_LAB_WIDTH, $b, $5
 
 ViridianMart_h: ; 0x1d462 to 0x1d46e (12 bytes) (bank=7) (id=42)
 	db MART ; tileset
@@ -39249,8 +39250,8 @@ ViridianMartObject: ; 0x1d50a (size=38)
 	db SPRITE_BLACK_HAIR_BOY_1, $3 + 4, $3 + 4, $ff, $ff, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $7, $4
+	EVENT_DISP VIRIDIAN_MART_WIDTH, $7, $3
+	EVENT_DISP VIRIDIAN_MART_WIDTH, $7, $4
 
 ViridianMartBlocks: ; 1d530 (7:5530)
 	INCBIN "maps/viridianmart.blk"
@@ -39291,8 +39292,8 @@ SchoolObject: ; 0x1d55d (size=32)
 	db SPRITE_LASS, $1 + 4, $4 + 4, $ff, $d0, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP VIRIDIAN_SCHOOL_WIDTH, $7, $2
+	EVENT_DISP VIRIDIAN_SCHOOL_WIDTH, $7, $3
 
 ViridianHouse_h: ; 0x1d57d to 0x1d589 (12 bytes) (bank=7) (id=44)
 	db HOUSE ; tileset
@@ -39353,8 +39354,8 @@ ViridianHouseObject: ; 0x1d5bb (size=44)
 	db SPRITE_CLIPBOARD, $0 + 4, $4 + 4, $ff, $ff, $4 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP VIRIDIAN_HOUSE_WIDTH, $7, $2
+	EVENT_DISP VIRIDIAN_HOUSE_WIDTH, $7, $3
 
 PewterHouse1_h: ; 0x1d5e7 to 0x1d5f3 (12 bytes) (bank=7) (id=55)
 	db HOUSE ; tileset
@@ -39402,8 +39403,8 @@ PewterHouse1Object: ; 0x1d616 (size=38)
 	db SPRITE_FAT_BALD_GUY, $2 + 4, $1 + 4, $ff, $ff, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP PEWTER_HOUSE_1_WIDTH, $7, $2
+	EVENT_DISP PEWTER_HOUSE_1_WIDTH, $7, $3
 
 PewterHouse2_h: ; 0x1d63c to 0x1d648 (12 bytes) (bank=7) (id=57)
 	db HOUSE ; tileset
@@ -39441,8 +39442,8 @@ PewterHouse2Object: ; 0x1d659 (size=32)
 	db SPRITE_BUG_CATCHER, $5 + 4, $4 + 4, $ff, $ff, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP PEWTER_HOUSE_2_WIDTH, $7, $2
+	EVENT_DISP PEWTER_HOUSE_2_WIDTH, $7, $3
 
 CeruleanHouseTrashed_h: ; 0x1d679 to 0x1d685 (12 bytes) (bank=7) (id=62)
 	db HOUSE ; tileset
@@ -39508,29 +39509,29 @@ CeruleanHouseTrashedObject: ; 0x1d6bf (size=43)
 	db SPRITE_GIRL, $6 + 4, $5 + 4, $fe, $2, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $0, $3
+	EVENT_DISP TRASHED_HOUSE_WIDTH, $7, $2
+	EVENT_DISP TRASHED_HOUSE_WIDTH, $7, $3
+	EVENT_DISP TRASHED_HOUSE_WIDTH, $0, $3
 
-CeruleanHouse_h: ; 0x1d6ea to 0x1d6f6 (12 bytes) (bank=7) (id=63)
+CeruleanHouse1_h: ; 0x1d6ea to 0x1d6f6 (12 bytes) (bank=7) (id=63)
 	db HOUSE ; tileset
-	db CERULEAN_HOUSE_HEIGHT, CERULEAN_HOUSE_WIDTH ; dimensions (y, x)
-	dw CeruleanHouseBlocks, CeruleanHouseTextPointers, CeruleanHouseScript ; blocks, texts, scripts
+	db CERULEAN_HOUSE_1_HEIGHT, CERULEAN_HOUSE_1_WIDTH ; dimensions (y, x)
+	dw CeruleanHouse1Blocks, CeruleanHouse1TextPointers, CeruleanHouse1Script ; blocks, texts, scripts
 	db $00 ; connections
-	dw CeruleanHouseObject ; objects
+	dw CeruleanHouse1Object ; objects
 
-CeruleanHouseScript: ; 1d6f6 (7:56f6)
+CeruleanHouse1Script: ; 1d6f6 (7:56f6)
 	jp EnableAutoTextBoxDrawing
 
-CeruleanHouseTextPointers: ; 1d6f9 (7:56f9)
-	dw CeruleanHouseText1
-	dw CeruleanHouseText2
+CeruleanHouse1TextPointers: ; 1d6f9 (7:56f9)
+	dw CeruleanHouse1Text1
+	dw CeruleanHouse1Text2
 
-CeruleanHouseText1: ; 1d6fd (7:56fd)
-	TX_FAR _CeruleanHouseText1
+CeruleanHouse1Text1: ; 1d6fd (7:56fd)
+	TX_FAR _CeruleanHouse1Text1
 	db "@"
 
-CeruleanHouseText2: ; 1d702 (7:5702)
+CeruleanHouse1Text2: ; 1d702 (7:5702)
 	db $08 ; asm
 	ld a, $6
 	ld [wWhichTrade], a
@@ -39538,7 +39539,7 @@ CeruleanHouseText2: ; 1d702 (7:5702)
 	call Predef
 	jp TextScriptEnd
 
-CeruleanHouseObject: ; 0x1d710 (size=32)
+CeruleanHouse1Object: ; 0x1d710 (size=32)
 	db $a ; border tile
 
 	db $2 ; warps
@@ -39552,8 +39553,8 @@ CeruleanHouseObject: ; 0x1d710 (size=32)
 	db SPRITE_GAMBLER, $2 + 4, $1 + 4, $ff, $ff, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP CERULEAN_HOUSE_1_WIDTH, $7, $2
+	EVENT_DISP CERULEAN_HOUSE_1_WIDTH, $7, $3
 
 BikeShop_h: ; 0x1d730 to 0x1d73c (12 bytes) (bank=7) (id=66)
 	db CLUB ; tileset
@@ -39731,8 +39732,8 @@ BikeShopObject: ; 0x1d866 (size=38)
 	db SPRITE_BUG_CATCHER, $3 + 4, $1 + 4, $ff, $d1, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP BIKE_SHOP_WIDTH, $7, $2
+	EVENT_DISP BIKE_SHOP_WIDTH, $7, $3
 
 BikeShopBlocks: ; 1d88c (7:588c)
 	INCBIN "maps/bikeshop.blk"
@@ -39879,8 +39880,8 @@ LavenderHouse1Object: ; 0x1d96a (size=56)
 	db SPRITE_BOOK_MAP_DEX, $3 + 4, $3 + 4, $ff, $ff, $6 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP LAVENDER_HOUSE_1_WIDTH, $7, $2
+	EVENT_DISP LAVENDER_HOUSE_1_WIDTH, $7, $3
 
 LavenderHouse2_h: ; 0x1d9a2 to 0x1d9ae (12 bytes) (bank=7) (id=151)
 	db HOUSE ; tileset
@@ -39940,8 +39941,8 @@ LavenderHouse2Object: ; 0x1d9e6 (size=32)
 	db SPRITE_BRUNETTE_GIRL, $4 + 4, $2 + 4, $ff, $d3, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP LAVENDER_HOUSE_2_WIDTH, $7, $2
+	EVENT_DISP LAVENDER_HOUSE_2_WIDTH, $7, $3
 
 NameRater_h: ; 0x1da06 to 0x1da12 (12 bytes) (bank=7) (id=229)
 	db HOUSE ; tileset
@@ -40073,8 +40074,8 @@ NameRaterObject: ; 0x1dad6 (size=26)
 	db SPRITE_MR_MASTERBALL, $3 + 4, $5 + 4, $ff, $d2, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP NAME_RATERS_HOUSE_WIDTH, $7, $2
+	EVENT_DISP NAME_RATERS_HOUSE_WIDTH, $7, $3
 
 VermilionHouse1_h: ; 0x1daf0 to 0x1dafc (12 bytes) (bank=7) (id=93)
 	db HOUSE ; tileset
@@ -40123,8 +40124,8 @@ VermilionHouse1Object: ; 0x1db20 (size=38)
 	db SPRITE_PAPER_SHEET, $3 + 4, $4 + 4, $ff, $ff, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP VERMILION_HOUSE_1_WIDTH, $7, $2
+	EVENT_DISP VERMILION_HOUSE_1_WIDTH, $7, $3
 
 VermilionDock_h: ; 0x1db46 to 0x1db52 (12 bytes) (bank=7) (id=94)
 	db SHIP_PORT ; tileset
@@ -40210,7 +40211,7 @@ VermilionDock_1db9b: ; 1db9b (7:5b9b)
 	ld b, [hl]
 	push bc
 	push hl
-	ld a, $a9
+	ld a, (SFX_02_54 - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent
 	ld a, $ff
 	ld [$cfcb], a
@@ -40331,7 +40332,7 @@ VermilionDock_1dc94: ; 1dc94 (7:5c94)
 	ld [hli], a
 	ld [hli], a
 	ld [hl], a
-	ld a, $a9
+	ld a, (SFX_02_54 - SFX_Headers_02) / 3
 	call PlaySound
 	ld c, $78
 	call DelayFrames
@@ -40356,8 +40357,8 @@ VermilionDockObject: ; 0x1dcc6 (size=20)
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $e, $0, $e
-	EVENT_DISP $e, $2, $e ; SS_ANNE_1
+	EVENT_DISP VERMILION_DOCK_WIDTH, $0, $e
+	EVENT_DISP VERMILION_DOCK_WIDTH, $2, $e ; SS_ANNE_1
 
 VermilionDockBlocks: ; 1dcda (7:5cda)
 	INCBIN "maps/vermiliondock.blk"
@@ -40406,8 +40407,8 @@ CeladonMansion5Object: ; 0x1dd5c (size=32)
 	db SPRITE_BALL, $3 + 4, $4 + 4, $ff, $ff, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2 ; CELADON_MANSION_4
-	EVENT_DISP $4, $7, $3 ; CELADON_MANSION_4
+	EVENT_DISP CELADON_MANSION_5_WIDTH, $7, $2 ; CELADON_MANSION_4
+	EVENT_DISP CELADON_MANSION_5_WIDTH, $7, $3 ; CELADON_MANSION_4
 
 FuchsiaMart_h: ; 0x1dd7c to 0x1dd88 (12 bytes) (bank=7) (id=152)
 	db MART ; tileset
@@ -40447,8 +40448,8 @@ FuchsiaMartObject: ; 0x1dd9b (size=38)
 	db SPRITE_LASS, $5 + 4, $6 + 4, $fe, $1, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $7, $4
+	EVENT_DISP FUCHSIA_MART_WIDTH, $7, $3
+	EVENT_DISP FUCHSIA_MART_WIDTH, $7, $4
 
 FuchsiaMartBlocks: ; 1ddc1 (7:5dc1)
 	INCBIN "maps/fuchsiamart.blk"
@@ -40504,8 +40505,8 @@ SaffronHouse1Object: ; 0x1de04 (size=44)
 	db SPRITE_PAPER_SHEET, $3 + 4, $3 + 4, $ff, $ff, $4 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP SAFFRON_HOUSE_1_WIDTH, $7, $2
+	EVENT_DISP SAFFRON_HOUSE_1_WIDTH, $7, $3
 
 SaffronHouse2_h: ; 0x1de30 to 0x1de3c (12 bytes) (bank=7) (id=183)
 	db HOUSE ; tileset
@@ -40574,8 +40575,8 @@ SaffronHouse2Object: ; 0x1de8a (size=26)
 	db SPRITE_FISHER, $3 + 4, $5 + 4, $ff, $d2, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP SAFFRON_HOUSE_2_WIDTH, $7, $2
+	EVENT_DISP SAFFRON_HOUSE_2_WIDTH, $7, $3
 
 DiglettsCaveRoute2_h: ; 0x1dea4 to 0x1deb0 (12 bytes) (bank=7) (id=46)
 	db CAVERN ; tileset
@@ -40610,9 +40611,9 @@ DiglettsCaveRoute2Object: ; 0x1debf (size=34)
 	db SPRITE_FISHER, $3 + 4, $3 + 4, $ff, $ff, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $4, $4 ; DIGLETTS_CAVE
+	EVENT_DISP DIGLETTS_CAVE_EXIT_WIDTH, $7, $2
+	EVENT_DISP DIGLETTS_CAVE_EXIT_WIDTH, $7, $3
+	EVENT_DISP DIGLETTS_CAVE_EXIT_WIDTH, $4, $4 ; DIGLETTS_CAVE
 
 Route2House_h: ; 0x1dee1 to 0x1deed (12 bytes) (bank=7) (id=48)
 	db HOUSE ; tileset
@@ -40654,8 +40655,8 @@ Route2HouseObject: ; 0x1df07 (size=32)
 	db SPRITE_GAMEBOY_KID_COPY, $1 + 4, $4 + 4, $ff, $d0, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP ROUTE_2_HOUSE_WIDTH, $7, $2
+	EVENT_DISP ROUTE_2_HOUSE_WIDTH, $7, $3
 
 Route5Gate_h: ; 0x1df27 to 0x1df33 (12 bytes) (bank=7) (id=70)
 	db GATE ; tileset
@@ -40801,10 +40802,10 @@ Route5GateObject: ; 0x1dffb (size=42)
 	db SPRITE_GUARD, $3 + 4, $1 + 4, $ff, $d3, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $5, $3
-	EVENT_DISP $4, $5, $4
-	EVENT_DISP $4, $0, $3
-	EVENT_DISP $4, $0, $4
+	EVENT_DISP ROUTE_5_GATE_WIDTH, $5, $3
+	EVENT_DISP ROUTE_5_GATE_WIDTH, $5, $4
+	EVENT_DISP ROUTE_5_GATE_WIDTH, $0, $3
+	EVENT_DISP ROUTE_5_GATE_WIDTH, $0, $4
 
 Route5GateBlocks: ; 1e025 (7:6025)
 	INCBIN "maps/route5gate.blk"
@@ -40904,10 +40905,10 @@ Route6GateObject: ; 0x1e0be (size=42)
 	db SPRITE_GUARD, $2 + 4, $6 + 4, $ff, $d2, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $5, $3
-	EVENT_DISP $4, $5, $4
-	EVENT_DISP $4, $0, $3
-	EVENT_DISP $4, $0, $4
+	EVENT_DISP ROUTE_6_GATE_WIDTH, $5, $3
+	EVENT_DISP ROUTE_6_GATE_WIDTH, $5, $4
+	EVENT_DISP ROUTE_6_GATE_WIDTH, $0, $3
+	EVENT_DISP ROUTE_6_GATE_WIDTH, $0, $4
 
 Route6GateBlocks: ; 1e0e8 (7:60e8)
 	INCBIN "maps/route6gate.blk"
@@ -41010,10 +41011,10 @@ Route7GateObject: ; 0x1e185 (size=42)
 	db SPRITE_GUARD, $1 + 4, $3 + 4, $ff, $d0, $1 ; person
 
 	; warp-to
-	EVENT_DISP $3, $3, $0
-	EVENT_DISP $3, $4, $0
-	EVENT_DISP $3, $3, $5
-	EVENT_DISP $3, $4, $5
+	EVENT_DISP ROUTE_7_GATE_WIDTH, $3, $0
+	EVENT_DISP ROUTE_7_GATE_WIDTH, $4, $0
+	EVENT_DISP ROUTE_7_GATE_WIDTH, $3, $5
+	EVENT_DISP ROUTE_7_GATE_WIDTH, $4, $5
 
 Route7GateBlocks: ; 1e1af (7:61af)
 	INCBIN "maps/route7gate.blk"
@@ -41113,10 +41114,10 @@ Route8GateObject: ; 0x1e247 (size=42)
 	db SPRITE_GUARD, $1 + 4, $2 + 4, $ff, $d0, $1 ; person
 
 	; warp-to
-	EVENT_DISP $3, $3, $0
-	EVENT_DISP $3, $4, $0
-	EVENT_DISP $3, $3, $5
-	EVENT_DISP $3, $4, $5
+	EVENT_DISP ROUTE_8_GATE_WIDTH, $3, $0
+	EVENT_DISP ROUTE_8_GATE_WIDTH, $4, $0
+	EVENT_DISP ROUTE_8_GATE_WIDTH, $3, $5
+	EVENT_DISP ROUTE_8_GATE_WIDTH, $4, $5
 
 Route8GateBlocks: ; 1e271 (7:6271)
 	INCBIN "maps/route8gate.blk"
@@ -41154,9 +41155,9 @@ UndergroundPathEntranceRoute8Object: ; 0x1e298 (size=34)
 	db SPRITE_GIRL, $4 + 4, $3 + 4, $ff, $ff, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $7, $4
-	EVENT_DISP $4, $4, $4 ; UNDERGROUND_PATH_WE
+	EVENT_DISP PATH_ENTRANCE_ROUTE_8_WIDTH, $7, $3
+	EVENT_DISP PATH_ENTRANCE_ROUTE_8_WIDTH, $7, $4
+	EVENT_DISP PATH_ENTRANCE_ROUTE_8_WIDTH, $4, $4 ; UNDERGROUND_PATH_WE
 
 PowerPlant_h: ; 0x1e2ba to 0x1e2c6 (12 bytes) (bank=7) (id=83)
 	db FACILITY ; tileset
@@ -41369,9 +41370,9 @@ PowerPlantObject: ; 0x1e3bf (size=135)
 	db SPRITE_BALL, $20 + 4, $14 + 4, $ff, $ff, $8e, TM_33 ; item
 
 	; warp-to
-	EVENT_DISP $14, $23, $4
-	EVENT_DISP $14, $23, $5
-	EVENT_DISP $14, $b, $0
+	EVENT_DISP POWER_PLANT_WIDTH, $23, $4
+	EVENT_DISP POWER_PLANT_WIDTH, $23, $5
+	EVENT_DISP POWER_PLANT_WIDTH, $b, $0
 
 PowerPlantBlocks: ; 1e446 (7:6446)
 	INCBIN "maps/powerplant.blk"
@@ -41410,9 +41411,9 @@ DiglettsCaveEntranceRoute11Object: ; 0x1e5ca (size=34)
 	db SPRITE_GAMBLER, $3 + 4, $2 + 4, $ff, $ff, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $4, $4 ; DIGLETTS_CAVE
+	EVENT_DISP DIGLETTS_CAVE_ENTRANCE_WIDTH, $7, $2
+	EVENT_DISP DIGLETTS_CAVE_ENTRANCE_WIDTH, $7, $3
+	EVENT_DISP DIGLETTS_CAVE_ENTRANCE_WIDTH, $4, $4 ; DIGLETTS_CAVE
 
 Route16House_h: ; 0x1e5ec to 0x1e5f8 (12 bytes) (bank=7) (id=188)
 	db HOUSE ; tileset
@@ -41492,8 +41493,8 @@ Route16HouseObject: ; 0x1e657 (size=32)
 	db SPRITE_BIRD, $4 + 4, $6 + 4, $fe, $0, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP ROUTE_16_HOUSE_WIDTH, $7, $2
+	EVENT_DISP ROUTE_16_HOUSE_WIDTH, $7, $3
 
 Route22Gate_h: ; 0x1e677 to 0x1e683 (12 bytes) (bank=7) (id=193)
 	db GATE ; tileset
@@ -41581,7 +41582,7 @@ Route22GateText1: ; 1e6e1 (7:66e1)
 UnnamedText_1e704: ; 1e704 (7:6704)
 	TX_FAR _UnnamedText_1e704 ; 0x8cfbb
 	db $8
-	ld a, $a5
+	ld a, (SFX_02_51 - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent
 	call WaitForSoundToFinish
 	ld hl, UnnamedText_1e715 ; $6715
@@ -41610,10 +41611,10 @@ Route22GateObject: ; 0x1e720 (size=42)
 	db SPRITE_GUARD, $2 + 4, $6 + 4, $ff, $d2, $1 ; person
 
 	; warp-to
-	EVENT_DISP $5, $7, $4
-	EVENT_DISP $5, $7, $5
-	EVENT_DISP $5, $0, $4
-	EVENT_DISP $5, $0, $5
+	EVENT_DISP ROUTE_22_GATE_WIDTH, $7, $4
+	EVENT_DISP ROUTE_22_GATE_WIDTH, $7, $5
+	EVENT_DISP ROUTE_22_GATE_WIDTH, $0, $4
+	EVENT_DISP ROUTE_22_GATE_WIDTH, $0, $5
 
 Route22GateBlocks: ; 1e74a (7:674a)
 	INCBIN "maps/route22gate.blk"
@@ -41849,8 +41850,8 @@ BillsHouseObject: ; 0x1e8df (size=38)
 	db SPRITE_BLACK_HAIR_BOY_2, $5 + 4, $6 + 4, $ff, $ff, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP BILLS_HOUSE_WIDTH, $7, $2
+	EVENT_DISP BILLS_HOUSE_WIDTH, $7, $3
 
 BillsHouseBlocks: ; 1e905 (7:6905)
 	INCBIN "maps/billshouse.blk"
@@ -42103,7 +42104,7 @@ Func_1ea92: ; 1ea92 (7:6a92)
 	jp Func_1eb0a
 .asm_1eab8
 	call WaitForSoundToFinish
-	ld a, $a5
+	ld a, (SFX_02_51 - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 	ld hl, CinnabarGymQuizIncorrectText ; $6b05
@@ -42136,7 +42137,7 @@ CinnabarGymQuizCorrectText: ; 1eae3 (7:6ae3)
 	and a
 	jp nz, TextScriptEnd
 	call WaitForSoundToFinish
-	ld a, $ad
+	ld a, (SFX_02_57 - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 	jp TextScriptEnd
@@ -42228,22 +42229,22 @@ Func_1eb6e: ; 1eb6e (7:6b6e)
 	call Func_3ef5
 	ld c, $20
 	call DelayFrames
-	ld a, $8c
+	ld a, (SFX_02_3c - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 	ld c, $50
 	call DelayFrames
-	ld a, $9c
+	ld a, (SFX_02_48 - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 	ld c, $30
 	call DelayFrames
-	ld a, $8c
+	ld a, (SFX_02_3c - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 	ld c, $20
 	call DelayFrames
-	ld a, $86
+	ld a, (SFX_02_3a - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 	call Func_2307
@@ -42270,7 +42271,7 @@ BillsHouseInitiatedText: ; 1ebe2 (7:6be2)
 	call PlaySound
 	ld c, $10
 	call DelayFrames
-	ld a, $9d
+	ld a, (SFX_02_49 - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 	ld c, $3c
@@ -43697,7 +43698,7 @@ Func_37395: ; 37395 (d:7395)
 	ld [hli], a
 	ld [hl], a
 	call WaitForSoundToFinish
-	ld a, $c0
+	ld a, (SFX_1f_66 - SFX_Headers_1f) / 3
 	call PlaySound
 	ld hl, StartSlotMachineText
 	call PrintText
@@ -44144,7 +44145,7 @@ SlotReward15Func: ; 376e5 (d:76e5)
 	ret
 
 SlotReward100Func: ; 376f3 (d:76f3)
-	ld a, $94
+	ld a, (SFX_1f_42 - SFX_Headers_1f) / 3
 	call PlaySound
 	xor a
 	ld [$cd4c], a
@@ -44155,7 +44156,7 @@ SlotReward100Func: ; 376f3 (d:76f3)
 SlotReward300Func: ; 37702 (d:7702)
 	ld hl, UnnamedText_37722
 	call PrintText
-	ld a, $89
+	ld a, (SFX_1f_3b - SFX_Headers_1f) / 3
 	call PlaySound
 	call GenRandom
 	cp $80
@@ -44243,7 +44244,7 @@ Func_3776b: ; 3776b (d:776b)
 	call Predef
 	call Func_37754
 	call Func_3775f
-	ld a, $bf
+	ld a, (SFX_1f_65 - SFX_Headers_1f) / 3
 	call PlaySound
 	ld a, [W_SUBANIMTRANSFORM]
 	dec a
@@ -44392,7 +44393,7 @@ Func_37882: ; 37882 (d:7882)
 	jr z, .skip
 .loop
 	inc [hl]
-	ld a, $be
+	ld a, (SFX_1f_64 - SFX_Headers_1f) / 3
 	jp PlaySound
 .skip
 	ld a, [de]
@@ -52652,7 +52653,7 @@ DecrementAICount: ; 3a695 (e:6695)
 	ret
 
 Func_3a69b: ; 3a69b (e:669b)
-	ld a,$8E
+	ld a,(SFX_08_3e - SFX_Headers_08) / 3
 	jp PlaySoundWaitForCurrent
 
 AIUseFullRestore: ; 3a6a0 (e:66a0)
@@ -53289,7 +53290,7 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	push hl
 	ld hl, UnnamedText_3af43 ; $6f43
 	call Func_3c59
-	ld a, $89
+	ld a, (SFX_02_3b - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent
 	call WaitForSoundToFinish
 	ld c, $28
@@ -56430,7 +56431,7 @@ asm_3c202: ; 3c202 (f:4202)
 	ld hl, UnnamedText_3c22e ; $422e
 .asm_3c216
 	call PrintText
-	ld a, $97
+	ld a, (SFX_08_44 - SFX_Headers_08) / 3
 	call PlaySoundWaitForCurrent
 	xor a
 	ld [H_WHOSETURN], a ; $fff3
@@ -56941,13 +56942,13 @@ FaintEnemyPokemon ; 0x3c567
 	xor a
 	ld [$c0f1], a
 	ld [$c0f2], a
-	ld a, $9e ; SFX_FALL?
+	ld a, (SFX_08_48 - SFX_Headers_08) / 3 ; SFX_FALL?
 	call PlaySoundWaitForCurrent
 .sfxwait
 	ld a, [$c02a]
-	cp $9e
+	cp (SFX_08_48 - SFX_Headers_08) / 3
 	jr z, .sfxwait
-	ld a, $95 ; SFX_DROP
+	ld a, (SFX_08_43 - SFX_Headers_08) / 3 ; SFX_DROP
 	call PlaySound
 	call WaitForSoundToFinish
 	jr .sfxplayed
@@ -57731,7 +57732,7 @@ Func_3cab9: ; 3cab9 (f:4ab9)
 	dec a
 .asm_3cb81
 	ld [$cf0b], a
-	ld a, $97
+	ld a, (SFX_08_44 - SFX_Headers_08) / 3
 	call PlaySoundWaitForCurrent
 	ld hl, UnnamedText_3cba1 ; $4ba1
 	call PrintText
@@ -67326,7 +67327,7 @@ Func_41298: ; 41298 (10:5298)
 	ld b, $7
 	call Func_41842
 	call Func_41186
-	ld a, $8d
+	ld a, (SFX_02_3d - SFX_Headers_02) / 3
 	call PlaySound
 	ld c, $14
 .asm_412c8
@@ -67371,7 +67372,7 @@ Func_412d2: ; 412d2 (10:52d2)
 	ld c, a
 	cp $a0
 	jr nc, .asm_41318
-	ld a, $8c
+	ld a, (SFX_02_3c - SFX_Headers_02) / 3
 	call PlaySound
 	jr .asm_412e7
 .asm_41318
@@ -67902,14 +67903,14 @@ PlayIntroScene: ; 4169d (10:569d)
 	ret c
 
 ; hip
-	ld a, $b9
+	ld a, (SFX_1f_5f - SFX_Headers_1f) / 3
 	call PlaySound
 	xor a
 	ld [$d09f], a
 	ld de, IntroNidorinoAnimation1
 	call AnimateIntroNidorino
 ; hop
-	ld a, $ba
+	ld a, (SFX_1f_60 - SFX_Headers_1f) / 3
 	call PlaySound
 	ld de, IntroNidorinoAnimation2
 	call AnimateIntroNidorino
@@ -67918,12 +67919,12 @@ PlayIntroScene: ; 4169d (10:569d)
 	ret c
 
 ; hip
-	ld a, $b9
+	ld a, (SFX_1f_5f - SFX_Headers_1f) / 3
 	call PlaySound
 	ld de, IntroNidorinoAnimation1
 	call AnimateIntroNidorino
 ; hop
-	ld a, $ba
+	ld a, (SFX_1f_60 - SFX_Headers_1f) / 3
 	call PlaySound
 	ld de, IntroNidorinoAnimation2
 	call AnimateIntroNidorino
@@ -67934,7 +67935,7 @@ PlayIntroScene: ; 4169d (10:569d)
 ; raise
 	ld b, $4
 	call Func_4183f
-	ld a, $bb
+	ld a, (SFX_1f_61 - SFX_Headers_1f) / 3
 	call PlaySound
 	ld de, $401
 	call Func_4180e
@@ -67945,12 +67946,12 @@ PlayIntroScene: ; 4169d (10:569d)
 ; slash
 	ld b, $5
 	call Func_4183f
-	ld a, $bc
+	ld a, (SFX_1f_62 - SFX_Headers_1f) / 3
 	call PlaySound
 	ld de, $800
 	call Func_4180e
 ; hip
-	ld a, $b9
+	ld a, (SFX_1f_5f - SFX_Headers_1f) / 3
 	call PlaySound
 	ld a, $24
 	ld [$d09f], a
@@ -67969,14 +67970,14 @@ PlayIntroScene: ; 4169d (10:569d)
 	ret c
 
 ; hip
-	ld a, $b9
+	ld a, (SFX_1f_5f - SFX_Headers_1f) / 3
 	call PlaySound
 	xor a
 	ld [$d09f], a
 	ld de, IntroNidorinoAnimation4 ; $5931
 	call AnimateIntroNidorino
 ; hop
-	ld a, $ba
+	ld a, (SFX_1f_60 - SFX_Headers_1f) / 3
 	call PlaySound
 	ld de, IntroNidorinoAnimation5 ; $593c
 	call AnimateIntroNidorino
@@ -67993,7 +67994,7 @@ PlayIntroScene: ; 4169d (10:569d)
 	ret c
 
 ; lunge
-	ld a, $b8
+	ld a, (SFX_1f_5e - SFX_Headers_1f) / 3
 	call PlaySound
 	ld a, $48
 	ld [$d09f], a
@@ -68422,12 +68423,12 @@ LavenderTownObject: ; 0x4402d (size=88)
 	db SPRITE_BLACK_HAIR_BOY_2, $7 + 4, $8 + 4, $fe, $2, $3 ; person
 
 	; warp-to
-	EVENT_DISP $a, $5, $3 ; LAVENDER_POKECENTER
-	EVENT_DISP $a, $5, $e ; POKEMONTOWER_1
-	EVENT_DISP $a, $9, $7 ; LAVENDER_HOUSE_1
-	EVENT_DISP $a, $d, $f ; LAVENDER_MART
-	EVENT_DISP $a, $d, $3 ; LAVENDER_HOUSE_2
-	EVENT_DISP $a, $d, $7 ; NAME_RATERS_HOUSE
+	EVENT_DISP LAVENDER_TOWN_WIDTH, $5, $3 ; LAVENDER_POKECENTER
+	EVENT_DISP LAVENDER_TOWN_WIDTH, $5, $e ; POKEMONTOWER_1
+	EVENT_DISP LAVENDER_TOWN_WIDTH, $9, $7 ; LAVENDER_HOUSE_1
+	EVENT_DISP LAVENDER_TOWN_WIDTH, $d, $f ; LAVENDER_MART
+	EVENT_DISP LAVENDER_TOWN_WIDTH, $d, $3 ; LAVENDER_HOUSE_2
+	EVENT_DISP LAVENDER_TOWN_WIDTH, $d, $7 ; NAME_RATERS_HOUSE
 
 LavenderTownBlocks: ; 44085 (11:4085)
 	INCBIN "maps/lavendertown.blk"
@@ -68712,8 +68713,8 @@ ViridianPokecenterObject: ; 0x44277 (size=44)
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
 
 	; warp-to
-	EVENT_DISP $7, $7, $3
-	EVENT_DISP $7, $7, $4
+	EVENT_DISP VIRIDIAN_POKECENTER_WIDTH, $7, $3
+	EVENT_DISP VIRIDIAN_POKECENTER_WIDTH, $7, $4
 
 Mansion1_h: ; 0x442a3 to 0x442af (12 bytes) (bank=11) (id=165)
 	db FACILITY ; tileset
@@ -68836,7 +68837,7 @@ Mansion1Text4: ; 4435a (11:435a)
 	set 5, [hl]
 	ld hl, MansionSwitchPressedText
 	call PrintText
-	ld a, $ad
+	ld a, (SFX_02_57 - SFX_Headers_02) / 3
 	call PlaySound
 	ld hl, $d796
 	bit 0, [hl]
@@ -68883,14 +68884,14 @@ Mansion1Object: ; 0x443a4 (size=90)
 	db SPRITE_BALL, $15 + 4, $12 + 4, $ff, $ff, $83, CARBOS ; item
 
 	; warp-to
-	EVENT_DISP $f, $1b, $4
-	EVENT_DISP $f, $1b, $5
-	EVENT_DISP $f, $1b, $6
-	EVENT_DISP $f, $1b, $7
-	EVENT_DISP $f, $a, $5 ; MANSION_2
-	EVENT_DISP $f, $17, $15 ; MANSION_4
-	EVENT_DISP $f, $1b, $1a
-	EVENT_DISP $f, $1b, $1b
+	EVENT_DISP MANSION_1_WIDTH, $1b, $4
+	EVENT_DISP MANSION_1_WIDTH, $1b, $5
+	EVENT_DISP MANSION_1_WIDTH, $1b, $6
+	EVENT_DISP MANSION_1_WIDTH, $1b, $7
+	EVENT_DISP MANSION_1_WIDTH, $a, $5 ; MANSION_2
+	EVENT_DISP MANSION_1_WIDTH, $17, $15 ; MANSION_4
+	EVENT_DISP MANSION_1_WIDTH, $1b, $1a
+	EVENT_DISP MANSION_1_WIDTH, $1b, $1b
 
 Mansion1Blocks: ; 443fe (11:43fe)
 	INCBIN "maps/mansion1.blk"
@@ -69143,14 +69144,14 @@ RockTunnel1Object: ; 0x445f6 (size=127)
 	db SPRITE_LASS, $18 + 4, $20 + 4, $ff, $d3, $47, JR__TRAINER_F + $C8, $13 ; trainer
 
 	; warp-to
-	EVENT_DISP $14, $3, $f
-	EVENT_DISP $14, $0, $f
-	EVENT_DISP $14, $21, $f
-	EVENT_DISP $14, $23, $f
-	EVENT_DISP $14, $3, $25 ; ROCK_TUNNEL_2
-	EVENT_DISP $14, $3, $5 ; ROCK_TUNNEL_2
-	EVENT_DISP $14, $b, $11 ; ROCK_TUNNEL_2
-	EVENT_DISP $14, $11, $25 ; ROCK_TUNNEL_2
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $3, $f
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $0, $f
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $21, $f
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $23, $f
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $3, $25 ; ROCK_TUNNEL_2
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $3, $5 ; ROCK_TUNNEL_2
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $b, $11 ; ROCK_TUNNEL_2
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $11, $25 ; ROCK_TUNNEL_2
 
 RockTunnel1Blocks: ; 44675 (11:4675)
 	INCBIN "maps/rocktunnel1.blk"
@@ -69232,17 +69233,17 @@ SeafoamIslands1Object: ; 0x4484f (size=72)
 	db SPRITE_BOULDER, $7 + 4, $1a + 4, $ff, $10, $2 ; person
 
 	; warp-to
-	EVENT_DISP $f, $11, $4
-	EVENT_DISP $f, $11, $5
-	EVENT_DISP $f, $11, $1a
-	EVENT_DISP $f, $11, $1b
-	EVENT_DISP $f, $5, $7 ; SEAFOAM_ISLANDS_2
-	EVENT_DISP $f, $3, $19 ; SEAFOAM_ISLANDS_2
-	EVENT_DISP $f, $f, $17 ; SEAFOAM_ISLANDS_2
+	EVENT_DISP SEAFOAM_ISLANDS_1_WIDTH, $11, $4
+	EVENT_DISP SEAFOAM_ISLANDS_1_WIDTH, $11, $5
+	EVENT_DISP SEAFOAM_ISLANDS_1_WIDTH, $11, $1a
+	EVENT_DISP SEAFOAM_ISLANDS_1_WIDTH, $11, $1b
+	EVENT_DISP SEAFOAM_ISLANDS_1_WIDTH, $5, $7 ; SEAFOAM_ISLANDS_2
+	EVENT_DISP SEAFOAM_ISLANDS_1_WIDTH, $3, $19 ; SEAFOAM_ISLANDS_2
+	EVENT_DISP SEAFOAM_ISLANDS_1_WIDTH, $f, $17 ; SEAFOAM_ISLANDS_2
 
 	; holes
-	EVENT_DISP $f, $6, $11
-	EVENT_DISP $f, $6, $18
+	EVENT_DISP SEAFOAM_ISLANDS_1_WIDTH, $6, $11
+	EVENT_DISP SEAFOAM_ISLANDS_1_WIDTH, $6, $18
 
 SeafoamIslands1Blocks: ; 4489f (11:489f)
 	INCBIN "maps/seafoamislands1.blk"
@@ -69277,8 +69278,8 @@ SSAnne3Object: ; 0x4493c (size=26)
 	db SPRITE_SAILOR, $3 + 4, $9 + 4, $fe, $2, $1 ; person
 
 	; warp-to
-	EVENT_DISP $a, $3, $0 ; SS_ANNE_5
-	EVENT_DISP $a, $3, $13 ; SS_ANNE_2
+	EVENT_DISP SS_ANNE_3_WIDTH, $3, $0 ; SS_ANNE_5
+	EVENT_DISP SS_ANNE_3_WIDTH, $3, $13 ; SS_ANNE_2
 
 SSAnne3Blocks: ; 44956 (11:4956)
 	INCBIN "maps/ssanne3.blk"
@@ -69520,10 +69521,10 @@ VictoryRoad3Object: ; 0x44acd (size=106)
 	db SPRITE_BOULDER, $f + 4, $16 + 4, $ff, $10, $a ; person
 
 	; warp-to
-	EVENT_DISP $f, $7, $17 ; VICTORY_ROAD_2
-	EVENT_DISP $f, $8, $1a ; VICTORY_ROAD_2
-	EVENT_DISP $f, $f, $1b ; VICTORY_ROAD_2
-	EVENT_DISP $f, $0, $2 ; VICTORY_ROAD_2
+	EVENT_DISP VICTORY_ROAD_3_WIDTH, $7, $17 ; VICTORY_ROAD_2
+	EVENT_DISP VICTORY_ROAD_3_WIDTH, $8, $1a ; VICTORY_ROAD_2
+	EVENT_DISP VICTORY_ROAD_3_WIDTH, $f, $1b ; VICTORY_ROAD_2
+	EVENT_DISP VICTORY_ROAD_3_WIDTH, $0, $2 ; VICTORY_ROAD_2
 
 VictoryRoad3Blocks: ; 44b37 (11:4b37)
 	INCBIN "maps/victoryroad3.blk"
@@ -69558,7 +69559,7 @@ Func_44be0: ; 44be0 (11:4be0)
 	ld a, $54
 	jr .asm_44c03
 .asm_44bf7
-	ld a, $ad
+	ld a, (SFX_02_57 - SFX_Headers_02) / 3
 	call PlaySound
 	ld hl, $d815
 	bit 7, [hl]
@@ -69751,11 +69752,11 @@ RocketHideout1Object: ; 0x44ce7 (size=98)
 	db SPRITE_BALL, $11 + 4, $9 + 4, $ff, $ff, $87, HYPER_POTION ; item
 
 	; warp-to
-	EVENT_DISP $f, $2, $17 ; ROCKET_HIDEOUT_2
-	EVENT_DISP $f, $2, $15 ; GAME_CORNER
-	EVENT_DISP $f, $13, $18 ; ROCKET_HIDEOUT_ELEVATOR
-	EVENT_DISP $f, $18, $15 ; ROCKET_HIDEOUT_2
-	EVENT_DISP $f, $13, $19 ; ROCKET_HIDEOUT_ELEVATOR
+	EVENT_DISP ROCKET_HIDEOUT_1_WIDTH, $2, $17 ; ROCKET_HIDEOUT_2
+	EVENT_DISP ROCKET_HIDEOUT_1_WIDTH, $2, $15 ; GAME_CORNER
+	EVENT_DISP ROCKET_HIDEOUT_1_WIDTH, $13, $18 ; ROCKET_HIDEOUT_ELEVATOR
+	EVENT_DISP ROCKET_HIDEOUT_1_WIDTH, $18, $15 ; ROCKET_HIDEOUT_2
+	EVENT_DISP ROCKET_HIDEOUT_1_WIDTH, $13, $19 ; ROCKET_HIDEOUT_ELEVATOR
 
 RocketHideout1Blocks: ; 44d49 (11:4d49)
 	INCBIN "maps/rockethideout1.blk"
@@ -69794,7 +69795,7 @@ RocketHideout2Script0: ; 44e42 (11:4e42)
 	ld hl, $d736
 	set 7, [hl]
 	call Func_3486
-	ld a, $a7
+	ld a, (SFX_02_52 - SFX_Headers_02) / 3
 	call PlaySound
 	ld a, $ff
 	ld [wJoypadForbiddenButtonsMask], a
@@ -70289,11 +70290,11 @@ RocketHideout2Object: ; 0x450f7 (size=80)
 	db SPRITE_BALL, $15 + 4, $3 + 4, $ff, $ff, $85, SUPER_POTION ; item
 
 	; warp-to
-	EVENT_DISP $f, $8, $1b ; ROCKET_HIDEOUT_1
-	EVENT_DISP $f, $8, $15 ; ROCKET_HIDEOUT_3
-	EVENT_DISP $f, $13, $18 ; ROCKET_HIDEOUT_ELEVATOR
-	EVENT_DISP $f, $16, $15 ; ROCKET_HIDEOUT_1
-	EVENT_DISP $f, $13, $19 ; ROCKET_HIDEOUT_ELEVATOR
+	EVENT_DISP ROCKET_HIDEOUT_2_WIDTH, $8, $1b ; ROCKET_HIDEOUT_1
+	EVENT_DISP ROCKET_HIDEOUT_2_WIDTH, $8, $15 ; ROCKET_HIDEOUT_3
+	EVENT_DISP ROCKET_HIDEOUT_2_WIDTH, $13, $18 ; ROCKET_HIDEOUT_ELEVATOR
+	EVENT_DISP ROCKET_HIDEOUT_2_WIDTH, $16, $15 ; ROCKET_HIDEOUT_1
+	EVENT_DISP ROCKET_HIDEOUT_2_WIDTH, $13, $19 ; ROCKET_HIDEOUT_ELEVATOR
 
 RocketHideout2Blocks: ; 45147 (11:5147)
 	INCBIN "maps/rockethideout2.blk"
@@ -70332,7 +70333,7 @@ RocketHideout3Script0: ; 45240 (11:5240)
 	ld hl, $d736
 	set 7, [hl]
 	call Func_3486
-	ld a, $a7
+	ld a, (SFX_02_52 - SFX_Headers_02) / 3
 	call PlaySound
 	ld a, $ff
 	ld [wJoypadForbiddenButtonsMask], a
@@ -70533,8 +70534,8 @@ RocketHideout3Object: ; 0x4534d (size=50)
 	db SPRITE_BALL, $e + 4, $14 + 4, $ff, $ff, $84, RARE_CANDY ; item
 
 	; warp-to
-	EVENT_DISP $f, $6, $19 ; ROCKET_HIDEOUT_2
-	EVENT_DISP $f, $12, $13 ; ROCKET_HIDEOUT_4
+	EVENT_DISP ROCKET_HIDEOUT_3_WIDTH, $6, $19 ; ROCKET_HIDEOUT_2
+	EVENT_DISP ROCKET_HIDEOUT_3_WIDTH, $12, $13 ; ROCKET_HIDEOUT_4
 
 RocketHideout3Blocks: ; 4537f (11:537f)
 	INCBIN "maps/rockethideout3.blk"
@@ -70570,7 +70571,7 @@ Func_45473: ; 45473 (11:5473)
 	ld a, $2d
 	jr .asm_45498
 .asm_4548c
-	ld a, $ad
+	ld a, (SFX_02_57 - SFX_Headers_02) / 3
 	call PlaySound
 	ld hl, $d81b
 	set 5, [hl]
@@ -70801,9 +70802,9 @@ RocketHideout4Object: ; 0x455f1 (size=95)
 	db SPRITE_BALL, $2 + 4, $a + 4, $ff, $ff, $89, LIFT_KEY ; item
 
 	; warp-to
-	EVENT_DISP $f, $a, $13 ; ROCKET_HIDEOUT_3
-	EVENT_DISP $f, $f, $18 ; ROCKET_HIDEOUT_ELEVATOR
-	EVENT_DISP $f, $f, $19 ; ROCKET_HIDEOUT_ELEVATOR
+	EVENT_DISP ROCKET_HIDEOUT_4_WIDTH, $a, $13 ; ROCKET_HIDEOUT_3
+	EVENT_DISP ROCKET_HIDEOUT_4_WIDTH, $f, $18 ; ROCKET_HIDEOUT_ELEVATOR
+	EVENT_DISP ROCKET_HIDEOUT_4_WIDTH, $f, $19 ; ROCKET_HIDEOUT_ELEVATOR
 
 RocketHideout4Blocks: ; 45650 (11:5650)
 	INCBIN "maps/rockethideout4.blk"
@@ -70913,8 +70914,8 @@ RocketHideoutElevatorObject: ; 0x45791 (size=23)
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $3, $1, $2 ; ROCKET_HIDEOUT_1
-	EVENT_DISP $3, $1, $3 ; ROCKET_HIDEOUT_1
+	EVENT_DISP ROCKET_HIDEOUT_ELEVATOR_WIDTH, $1, $2 ; ROCKET_HIDEOUT_1
+	EVENT_DISP ROCKET_HIDEOUT_ELEVATOR_WIDTH, $1, $3 ; ROCKET_HIDEOUT_1
 
 RocketHideoutElevatorBlocks: ; 457a8 (11:57a8)
 	INCBIN "maps/rockethideoutelevator.blk"
@@ -71020,8 +71021,8 @@ SilphCoElevatorObject: ; 0x45844 (size=23)
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $2, $3, $1
-	EVENT_DISP $2, $3, $2
+	EVENT_DISP SILPH_CO_ELEVATOR_WIDTH, $3, $1
+	EVENT_DISP SILPH_CO_ELEVATOR_WIDTH, $3, $2
 
 SilphCoElevatorBlocks: ; 4585b (11:585b)
 	INCBIN "maps/silphcoelevator.blk"
@@ -71079,11 +71080,11 @@ SafariZoneEastObject: ; 0x4588b (size=81)
 	db SPRITE_BALL, $c + 4, $f + 4, $ff, $ff, $84, TM_37 ; item
 
 	; warp-to
-	EVENT_DISP $f, $4, $0 ; SAFARI_ZONE_NORTH
-	EVENT_DISP $f, $5, $0 ; SAFARI_ZONE_NORTH
-	EVENT_DISP $f, $16, $0 ; SAFARI_ZONE_CENTER
-	EVENT_DISP $f, $17, $0 ; SAFARI_ZONE_CENTER
-	EVENT_DISP $f, $9, $19 ; SAFARI_ZONE_REST_HOUSE_3
+	EVENT_DISP SAFARI_ZONE_EAST_WIDTH, $4, $0 ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_EAST_WIDTH, $5, $0 ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_EAST_WIDTH, $16, $0 ; SAFARI_ZONE_CENTER
+	EVENT_DISP SAFARI_ZONE_EAST_WIDTH, $17, $0 ; SAFARI_ZONE_CENTER
+	EVENT_DISP SAFARI_ZONE_EAST_WIDTH, $9, $19 ; SAFARI_ZONE_REST_HOUSE_3
 
 SafariZoneEastBlocks: ; 458dc (11:58dc)
 	INCBIN "maps/safarizoneeast.blk"
@@ -71153,15 +71154,15 @@ SafariZoneNorthObject: ; 0x459d5 (size=105)
 	db SPRITE_BALL, $7 + 4, $13 + 4, $ff, $ff, $82, TM_40 ; item
 
 	; warp-to
-	EVENT_DISP $14, $23, $2 ; SAFARI_ZONE_WEST
-	EVENT_DISP $14, $23, $3 ; SAFARI_ZONE_WEST
-	EVENT_DISP $14, $23, $8 ; SAFARI_ZONE_WEST
-	EVENT_DISP $14, $23, $9 ; SAFARI_ZONE_WEST
-	EVENT_DISP $14, $23, $14 ; SAFARI_ZONE_CENTER
-	EVENT_DISP $14, $23, $15 ; SAFARI_ZONE_CENTER
-	EVENT_DISP $14, $1e, $27 ; SAFARI_ZONE_EAST
-	EVENT_DISP $14, $1f, $27 ; SAFARI_ZONE_EAST
-	EVENT_DISP $14, $3, $23 ; SAFARI_ZONE_REST_HOUSE_4
+	EVENT_DISP SAFARI_ZONE_NORTH_WIDTH, $23, $2 ; SAFARI_ZONE_WEST
+	EVENT_DISP SAFARI_ZONE_NORTH_WIDTH, $23, $3 ; SAFARI_ZONE_WEST
+	EVENT_DISP SAFARI_ZONE_NORTH_WIDTH, $23, $8 ; SAFARI_ZONE_WEST
+	EVENT_DISP SAFARI_ZONE_NORTH_WIDTH, $23, $9 ; SAFARI_ZONE_WEST
+	EVENT_DISP SAFARI_ZONE_NORTH_WIDTH, $23, $14 ; SAFARI_ZONE_CENTER
+	EVENT_DISP SAFARI_ZONE_NORTH_WIDTH, $23, $15 ; SAFARI_ZONE_CENTER
+	EVENT_DISP SAFARI_ZONE_NORTH_WIDTH, $1e, $27 ; SAFARI_ZONE_EAST
+	EVENT_DISP SAFARI_ZONE_NORTH_WIDTH, $1f, $27 ; SAFARI_ZONE_EAST
+	EVENT_DISP SAFARI_ZONE_NORTH_WIDTH, $3, $23 ; SAFARI_ZONE_REST_HOUSE_4
 
 SafariZoneNorthBlocks: ; 45a3e (11:5a3e)
 	INCBIN "maps/safarizonenorth.blk"
@@ -71193,8 +71194,8 @@ SafariZoneCenterObject: ; 0x45bc5 (size=89)
 	db $0 ; border tile
 
 	db $9 ; warps
-	db $19, $e, $2, SAFARIZONEENTRANCE
-	db $19, $f, $3, SAFARIZONEENTRANCE
+	db $19, $e, $2, SAFARI_ZONE_ENTRANCE
+	db $19, $f, $3, SAFARI_ZONE_ENTRANCE
 	db $a, $0, $4, SAFARI_ZONE_WEST
 	db $b, $0, $5, SAFARI_ZONE_WEST
 	db $0, $e, $4, SAFARI_ZONE_NORTH
@@ -71211,15 +71212,15 @@ SafariZoneCenterObject: ; 0x45bc5 (size=89)
 	db SPRITE_BALL, $a + 4, $e + 4, $ff, $ff, $81, NUGGET ; item
 
 	; warp-to
-	EVENT_DISP $f, $19, $e ; SAFARIZONEENTRANCE
-	EVENT_DISP $f, $19, $f ; SAFARIZONEENTRANCE
-	EVENT_DISP $f, $a, $0 ; SAFARI_ZONE_WEST
-	EVENT_DISP $f, $b, $0 ; SAFARI_ZONE_WEST
-	EVENT_DISP $f, $0, $e ; SAFARI_ZONE_NORTH
-	EVENT_DISP $f, $0, $f ; SAFARI_ZONE_NORTH
-	EVENT_DISP $f, $a, $1d ; SAFARI_ZONE_EAST
-	EVENT_DISP $f, $b, $1d ; SAFARI_ZONE_EAST
-	EVENT_DISP $f, $13, $11 ; SAFARI_ZONE_REST_HOUSE_1
+	EVENT_DISP SAFARI_ZONE_CENTER_WIDTH, $19, $e ; SAFARI_ZONE_ENTRANCE
+	EVENT_DISP SAFARI_ZONE_CENTER_WIDTH, $19, $f ; SAFARI_ZONE_ENTRANCE
+	EVENT_DISP SAFARI_ZONE_CENTER_WIDTH, $a, $0 ; SAFARI_ZONE_WEST
+	EVENT_DISP SAFARI_ZONE_CENTER_WIDTH, $b, $0 ; SAFARI_ZONE_WEST
+	EVENT_DISP SAFARI_ZONE_CENTER_WIDTH, $0, $e ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_CENTER_WIDTH, $0, $f ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_CENTER_WIDTH, $a, $1d ; SAFARI_ZONE_EAST
+	EVENT_DISP SAFARI_ZONE_CENTER_WIDTH, $b, $1d ; SAFARI_ZONE_EAST
+	EVENT_DISP SAFARI_ZONE_CENTER_WIDTH, $13, $11 ; SAFARI_ZONE_REST_HOUSE_1
 
 SafariZoneCenterBlocks: ; 45c1e (11:5c1e)
 	INCBIN "maps/safarizonecenter.blk"
@@ -71260,8 +71261,8 @@ SafariZoneRestHouse1Object: ; 0x45cfe (size=32)
 	db SPRITE_OAK_AIDE, $4 + 4, $1 + 4, $fe, $1, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2 ; SAFARI_ZONE_CENTER
-	EVENT_DISP $4, $7, $3 ; SAFARI_ZONE_CENTER
+	EVENT_DISP SAFARI_ZONE_REST_HOUSE_1_WIDTH, $7, $2 ; SAFARI_ZONE_CENTER
+	EVENT_DISP SAFARI_ZONE_REST_HOUSE_1_WIDTH, $7, $3 ; SAFARI_ZONE_CENTER
 
 SafariZoneRestHouse2_h: ; 0x45d1e to 0x45d2a (12 bytes) (bank=11) (id=223)
 	db GATE ; tileset
@@ -71306,8 +71307,8 @@ SafariZoneRestHouse2Object: ; 0x45d43 (size=38)
 	db SPRITE_ERIKA, $2 + 4, $6 + 4, $ff, $d0, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2 ; SAFARI_ZONE_WEST
-	EVENT_DISP $4, $7, $3 ; SAFARI_ZONE_WEST
+	EVENT_DISP SAFARI_ZONE_REST_HOUSE_2_WIDTH, $7, $2 ; SAFARI_ZONE_WEST
+	EVENT_DISP SAFARI_ZONE_REST_HOUSE_2_WIDTH, $7, $3 ; SAFARI_ZONE_WEST
 
 SafariZoneRestHouse3_h: ; 0x45d69 to 0x45d75 (12 bytes) (bank=11) (id=224)
 	db GATE ; tileset
@@ -71352,8 +71353,8 @@ SafariZoneRestHouse3Object: ; 0x45d8e (size=38)
 	db SPRITE_LAPRAS_GIVER, $2 + 4, $5 + 4, $ff, $ff, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2 ; SAFARI_ZONE_EAST
-	EVENT_DISP $4, $7, $3 ; SAFARI_ZONE_EAST
+	EVENT_DISP SAFARI_ZONE_REST_HOUSE_3_WIDTH, $7, $2 ; SAFARI_ZONE_EAST
+	EVENT_DISP SAFARI_ZONE_REST_HOUSE_3_WIDTH, $7, $3 ; SAFARI_ZONE_EAST
 
 SafariZoneRestHouse4_h: ; 0x45db4 to 0x45dc0 (12 bytes) (bank=11) (id=225)
 	db GATE ; tileset
@@ -71398,8 +71399,8 @@ SafariZoneRestHouse4Object: ; 0x45dd9 (size=38)
 	db SPRITE_GENTLEMAN, $5 + 4, $1 + 4, $fe, $1, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2 ; SAFARI_ZONE_NORTH
-	EVENT_DISP $4, $7, $3 ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_REST_HOUSE_4_WIDTH, $7, $2 ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_REST_HOUSE_4_WIDTH, $7, $3 ; SAFARI_ZONE_NORTH
 
 UnknownDungeon2_h: ; 0x45dff to 0x45e0b (12 bytes) (bank=11) (id=226)
 	db CAVERN ; tileset
@@ -71435,12 +71436,12 @@ UnknownDungeon2Object: ; 0x45e14 (size=73)
 	db SPRITE_BALL, $6 + 4, $d + 4, $ff, $ff, $83, FULL_RESTORE ; item
 
 	; warp-to
-	EVENT_DISP $f, $1, $1d ; UNKNOWN_DUNGEON_1
-	EVENT_DISP $f, $6, $16 ; UNKNOWN_DUNGEON_1
-	EVENT_DISP $f, $7, $13 ; UNKNOWN_DUNGEON_1
-	EVENT_DISP $f, $1, $9 ; UNKNOWN_DUNGEON_1
-	EVENT_DISP $f, $3, $1 ; UNKNOWN_DUNGEON_1
-	EVENT_DISP $f, $b, $3 ; UNKNOWN_DUNGEON_1
+	EVENT_DISP UNKNOWN_DUNGEON_2_WIDTH, $1, $1d ; UNKNOWN_DUNGEON_1
+	EVENT_DISP UNKNOWN_DUNGEON_2_WIDTH, $6, $16 ; UNKNOWN_DUNGEON_1
+	EVENT_DISP UNKNOWN_DUNGEON_2_WIDTH, $7, $13 ; UNKNOWN_DUNGEON_1
+	EVENT_DISP UNKNOWN_DUNGEON_2_WIDTH, $1, $9 ; UNKNOWN_DUNGEON_1
+	EVENT_DISP UNKNOWN_DUNGEON_2_WIDTH, $3, $1 ; UNKNOWN_DUNGEON_1
+	EVENT_DISP UNKNOWN_DUNGEON_2_WIDTH, $b, $3 ; UNKNOWN_DUNGEON_1
 
 UnknownDungeon2Blocks: ; 45e5d (11:5e5d)
 	INCBIN "maps/unknowndungeon2.blk"
@@ -71511,7 +71512,7 @@ UnknownDungeon3Object: ; 0x45f36 (size=34)
 	db SPRITE_BALL, $1 + 4, $12 + 4, $ff, $ff, $83, MAX_REVIVE ; item
 
 	; warp-to
-	EVENT_DISP $f, $6, $3 ; UNKNOWN_DUNGEON_1
+	EVENT_DISP UNKNOWN_DUNGEON_3_WIDTH, $6, $3 ; UNKNOWN_DUNGEON_1
 
 UnknownDungeon3Blocks: ; 45f58 (11:5f58)
 	INCBIN "maps/unknowndungeon3.blk"
@@ -71788,10 +71789,10 @@ RockTunnel2Object: ; 0x4613d (size=100)
 	db SPRITE_BLACK_HAIR_BOY_2, $1e + 4, $1a + 4, $ff, $d0, $48, POKEMANIAC + $C8, $5 ; trainer
 
 	; warp-to
-	EVENT_DISP $14, $19, $21 ; ROCK_TUNNEL_1
-	EVENT_DISP $14, $3, $1b ; ROCK_TUNNEL_1
-	EVENT_DISP $14, $b, $17 ; ROCK_TUNNEL_1
-	EVENT_DISP $14, $3, $3 ; ROCK_TUNNEL_1
+	EVENT_DISP ROCK_TUNNEL_2_WIDTH, $19, $21 ; ROCK_TUNNEL_1
+	EVENT_DISP ROCK_TUNNEL_2_WIDTH, $3, $1b ; ROCK_TUNNEL_1
+	EVENT_DISP ROCK_TUNNEL_2_WIDTH, $b, $17 ; ROCK_TUNNEL_1
+	EVENT_DISP ROCK_TUNNEL_2_WIDTH, $3, $3 ; ROCK_TUNNEL_1
 
 RockTunnel2Blocks: ; 461a1 (11:61a1)
 	INCBIN "maps/rocktunnel2.blk"
@@ -71871,13 +71872,13 @@ SeafoamIslands2Object: ; 0x46376 (size=72)
 	db SPRITE_BOULDER, $6 + 4, $16 + 4, $ff, $10, $2 ; person
 
 	; warp-to
-	EVENT_DISP $f, $2, $4 ; SEAFOAM_ISLANDS_3
-	EVENT_DISP $f, $5, $7 ; SEAFOAM_ISLANDS_1
-	EVENT_DISP $f, $7, $d ; SEAFOAM_ISLANDS_3
-	EVENT_DISP $f, $f, $13 ; SEAFOAM_ISLANDS_3
-	EVENT_DISP $f, $f, $17 ; SEAFOAM_ISLANDS_1
-	EVENT_DISP $f, $b, $19 ; SEAFOAM_ISLANDS_3
-	EVENT_DISP $f, $3, $19 ; SEAFOAM_ISLANDS_1
+	EVENT_DISP SEAFOAM_ISLANDS_2_WIDTH, $2, $4 ; SEAFOAM_ISLANDS_3
+	EVENT_DISP SEAFOAM_ISLANDS_2_WIDTH, $5, $7 ; SEAFOAM_ISLANDS_1
+	EVENT_DISP SEAFOAM_ISLANDS_2_WIDTH, $7, $d ; SEAFOAM_ISLANDS_3
+	EVENT_DISP SEAFOAM_ISLANDS_2_WIDTH, $f, $13 ; SEAFOAM_ISLANDS_3
+	EVENT_DISP SEAFOAM_ISLANDS_2_WIDTH, $f, $17 ; SEAFOAM_ISLANDS_1
+	EVENT_DISP SEAFOAM_ISLANDS_2_WIDTH, $b, $19 ; SEAFOAM_ISLANDS_3
+	EVENT_DISP SEAFOAM_ISLANDS_2_WIDTH, $3, $19 ; SEAFOAM_ISLANDS_1
 
 SeafoamIslands2Blocks: ; 463be (11:63be)
 	INCBIN "maps/seafoamislands2.blk"
@@ -71957,13 +71958,13 @@ SeafoamIslands3Object: ; 0x464b2 (size=72)
 	db SPRITE_BOULDER, $6 + 4, $17 + 4, $ff, $10, $2 ; person
 
 	; warp-to
-	EVENT_DISP $f, $3, $5 ; SEAFOAM_ISLANDS_2
-	EVENT_DISP $f, $d, $5 ; SEAFOAM_ISLANDS_4
-	EVENT_DISP $f, $7, $d ; SEAFOAM_ISLANDS_2
-	EVENT_DISP $f, $f, $13 ; SEAFOAM_ISLANDS_2
-	EVENT_DISP $f, $3, $19 ; SEAFOAM_ISLANDS_4
-	EVENT_DISP $f, $b, $19 ; SEAFOAM_ISLANDS_2
-	EVENT_DISP $f, $e, $19 ; SEAFOAM_ISLANDS_4
+	EVENT_DISP SEAFOAM_ISLANDS_3_WIDTH, $3, $5 ; SEAFOAM_ISLANDS_2
+	EVENT_DISP SEAFOAM_ISLANDS_3_WIDTH, $d, $5 ; SEAFOAM_ISLANDS_4
+	EVENT_DISP SEAFOAM_ISLANDS_3_WIDTH, $7, $d ; SEAFOAM_ISLANDS_2
+	EVENT_DISP SEAFOAM_ISLANDS_3_WIDTH, $f, $13 ; SEAFOAM_ISLANDS_2
+	EVENT_DISP SEAFOAM_ISLANDS_3_WIDTH, $3, $19 ; SEAFOAM_ISLANDS_4
+	EVENT_DISP SEAFOAM_ISLANDS_3_WIDTH, $b, $19 ; SEAFOAM_ISLANDS_2
+	EVENT_DISP SEAFOAM_ISLANDS_3_WIDTH, $e, $19 ; SEAFOAM_ISLANDS_4
 
 SeafoamIslands3Blocks: ; 464fa (11:64fa)
 	INCBIN "maps/seafoamislands3.blk"
@@ -72147,13 +72148,13 @@ SeafoamIslands4Object: ; 0x466a6 (size=96)
 	db SPRITE_BOULDER, $6 + 4, $13 + 4, $ff, $ff, $6 ; person
 
 	; warp-to
-	EVENT_DISP $f, $c, $5 ; SEAFOAM_ISLANDS_3
-	EVENT_DISP $f, $6, $8 ; SEAFOAM_ISLANDS_5
-	EVENT_DISP $f, $4, $19 ; SEAFOAM_ISLANDS_5
-	EVENT_DISP $f, $3, $19 ; SEAFOAM_ISLANDS_3
-	EVENT_DISP $f, $e, $19 ; SEAFOAM_ISLANDS_3
-	EVENT_DISP $f, $11, $14 ; SEAFOAM_ISLANDS_5
-	EVENT_DISP $f, $11, $15 ; SEAFOAM_ISLANDS_5
+	EVENT_DISP SEAFOAM_ISLANDS_4_WIDTH, $c, $5 ; SEAFOAM_ISLANDS_3
+	EVENT_DISP SEAFOAM_ISLANDS_4_WIDTH, $6, $8 ; SEAFOAM_ISLANDS_5
+	EVENT_DISP SEAFOAM_ISLANDS_4_WIDTH, $4, $19 ; SEAFOAM_ISLANDS_5
+	EVENT_DISP SEAFOAM_ISLANDS_4_WIDTH, $3, $19 ; SEAFOAM_ISLANDS_3
+	EVENT_DISP SEAFOAM_ISLANDS_4_WIDTH, $e, $19 ; SEAFOAM_ISLANDS_3
+	EVENT_DISP SEAFOAM_ISLANDS_4_WIDTH, $11, $14 ; SEAFOAM_ISLANDS_5
+	EVENT_DISP SEAFOAM_ISLANDS_4_WIDTH, $11, $15 ; SEAFOAM_ISLANDS_5
 
 SeafoamIslands4Blocks: ; 46706 (11:6706)
 	INCBIN "maps/seafoamislands4.blk"
@@ -72363,10 +72364,10 @@ SeafoamIslands5Object: ; 0x468bc (size=62)
 	db SPRITE_BIRD, $1 + 4, $6 + 4, $ff, $d0, $43, ARTICUNO, 50 ; trainer
 
 	; warp-to
-	EVENT_DISP $f, $11, $14 ; SEAFOAM_ISLANDS_4
-	EVENT_DISP $f, $11, $15 ; SEAFOAM_ISLANDS_4
-	EVENT_DISP $f, $7, $b ; SEAFOAM_ISLANDS_4
-	EVENT_DISP $f, $4, $19 ; SEAFOAM_ISLANDS_4
+	EVENT_DISP SEAFOAM_ISLANDS_5_WIDTH, $11, $14 ; SEAFOAM_ISLANDS_4
+	EVENT_DISP SEAFOAM_ISLANDS_5_WIDTH, $11, $15 ; SEAFOAM_ISLANDS_4
+	EVENT_DISP SEAFOAM_ISLANDS_5_WIDTH, $7, $b ; SEAFOAM_ISLANDS_4
+	EVENT_DISP SEAFOAM_ISLANDS_5_WIDTH, $4, $19 ; SEAFOAM_ISLANDS_4
 
 SeafoamIslands5Blocks: ; 468fa (11:68fa)
 	INCBIN "maps/seafoamislands5.blk"
@@ -72544,7 +72545,7 @@ HiddenObjectMaps: ; 46a40 (11:6a40)
 	db SAFFRON_POKECENTER
 	db POKEMONTOWER_5
 	db ROUTE_13
-	db SAFARIZONEENTRANCE
+	db SAFARI_ZONE_ENTRANCE
 	db SAFARI_ZONE_WEST
 	db SILPH_CO_5F
 	db SILPH_CO_9F
@@ -72567,7 +72568,7 @@ HiddenObjectMaps: ; 46a40 (11:6a40)
 	db $B9
 	db LAVENDER_HOUSE_1
 	db CELADON_MANSION_5
-	db FIGHTINGDOJO
+	db FIGHTING_DOJO
 	db ROUTE_10
 	db INDIGO_PLATEAU_LOBBY
 	db CINNABAR_LAB_4
@@ -73307,11 +73308,11 @@ Route7Object: ; 0x48022 (size=47)
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $a, $9, $12 ; ROUTE_7_GATE
-	EVENT_DISP $a, $a, $12 ; ROUTE_7_GATE
-	EVENT_DISP $a, $9, $b ; ROUTE_7_GATE
-	EVENT_DISP $a, $a, $b ; ROUTE_7_GATE
-	EVENT_DISP $a, $d, $5 ; PATH_ENTRANCE_ROUTE_7
+	EVENT_DISP ROUTE_7_WIDTH, $9, $12 ; ROUTE_7_GATE
+	EVENT_DISP ROUTE_7_WIDTH, $a, $12 ; ROUTE_7_GATE
+	EVENT_DISP ROUTE_7_WIDTH, $9, $b ; ROUTE_7_GATE
+	EVENT_DISP ROUTE_7_WIDTH, $a, $b ; ROUTE_7_GATE
+	EVENT_DISP ROUTE_7_WIDTH, $d, $5 ; PATH_ENTRANCE_ROUTE_7
 
 Route7Blocks: ; 48051 (12:4051)
 	INCBIN "maps/route7.blk"
@@ -73654,9 +73655,9 @@ CeladonMart3Object: ; 0x482c4 (size=94)
 	db SPRITE_YOUNG_BOY, $5 + 4, $2 + 4, $ff, $d1, $5 ; person
 
 	; warp-to
-	EVENT_DISP $a, $1, $c ; CELADON_MART_4
-	EVENT_DISP $a, $1, $10 ; CELADON_MART_2
-	EVENT_DISP $a, $1, $1 ; CELADON_MART_ELEVATOR
+	EVENT_DISP CELADON_MART_3_WIDTH, $1, $c ; CELADON_MART_4
+	EVENT_DISP CELADON_MART_3_WIDTH, $1, $10 ; CELADON_MART_2
+	EVENT_DISP CELADON_MART_3_WIDTH, $1, $1 ; CELADON_MART_ELEVATOR
 
 CeladonMart3Blocks: ; 48322 (12:4322)
 	INCBIN "maps/celadonmart3.blk"
@@ -73706,9 +73707,9 @@ CeladonMart4Object: ; 0x48370 (size=49)
 	db SPRITE_BUG_CATCHER, $2 + 4, $5 + 4, $fe, $2, $3 ; person
 
 	; warp-to
-	EVENT_DISP $a, $1, $c ; CELADON_MART_3
-	EVENT_DISP $a, $1, $10 ; CELADON_MART_5
-	EVENT_DISP $a, $1, $1 ; CELADON_MART_ELEVATOR
+	EVENT_DISP CELADON_MART_4_WIDTH, $1, $c ; CELADON_MART_3
+	EVENT_DISP CELADON_MART_4_WIDTH, $1, $10 ; CELADON_MART_5
+	EVENT_DISP CELADON_MART_4_WIDTH, $1, $1 ; CELADON_MART_ELEVATOR
 
 CeladonMart4Blocks: ; 483a1 (12:43a1)
 	INCBIN "maps/celadonmart4.blk"
@@ -74001,7 +74002,7 @@ CeladonMartRoofObject: ; 0x485a8 (size=36)
 	db SPRITE_LITTLE_GIRL, $5 + 4, $5 + 4, $fe, $0, $2 ; person
 
 	; warp-to
-	EVENT_DISP $a, $2, $f ; CELADON_MART_5
+	EVENT_DISP CELADON_MART_ROOF_WIDTH, $2, $f ; CELADON_MART_5
 
 CeladonMartRoofBlocks: ; 485cc (12:45cc)
 	INCBIN "maps/celadonmartroof.blk"
@@ -74098,8 +74099,8 @@ CeladonMartElevatorObject: ; 0x4866d (size=23)
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $2, $3, $1 ; CELADON_MART_1
-	EVENT_DISP $2, $3, $2 ; CELADON_MART_1
+	EVENT_DISP CELADON_MART_ELEVATOR_WIDTH, $3, $1 ; CELADON_MART_1
+	EVENT_DISP CELADON_MART_ELEVATOR_WIDTH, $3, $2 ; CELADON_MART_1
 
 CeladonMartElevatorBlocks: ; 48684 (12:4684)
 	INCBIN "maps/celadonmartelevator.blk"
@@ -74171,11 +74172,11 @@ CeladonMansion1Object: ; 0x486cf (size=71)
 	db SPRITE_SLOWBRO, $4 + 4, $4 + 4, $fe, $1, $4 ; person
 
 	; warp-to
-	EVENT_DISP $4, $b, $4
-	EVENT_DISP $4, $b, $5
-	EVENT_DISP $4, $0, $4
-	EVENT_DISP $4, $1, $7 ; CELADON_MANSION_2
-	EVENT_DISP $4, $1, $2 ; CELADON_MANSION_2
+	EVENT_DISP CELADON_MANSION_1_WIDTH, $b, $4
+	EVENT_DISP CELADON_MANSION_1_WIDTH, $b, $5
+	EVENT_DISP CELADON_MANSION_1_WIDTH, $0, $4
+	EVENT_DISP CELADON_MANSION_1_WIDTH, $1, $7 ; CELADON_MANSION_2
+	EVENT_DISP CELADON_MANSION_1_WIDTH, $1, $2 ; CELADON_MANSION_2
 
 CeladonMansion1Blocks: ; 48716 (12:4716)
 	INCBIN "maps/celadonmansion1.blk"
@@ -74213,10 +74214,10 @@ CeladonMansion2Object: ; 0x48745 (size=39)
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $4, $1, $6 ; CELADON_MANSION_3
-	EVENT_DISP $4, $1, $7 ; CELADON_MANSION_1
-	EVENT_DISP $4, $1, $2 ; CELADON_MANSION_1
-	EVENT_DISP $4, $1, $4 ; CELADON_MANSION_3
+	EVENT_DISP CELADON_MANSION_2_WIDTH, $1, $6 ; CELADON_MANSION_3
+	EVENT_DISP CELADON_MANSION_2_WIDTH, $1, $7 ; CELADON_MANSION_1
+	EVENT_DISP CELADON_MANSION_2_WIDTH, $1, $2 ; CELADON_MANSION_1
+	EVENT_DISP CELADON_MANSION_2_WIDTH, $1, $4 ; CELADON_MANSION_3
 
 CeladonMansion2Blocks: ; 4876c (12:476c)
 	INCBIN "maps/celadonmansion2.blk"
@@ -74324,10 +74325,10 @@ CeladonMansion3Object: ; 0x487ff (size=72)
 	db SPRITE_LAPRAS_GIVER, $3 + 4, $2 + 4, $ff, $ff, $4 ; person
 
 	; warp-to
-	EVENT_DISP $4, $1, $6 ; CELADON_MANSION_2
-	EVENT_DISP $4, $1, $7 ; CELADON_MANSION_4
-	EVENT_DISP $4, $1, $2 ; CELADON_MANSION_4
-	EVENT_DISP $4, $1, $4 ; CELADON_MANSION_2
+	EVENT_DISP CELADON_MANSION_3_WIDTH, $1, $6 ; CELADON_MANSION_2
+	EVENT_DISP CELADON_MANSION_3_WIDTH, $1, $7 ; CELADON_MANSION_4
+	EVENT_DISP CELADON_MANSION_3_WIDTH, $1, $2 ; CELADON_MANSION_4
+	EVENT_DISP CELADON_MANSION_3_WIDTH, $1, $4 ; CELADON_MANSION_2
 
 CeladonMansion3Blocks: ; 48847 (12:4847)
 	INCBIN "maps/celadonmansion3.blk"
@@ -74363,9 +74364,9 @@ CeladonMansion4Object: ; 0x48875 (size=31)
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $4, $1, $6 ; CELADON_MANSION_3
-	EVENT_DISP $4, $1, $2 ; CELADON_MANSION_3
-	EVENT_DISP $4, $7, $2 ; CELADON_MANSION_5
+	EVENT_DISP CELADON_MANSION_4_WIDTH, $1, $6 ; CELADON_MANSION_3
+	EVENT_DISP CELADON_MANSION_4_WIDTH, $1, $2 ; CELADON_MANSION_3
+	EVENT_DISP CELADON_MANSION_4_WIDTH, $7, $2 ; CELADON_MANSION_5
 
 CeladonMansion4Blocks: ; 48894 (12:4894)
 	INCBIN "maps/celadonmansion4.blk"
@@ -74417,8 +74418,8 @@ CeladonPokecenterObject: ; 0x488d2 (size=44)
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
 
 	; warp-to
-	EVENT_DISP $7, $7, $3
-	EVENT_DISP $7, $7, $4
+	EVENT_DISP CELADON_POKECENTER_WIDTH, $7, $3
+	EVENT_DISP CELADON_POKECENTER_WIDTH, $7, $4
 
 CeladonGym_h: ; 0x488fe to 0x4890a (12 bytes) (bank=12) (id=134)
 	db GYM ; tileset
@@ -74789,8 +74790,8 @@ CeladonGymObject: ; 0x48b30 (size=84)
 	db SPRITE_LASS, $3 + 4, $5 + 4, $ff, $d0, $48, COOLTRAINER_F + $C8, $1 ; trainer
 
 	; warp-to
-	EVENT_DISP $5, $11, $4
-	EVENT_DISP $5, $11, $5
+	EVENT_DISP CELADON_GYM_WIDTH, $11, $4
+	EVENT_DISP CELADON_GYM_WIDTH, $11, $5
 
 CeladonGymBlocks: ; 48b84 (12:4b84)
 	INCBIN "maps/celadongym.blk"
@@ -75252,7 +75253,7 @@ CeladonGameCornerText12: ; 48edd (12:4edd)
 	ld hl, UnnamedText_48f09
 	call PrintText
 	call WaitForSoundToFinish
-	ld a, $ad
+	ld a, (SFX_02_57 - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 	ld hl, $d77e
@@ -75267,7 +75268,7 @@ CeladonGameCornerText12: ; 48edd (12:4edd)
 UnnamedText_48f09: ; 48f09 (12:4f09)
 	TX_FAR _UnnamedText_48f09 ; 0x9ddb0
 	db $8
-	ld a, $9d
+	ld a, (SFX_02_49 - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 	jp TextScriptEnd
@@ -75364,9 +75365,9 @@ CeladonGameCornerObject: ; 0x48fa0 (size=99)
 	db SPRITE_ROCKET, $5 + 4, $9 + 4, $ff, $d1, $4b, ROCKET + $C8, $7 ; trainer
 
 	; warp-to
-	EVENT_DISP $a, $11, $f
-	EVENT_DISP $a, $11, $10
-	EVENT_DISP $a, $4, $11 ; ROCKET_HIDEOUT_1
+	EVENT_DISP GAME_CORNER_WIDTH, $11, $f
+	EVENT_DISP GAME_CORNER_WIDTH, $11, $10
+	EVENT_DISP GAME_CORNER_WIDTH, $4, $11 ; ROCKET_HIDEOUT_1
 
 CeladonGameCornerBlocks: ; 49003 (12:5003)
 	INCBIN "maps/celadongamecorner.blk"
@@ -75418,16 +75419,16 @@ CeladonMart5Object: ; 0x49085 (size=55)
 	db SPRITE_MART_GUY, $3 + 4, $6 + 4, $ff, $d0, $4 ; person
 
 	; warp-to
-	EVENT_DISP $a, $1, $c ; CELADON_MART_ROOF
-	EVENT_DISP $a, $1, $10 ; CELADON_MART_4
-	EVENT_DISP $a, $1, $1 ; CELADON_MART_ELEVATOR
+	EVENT_DISP CELADON_MART_5_WIDTH, $1, $c ; CELADON_MART_ROOF
+	EVENT_DISP CELADON_MART_5_WIDTH, $1, $10 ; CELADON_MART_4
+	EVENT_DISP CELADON_MART_5_WIDTH, $1, $1 ; CELADON_MART_ELEVATOR
 
 CeladonMart5Blocks: ; 490bc (12:50bc)
 	INCBIN "maps/celadonmart5.blk"
 
 CeladonPrizeRoom_h: ; 0x490e4 to 0x490f0 (12 bytes) (bank=12) (id=137)
 	db LOBBY ; tileset
-	db CELADONPRIZE_ROOM_HEIGHT, CELADONPRIZE_ROOM_WIDTH ; dimensions (y, x)
+	db CELADON_PRIZE_ROOM_HEIGHT, CELADON_PRIZE_ROOM_WIDTH ; dimensions (y, x)
 	dw CeladonPrizeRoomBlocks, CeladonPrizeRoomTextPointers, CeladonPrizeRoomScript ; blocks, texts, scripts
 	db $00 ; connections
 	dw CeladonPrizeRoomObject ; objects
@@ -75470,8 +75471,8 @@ CeladonPrizeRoomObject: ; 0x49108 (size=41)
 	db SPRITE_GAMBLER, $3 + 4, $7 + 4, $fe, $2, $2 ; person
 
 	; warp-to
-	EVENT_DISP $5, $7, $4
-	EVENT_DISP $5, $7, $5
+	EVENT_DISP CELADON_PRIZE_ROOM_WIDTH, $7, $4
+	EVENT_DISP CELADON_PRIZE_ROOM_WIDTH, $7, $5
 
 CeladonPrizeRoomBlocks: ; 49131 (12:5131)
 	INCBIN "maps/celadonprizeroom.blk"
@@ -75568,8 +75569,8 @@ CeladonDinerObject: ; 0x491bc (size=50)
 	db SPRITE_GYM_HELPER, $1 + 4, $0 + 4, $ff, $d0, $5 ; person
 
 	; warp-to
-	EVENT_DISP $5, $7, $3
-	EVENT_DISP $5, $7, $4
+	EVENT_DISP CELADON_DINER_WIDTH, $7, $3
+	EVENT_DISP CELADON_DINER_WIDTH, $7, $4
 
 CeladonDinerBlocks: ; 491ee (12:51ee)
 	INCBIN "maps/celadondiner.blk"
@@ -75617,15 +75618,15 @@ CeladonHouseObject: ; 0x49227 (size=38)
 	db SPRITE_SAILOR, $6 + 4, $5 + 4, $ff, $d2, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP CELADON_HOUSE_WIDTH, $7, $2
+	EVENT_DISP CELADON_HOUSE_WIDTH, $7, $3
 
 CeladonHouseBlocks: ; 4924d (12:524d)
 	INCBIN "maps/celadonhouse.blk"
 
 CeladonHotel_h: ; 0x4925d to 0x49269 (12 bytes) (bank=12) (id=140)
 	db POKECENTER ; tileset
-	db CELADONHOTEL_HEIGHT, CELADONHOTEL_WIDTH ; dimensions (y, x)
+	db CELADON_HOTEL_HEIGHT, CELADON_HOTEL_WIDTH ; dimensions (y, x)
 	dw CeladonHotelBlocks, CeladonHotelTextPointers, CeladonHotelScript ; blocks, texts, scripts
 	db $00 ; connections
 	dw CeladonHotelObject ; objects
@@ -75665,8 +75666,8 @@ CeladonHotelObject: ; 0x49281 (size=38)
 	db SPRITE_BLACK_HAIR_BOY_2, $4 + 4, $8 + 4, $fe, $2, $3 ; person
 
 	; warp-to
-	EVENT_DISP $7, $7, $3
-	EVENT_DISP $7, $7, $4
+	EVENT_DISP CELADON_HOTEL_WIDTH, $7, $3
+	EVENT_DISP CELADON_HOTEL_WIDTH, $7, $4
 
 CeladonHotelBlocks: ; 492a7 (12:52a7)
 	INCBIN "maps/celadonhotel.blk"
@@ -75794,8 +75795,8 @@ MtMoonPokecenterObject: ; 0x49376 (size=56)
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $6 ; person
 
 	; warp-to
-	EVENT_DISP $7, $7, $3
-	EVENT_DISP $7, $7, $4
+	EVENT_DISP MT_MOON_POKECENTER_WIDTH, $7, $3
+	EVENT_DISP MT_MOON_POKECENTER_WIDTH, $7, $4
 
 RockTunnelPokecenter_h: ; 0x493ae to 0x493ba (12 bytes) (id=81)
 	db POKECENTER ; tileset
@@ -75844,8 +75845,8 @@ RockTunnelPokecenterObject: ; 0x493d4 (size=44)
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
 
 	; warp-to
-	EVENT_DISP $7, $7, $3
-	EVENT_DISP $7, $7, $4
+	EVENT_DISP ROCK_TUNNEL_POKECENTER_WIDTH, $7, $3
+	EVENT_DISP ROCK_TUNNEL_POKECENTER_WIDTH, $7, $4
 
 Route11Gate_h: ; 0x49400 to 0x4940c (12 bytes) (id=84)
 	db GATE ; tileset
@@ -75880,11 +75881,11 @@ Route11GateObject: ; 0x49416 (size=50)
 	db SPRITE_GUARD, $1 + 4, $4 + 4, $ff, $ff, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $4, $0
-	EVENT_DISP $4, $5, $0
-	EVENT_DISP $4, $4, $7
-	EVENT_DISP $4, $5, $7
-	EVENT_DISP $4, $8, $6 ; ROUTE_11_GATE_2F
+	EVENT_DISP ROUTE_11_GATE_1F_WIDTH, $4, $0
+	EVENT_DISP ROUTE_11_GATE_1F_WIDTH, $5, $0
+	EVENT_DISP ROUTE_11_GATE_1F_WIDTH, $4, $7
+	EVENT_DISP ROUTE_11_GATE_1F_WIDTH, $5, $7
+	EVENT_DISP ROUTE_11_GATE_1F_WIDTH, $8, $6 ; ROUTE_11_GATE_2F
 
 Route11GateUpstairs_h: ; 0x49448 to 0x49454 (12 bytes) (id=86)
 	db GATE ; tileset
@@ -75990,11 +75991,11 @@ Route11GateUpstairsObject: ; 0x494da (size=30)
 	db SPRITE_OAK_AIDE, $6 + 4, $2 + 4, $ff, $ff, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $7 ; ROUTE_11_GATE_1F
+	EVENT_DISP ROUTE_11_GATE_2F_WIDTH, $7, $7 ; ROUTE_11_GATE_1F
 
 Route12Gate_h: ; 0x494f8 to 0x49504 (12 bytes) (id=87)
 	db GATE ; tileset
-	db ROUTE_12_GATE_HEIGHT, ROUTE_12_GATE_WIDTH ; dimensions (y, x)
+	db ROUTE_12_GATE_1F_HEIGHT, ROUTE_12_GATE_1F_WIDTH ; dimensions (y, x)
 	dw Route12GateBlocks, Route12GateTextPointers, Route12GateScript ; blocks, texts, scripts
 	db $00 ; connections
 	dw Route12GateObject ; objects
@@ -76025,11 +76026,11 @@ Route12GateObject: ; 0x4950e (size=50)
 	db SPRITE_GUARD, $3 + 4, $1 + 4, $ff, $ff, $1 ; person
 
 	; warp-to
-	EVENT_DISP $5, $0, $4
-	EVENT_DISP $5, $0, $5
-	EVENT_DISP $5, $7, $4
-	EVENT_DISP $5, $7, $5
-	EVENT_DISP $5, $6, $8 ; ROUTE_12_GATE_2F
+	EVENT_DISP ROUTE_12_GATE_1F_WIDTH, $0, $4
+	EVENT_DISP ROUTE_12_GATE_1F_WIDTH, $0, $5
+	EVENT_DISP ROUTE_12_GATE_1F_WIDTH, $7, $4
+	EVENT_DISP ROUTE_12_GATE_1F_WIDTH, $7, $5
+	EVENT_DISP ROUTE_12_GATE_1F_WIDTH, $6, $8 ; ROUTE_12_GATE_2F
 
 Route12GateBlocks: ; 49540 (12:5540)
 	INCBIN "maps/route12gate.blk"
@@ -76125,7 +76126,7 @@ Route12GateUpstairsObject: ; 0x495de (size=24)
 	db $a ; border tile
 
 	db $1 ; warps
-	db $7, $7, $4, ROUTE_12_GATE
+	db $7, $7, $4, ROUTE_12_GATE_1F
 
 	db $2 ; signs
 	db $2, $1, $2 ; Route12GateUpstairsText2
@@ -76135,7 +76136,7 @@ Route12GateUpstairsObject: ; 0x495de (size=24)
 	db SPRITE_BRUNETTE_GIRL, $4 + 4, $3 + 4, $fe, $1, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $7 ; ROUTE_12_GATE
+	EVENT_DISP ROUTE_12_GATE_2F_WIDTH, $7, $7 ; ROUTE_12_GATE_1F
 
 Route15Gate_h: ; 0x495f6 to 0x49602 (12 bytes) (id=184)
 	db GATE ; tileset
@@ -76170,11 +76171,11 @@ Route15GateObject: ; 0x4960c (size=50)
 	db SPRITE_GUARD, $1 + 4, $4 + 4, $ff, $ff, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $4, $0
-	EVENT_DISP $4, $5, $0
-	EVENT_DISP $4, $4, $7
-	EVENT_DISP $4, $5, $7
-	EVENT_DISP $4, $8, $6
+	EVENT_DISP ROUTE_15_GATE_1F_WIDTH, $4, $0
+	EVENT_DISP ROUTE_15_GATE_1F_WIDTH, $5, $0
+	EVENT_DISP ROUTE_15_GATE_1F_WIDTH, $4, $7
+	EVENT_DISP ROUTE_15_GATE_1F_WIDTH, $5, $7
+	EVENT_DISP ROUTE_15_GATE_1F_WIDTH, $8, $6 ; ROUTE_15_GATE_2F
 
 Route15GateUpstairs_h: ; 4963e (12:563e)
 	db GATE ; tileset
@@ -76244,30 +76245,30 @@ Route15GateUpstairsObject: ; 4969d (12:569d)
 	db SPRITE_OAK_AIDE, $2 + 4, $4 + 4, $ff, $d0, $1
 
 	; warp-to
-	EVENT_DISP $4, $7, $7 ; ROUTE_15_GATE_1F
+	EVENT_DISP ROUTE_15_GATE_2F_WIDTH, $7, $7 ; ROUTE_15_GATE_1F
 
-Route16GateMap_h: ; 0x496b2 to 0x496be (12 bytes) (id=186)
+Route16Gate_h: ; 0x496b2 to 0x496be (12 bytes) (id=186)
 	db GATE ; tileset
 	db ROUTE_16_GATE_1F_HEIGHT, ROUTE_16_GATE_1F_WIDTH ; dimensions (y, x)
-	dw Route16GateMapBlocks, Route16GateMapTextPointers, Route16GateMapScript ; blocks, texts, scripts
+	dw Route16GateBlocks, Route16GateTextPointers, Route16GateScript ; blocks, texts, scripts
 	db $00 ; connections
-	dw Route16GateMapObject ; objects
+	dw Route16GateObject ; objects
 
-Route16GateMapScript: ; 496be (12:56be)
+Route16GateScript: ; 496be (12:56be)
 	ld hl, $d732
 	res 5, [hl]
 	call EnableAutoTextBoxDrawing
 	ld a, [W_ROUTE16GATECURSCRIPT]
-	ld hl, Route16GateMapScriptPointers
+	ld hl, Route16GateScriptPointers
 	jp CallFunctionInTable
 
-Route16GateMapScriptPointers: ; 496cf (12:56cf)
-	dw Route16GateMapScript0
-	dw Route16GateMapScript1
-	dw Route16GateMapScript2
-	dw Route16GateMapScript3
+Route16GateScriptPointers: ; 496cf (12:56cf)
+	dw Route16GateScript0
+	dw Route16GateScript1
+	dw Route16GateScript2
+	dw Route16GateScript3
 
-Route16GateMapScript0: ; 496d7 (12:56d7)
+Route16GateScript0: ; 496d7 (12:56d7)
 	call Func_49755
 	ret nz
 	ld hl, CoordsData_49714
@@ -76305,14 +76306,14 @@ CoordsData_49714: ; 49714 (12:5714)
 	db $0A,$04
 	db $FF
 
-Route16GateMapScript1: ; 4971d (12:571d)
+Route16GateScript1: ; 4971d (12:571d)
 	ld a, [$cd38]
 	and a
 	ret nz
 	ld a, $f0
 	ld [wJoypadForbiddenButtonsMask], a
 
-Route16GateMapScript2: ; 49727 (12:5727)
+Route16GateScript2: ; 49727 (12:5727)
 	ld a, $1
 	ld [H_SPRITEHEIGHT], a
 	call DisplayTextID
@@ -76325,7 +76326,7 @@ Route16GateMapScript2: ; 49727 (12:5727)
 	ld [W_ROUTE16GATECURSCRIPT], a
 	ret
 
-Route16GateMapScript3: ; 49741 (12:5741)
+Route16GateScript3: ; 49741 (12:5741)
 	ld a, [$cd38]
 	and a
 	ret nz
@@ -76338,15 +76339,15 @@ Route16GateMapScript3: ; 49741 (12:5741)
 	ret
 
 Func_49755: ; 49755 (12:5755)
-	ld b, $6
+	ld b, BICYCLE
 	jp IsItemInBag
 
-Route16GateMapTextPointers: ; 4975a (12:575a)
-	dw Route16GateMapText1
-	dw Route16GateMapText2
-	dw Route16GateMapText3
+Route16GateTextPointers: ; 4975a (12:575a)
+	dw Route16GateText1
+	dw Route16GateText2
+	dw Route16GateText3
 
-Route16GateMapText1: ; 49760 (12:5760)
+Route16GateText1: ; 49760 (12:5760)
 	db $08 ; asm
 	call Func_49755
 	jr z, .asm_0bdf3 ; 0x49764
@@ -76367,15 +76368,15 @@ UnnamedText_4977c: ; 4977c (12:577c)
 	TX_FAR _UnnamedText_4977c
 	db "@"
 
-Route16GateMapText3: ; 49781 (12:5781)
+Route16GateText3: ; 49781 (12:5781)
 	TX_FAR _UnnamedText_49781
 	db "@"
 
-Route16GateMapText2: ; 49786 (12:5786)
-	TX_FAR _Route16GateMapText2
+Route16GateText2: ; 49786 (12:5786)
+	TX_FAR _Route16GateText2
 	db "@"
 
-Route16GateMapObject: ; 0x4978b (size=88)
+Route16GateObject: ; 0x4978b (size=88)
 	db $a ; border tile
 
 	db $9 ; warps
@@ -76396,18 +76397,18 @@ Route16GateMapObject: ; 0x4978b (size=88)
 	db SPRITE_GAMBLER, $3 + 4, $4 + 4, $ff, $ff, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $8, $0
-	EVENT_DISP $4, $9, $0
-	EVENT_DISP $4, $8, $7
-	EVENT_DISP $4, $9, $7
-	EVENT_DISP $4, $2, $0
-	EVENT_DISP $4, $3, $0
-	EVENT_DISP $4, $2, $7
-	EVENT_DISP $4, $3, $7
-	EVENT_DISP $4, $c, $6 ; ROUTE_16_GATE_2F
+	EVENT_DISP ROUTE_16_GATE_1F_WIDTH, $8, $0
+	EVENT_DISP ROUTE_16_GATE_1F_WIDTH, $9, $0
+	EVENT_DISP ROUTE_16_GATE_1F_WIDTH, $8, $7
+	EVENT_DISP ROUTE_16_GATE_1F_WIDTH, $9, $7
+	EVENT_DISP ROUTE_16_GATE_1F_WIDTH, $2, $0
+	EVENT_DISP ROUTE_16_GATE_1F_WIDTH, $3, $0
+	EVENT_DISP ROUTE_16_GATE_1F_WIDTH, $2, $7
+	EVENT_DISP ROUTE_16_GATE_1F_WIDTH, $3, $7
+	EVENT_DISP ROUTE_16_GATE_1F_WIDTH, $c, $6 ; ROUTE_16_GATE_2F
 
-Route16GateMapBlocks: ; 497e3 (12:57e3)
-	INCBIN "maps/route16gatemap.blk"
+Route16GateBlocks: ; 497e3 (12:57e3)
+	INCBIN "maps/route16gate.blk"
 
 Route16GateUpstairs_h: ; 0x497ff to 0x4980b (12 bytes) (id=187)
 	db GATE ; tileset
@@ -76478,7 +76479,7 @@ Route16GateUpstairsObject: ; 0x4984c (size=30)
 	db SPRITE_LITTLE_GIRL, $5 + 4, $2 + 4, $fe, $2, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $7 ; ROUTE_16_GATE_1F
+	EVENT_DISP ROUTE_16_GATE_2F_WIDTH, $7, $7 ; ROUTE_16_GATE_1F
 
 Route18Gate_h: ; 0x4986a to 0x49876 (12 bytes) (id=190)
 	db GATE ; tileset
@@ -76616,11 +76617,11 @@ Route18GateObject: ; 0x49937 (size=50)
 	db SPRITE_GUARD, $1 + 4, $4 + 4, $ff, $d0, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $4, $0
-	EVENT_DISP $4, $5, $0
-	EVENT_DISP $4, $4, $7
-	EVENT_DISP $4, $5, $7
-	EVENT_DISP $4, $8, $6 ; ROUTE_18_GATE_2F
+	EVENT_DISP ROUTE_18_GATE_1F_WIDTH, $4, $0
+	EVENT_DISP ROUTE_18_GATE_1F_WIDTH, $5, $0
+	EVENT_DISP ROUTE_18_GATE_1F_WIDTH, $4, $7
+	EVENT_DISP ROUTE_18_GATE_1F_WIDTH, $5, $7
+	EVENT_DISP ROUTE_18_GATE_1F_WIDTH, $8, $6 ; ROUTE_18_GATE_2F
 
 Route18GateUpstairs_h: ; 0x49969 to 0x49975 (12 bytes) (id=191)
 	db GATE ; tileset
@@ -76677,7 +76678,7 @@ Route18GateUpstairsObject: ; 0x499a4 (size=24)
 	db SPRITE_BUG_CATCHER, $2 + 4, $4 + 4, $fe, $2, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $7 ; ROUTE_18_GATE_1F
+	EVENT_DISP ROUTE_18_GATE_2F_WIDTH, $7, $7 ; ROUTE_18_GATE_1F
 
 MtMoon1_h: ; 0x499bc to 0x499c8 (12 bytes) (id=59)
 	db CAVERN ; tileset
@@ -76941,11 +76942,11 @@ MtMoon1Object: ; 0x49b06 (size=145)
 	db SPRITE_BALL, $20 + 4, $5 + 4, $ff, $ff, $8d, TM_12 ; item
 
 	; warp-to
-	EVENT_DISP $14, $23, $e
-	EVENT_DISP $14, $23, $f
-	EVENT_DISP $14, $5, $5 ; MT_MOON_2
-	EVENT_DISP $14, $b, $11 ; MT_MOON_2
-	EVENT_DISP $14, $f, $19 ; MT_MOON_2
+	EVENT_DISP MT_MOON_1_WIDTH, $23, $e
+	EVENT_DISP MT_MOON_1_WIDTH, $23, $f
+	EVENT_DISP MT_MOON_1_WIDTH, $5, $5 ; MT_MOON_2
+	EVENT_DISP MT_MOON_1_WIDTH, $b, $11 ; MT_MOON_2
+	EVENT_DISP MT_MOON_1_WIDTH, $f, $19 ; MT_MOON_2
 
 MtMoon1Blocks: ; 49b97 (12:5b97)
 	INCBIN "maps/mtmoon1.blk"
@@ -77395,10 +77396,10 @@ MtMoon3Object: ; 0x49fdb (size=102)
 	db SPRITE_BALL, $5 + 4, $1d + 4, $ff, $ff, $89, TM_01 ; item
 
 	; warp-to
-	EVENT_DISP $14, $9, $19 ; MT_MOON_2
-	EVENT_DISP $14, $11, $15 ; MT_MOON_2
-	EVENT_DISP $14, $1b, $f ; MT_MOON_2
-	EVENT_DISP $14, $7, $5 ; MT_MOON_2
+	EVENT_DISP MT_MOON_3_WIDTH, $9, $19 ; MT_MOON_2
+	EVENT_DISP MT_MOON_3_WIDTH, $11, $15 ; MT_MOON_2
+	EVENT_DISP MT_MOON_3_WIDTH, $1b, $f ; MT_MOON_2
+	EVENT_DISP MT_MOON_3_WIDTH, $7, $5 ; MT_MOON_2
 
 MtMoon3Blocks: ; 4a041 (12:6041)
 	INCBIN "maps/mtmoon3.blk"
@@ -77465,14 +77466,14 @@ SafariZoneWestObject: ; 0x4a1dc (size=108)
 	db SPRITE_BALL, $7 + 4, $13 + 4, $ff, $ff, $84, GOLD_TEETH ; item
 
 	; warp-to
-	EVENT_DISP $f, $0, $14 ; SAFARI_ZONE_NORTH
-	EVENT_DISP $f, $0, $15 ; SAFARI_ZONE_NORTH
-	EVENT_DISP $f, $0, $1a ; SAFARI_ZONE_NORTH
-	EVENT_DISP $f, $0, $1b ; SAFARI_ZONE_NORTH
-	EVENT_DISP $f, $16, $1d ; SAFARI_ZONE_CENTER
-	EVENT_DISP $f, $17, $1d ; SAFARI_ZONE_CENTER
-	EVENT_DISP $f, $3, $3 ; SAFARI_ZONE_SECRET_HOUSE
-	EVENT_DISP $f, $b, $b ; SAFARI_ZONE_REST_HOUSE_2
+	EVENT_DISP SAFARI_ZONE_WEST_WIDTH, $0, $14 ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_WEST_WIDTH, $0, $15 ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_WEST_WIDTH, $0, $1a ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_WEST_WIDTH, $0, $1b ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_WEST_WIDTH, $16, $1d ; SAFARI_ZONE_CENTER
+	EVENT_DISP SAFARI_ZONE_WEST_WIDTH, $17, $1d ; SAFARI_ZONE_CENTER
+	EVENT_DISP SAFARI_ZONE_WEST_WIDTH, $3, $3 ; SAFARI_ZONE_SECRET_HOUSE
+	EVENT_DISP SAFARI_ZONE_WEST_WIDTH, $b, $b ; SAFARI_ZONE_REST_HOUSE_2
 
 SafariZoneWestBlocks: ; 4a248 (12:6248)
 	INCBIN "maps/safarizonewest.blk"
@@ -77544,8 +77545,8 @@ SafariZoneSecretHouseObject: ; 0x4a365 (size=26)
 	db SPRITE_FISHER, $3 + 4, $3 + 4, $ff, $d0, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2 ; SAFARI_ZONE_WEST
-	EVENT_DISP $4, $7, $3 ; SAFARI_ZONE_WEST
+	EVENT_DISP SAFARI_ZONE_SECRET_HOUSE_WIDTH, $7, $2 ; SAFARI_ZONE_WEST
+	EVENT_DISP SAFARI_ZONE_SECRET_HOUSE_WIDTH, $7, $3 ; SAFARI_ZONE_WEST
 
 SafariZoneSecretHouseBlocks: ; 4a37f (12:637f)
 	INCBIN "maps/safarizonesecrethouse.blk"
@@ -78026,7 +78027,7 @@ Route22Object: ; 0x50022 (size=27)
 	db SPRITE_BLUE, $5 + 4, $19 + 4, $ff, $ff, $2 ; person
 
 	; warp-to
-	EVENT_DISP $14, $5, $8 ; ROUTE_22_GATE
+	EVENT_DISP ROUTE_22_WIDTH, $5, $8 ; ROUTE_22_GATE
 
 Route22Blocks: ; 5003d (14:403d)
 	INCBIN "maps/route22.blk"
@@ -78064,8 +78065,8 @@ Route20Object: ; 0x50113 (size=106)
 	db SPRITE_SWIMMER, $8 + 4, $f + 4, $ff, $d1, $4a, BEAUTY + $C8, $8 ; trainer
 
 	; warp-to
-	EVENT_DISP $32, $5, $30 ; SEAFOAM_ISLANDS_1
-	EVENT_DISP $32, $9, $3a ; SEAFOAM_ISLANDS_1
+	EVENT_DISP ROUTE_20_WIDTH, $5, $30 ; SEAFOAM_ISLANDS_1
+	EVENT_DISP ROUTE_20_WIDTH, $9, $3a ; SEAFOAM_ISLANDS_1
 
 Route20Blocks: ; 5017d (14:417d)
 	INCBIN "maps/route20.blk"
@@ -78101,10 +78102,10 @@ Route23Object: ; 0x50361 (size=81)
 	db SPRITE_GUARD, $88 + 4, $8 + 4, $ff, $d0, $7 ; person
 
 	; warp-to
-	EVENT_DISP $a, $8b, $7 ; ROUTE_22_GATE
-	EVENT_DISP $a, $8b, $8 ; ROUTE_22_GATE
-	EVENT_DISP $a, $1f, $4 ; VICTORY_ROAD_1
-	EVENT_DISP $a, $1f, $e ; VICTORY_ROAD_2
+	EVENT_DISP ROUTE_23_WIDTH, $8b, $7 ; ROUTE_22_GATE
+	EVENT_DISP ROUTE_23_WIDTH, $8b, $8 ; ROUTE_22_GATE
+	EVENT_DISP ROUTE_23_WIDTH, $1f, $4 ; VICTORY_ROAD_1
+	EVENT_DISP ROUTE_23_WIDTH, $1f, $e ; VICTORY_ROAD_2
 
 Route23Blocks: ; 503b2 (14:43b2)
 	INCBIN "maps/route23.blk"
@@ -78168,7 +78169,7 @@ Route25Object: ; 0x507b2 (size=94)
 	db SPRITE_BALL, $2 + 4, $16 + 4, $ff, $ff, $8a, TM_19 ; item
 
 	; warp-to
-	EVENT_DISP $1e, $3, $2d ; BILLS_HOUSE
+	EVENT_DISP ROUTE_25_WIDTH, $3, $2d ; BILLS_HOUSE
 
 Route25Blocks: ; 50810 (14:4810)
 	INCBIN "maps/route25.blk"
@@ -78197,8 +78198,8 @@ IndigoPlateauObject: ; 0x50936 (size=20)
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $a, $5, $9 ; INDIGO_PLATEAU_LOBBY
-	EVENT_DISP $a, $5, $a ; INDIGO_PLATEAU_LOBBY
+	EVENT_DISP INDIGO_PLATEAU_WIDTH, $5, $9 ; INDIGO_PLATEAU_LOBBY
+	EVENT_DISP INDIGO_PLATEAU_WIDTH, $5, $a ; INDIGO_PLATEAU_LOBBY
 
 IndigoPlateauBlocks: ; 5094a (14:494a)
 	INCBIN "maps/indigoplateau.blk"
@@ -78219,7 +78220,7 @@ SaffronCityObject: ; 0x509dc (size=188)
 
 	db $8 ; warps
 	db $5, $7, $0, COPYCATS_HOUSE_1F
-	db $3, $1a, $0, FIGHTINGDOJO
+	db $3, $1a, $0, FIGHTING_DOJO
 	db $3, $22, $0, SAFFRON_GYM
 	db $b, $d, $0, SAFFRON_HOUSE_1
 	db $b, $19, $0, SAFFRON_MART
@@ -78257,14 +78258,14 @@ SaffronCityObject: ; 0x509dc (size=188)
 	db SPRITE_ROCKET, $16 + 4, $13 + 4, $ff, $d0, $f ; person
 
 	; warp-to
-	EVENT_DISP $14, $5, $7 ; COPYCATS_HOUSE_1F
-	EVENT_DISP $14, $3, $1a ; FIGHTINGDOJO
-	EVENT_DISP $14, $3, $22 ; SAFFRON_GYM
-	EVENT_DISP $14, $b, $d ; SAFFRON_HOUSE_1
-	EVENT_DISP $14, $b, $19 ; SAFFRON_MART
-	EVENT_DISP $14, $15, $12 ; SILPH_CO_1F
-	EVENT_DISP $14, $1d, $9 ; SAFFRON_POKECENTER
-	EVENT_DISP $14, $1d, $1d ; SAFFRON_HOUSE_2
+	EVENT_DISP SAFFRON_CITY_WIDTH, $5, $7 ; COPYCATS_HOUSE_1F
+	EVENT_DISP SAFFRON_CITY_WIDTH, $3, $1a ; FIGHTING_DOJO
+	EVENT_DISP SAFFRON_CITY_WIDTH, $3, $22 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_CITY_WIDTH, $b, $d ; SAFFRON_HOUSE_1
+	EVENT_DISP SAFFRON_CITY_WIDTH, $b, $19 ; SAFFRON_MART
+	EVENT_DISP SAFFRON_CITY_WIDTH, $15, $12 ; SILPH_CO_1F
+	EVENT_DISP SAFFRON_CITY_WIDTH, $1d, $9 ; SAFFRON_POKECENTER
+	EVENT_DISP SAFFRON_CITY_WIDTH, $1d, $1d ; SAFFRON_HOUSE_2
 
 SaffronCityBlocks: ; 50a98 (14:4a98)
 	INCBIN "maps/saffroncity.blk"
@@ -79420,7 +79421,7 @@ Func_51388: ; 51388 (14:5388)
 VictoryRoadGuardText1: ; 5138e (14:538e)
 	TX_FAR _VictoryRoadGuardText1
 	db $08 ; asm
-	ld a, $a5
+	ld a, (SFX_02_51 - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent
 	call WaitForSoundToFinish
 	jp TextScriptEnd
@@ -80358,13 +80359,13 @@ VictoryRoad2Object: ; 0x51915 (size=154)
 	db SPRITE_BOULDER, $10 + 4, $17 + 4, $ff, $10, $d ; person
 
 	; warp-to
-	EVENT_DISP $f, $8, $0 ; VICTORY_ROAD_1
-	EVENT_DISP $f, $7, $1d
-	EVENT_DISP $f, $8, $1d
-	EVENT_DISP $f, $7, $17 ; VICTORY_ROAD_3
-	EVENT_DISP $f, $e, $19 ; VICTORY_ROAD_3
-	EVENT_DISP $f, $7, $1b ; VICTORY_ROAD_3
-	EVENT_DISP $f, $1, $1 ; VICTORY_ROAD_3
+	EVENT_DISP VICTORY_ROAD_2_WIDTH, $8, $0 ; VICTORY_ROAD_1
+	EVENT_DISP VICTORY_ROAD_2_WIDTH, $7, $1d
+	EVENT_DISP VICTORY_ROAD_2_WIDTH, $8, $1d
+	EVENT_DISP VICTORY_ROAD_2_WIDTH, $7, $17 ; VICTORY_ROAD_3
+	EVENT_DISP VICTORY_ROAD_2_WIDTH, $e, $19 ; VICTORY_ROAD_3
+	EVENT_DISP VICTORY_ROAD_2_WIDTH, $7, $1b ; VICTORY_ROAD_3
+	EVENT_DISP VICTORY_ROAD_2_WIDTH, $1, $1 ; VICTORY_ROAD_3
 
 VictoryRoad2Blocks: ; 519af (14:59af)
 	INCBIN "maps/victoryroad2.blk"
@@ -80405,14 +80406,14 @@ MtMoon2Object: ; 0x51a4d (size=68)
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $e, $5, $5 ; MT_MOON_1
-	EVENT_DISP $e, $b, $11 ; MT_MOON_3
-	EVENT_DISP $e, $9, $19 ; MT_MOON_1
-	EVENT_DISP $e, $f, $19 ; MT_MOON_1
-	EVENT_DISP $e, $11, $15 ; MT_MOON_3
-	EVENT_DISP $e, $1b, $d ; MT_MOON_3
-	EVENT_DISP $e, $3, $17 ; MT_MOON_3
-	EVENT_DISP $e, $3, $1b
+	EVENT_DISP MT_MOON_2_WIDTH, $5, $5 ; MT_MOON_1
+	EVENT_DISP MT_MOON_2_WIDTH, $b, $11 ; MT_MOON_3
+	EVENT_DISP MT_MOON_2_WIDTH, $9, $19 ; MT_MOON_1
+	EVENT_DISP MT_MOON_2_WIDTH, $f, $19 ; MT_MOON_1
+	EVENT_DISP MT_MOON_2_WIDTH, $11, $15 ; MT_MOON_3
+	EVENT_DISP MT_MOON_2_WIDTH, $1b, $d ; MT_MOON_3
+	EVENT_DISP MT_MOON_2_WIDTH, $3, $17 ; MT_MOON_3
+	EVENT_DISP MT_MOON_2_WIDTH, $3, $1b
 
 MtMoon2Blocks: ; 51a91 (14:5a91)
 	INCBIN "maps/mtmoon2.blk"
@@ -80976,12 +80977,12 @@ SilphCo7Object: ; 0x51ed7 (size=128)
 	db SPRITE_BALL, $b + 4, $18 + 4, $ff, $ff, $8b, TM_03 ; item
 
 	; warp-to
-	EVENT_DISP $d, $0, $10 ; SILPH_CO_8F
-	EVENT_DISP $d, $0, $16 ; SILPH_CO_6F
-	EVENT_DISP $d, $0, $12 ; SILPH_CO_ELEVATOR
-	EVENT_DISP $d, $7, $5 ; SILPH_CO_11F
-	EVENT_DISP $d, $3, $5 ; SILPH_CO_3F
-	EVENT_DISP $d, $f, $15 ; SILPH_CO_5F
+	EVENT_DISP SILPH_CO_7F_WIDTH, $0, $10 ; SILPH_CO_8F
+	EVENT_DISP SILPH_CO_7F_WIDTH, $0, $16 ; SILPH_CO_6F
+	EVENT_DISP SILPH_CO_7F_WIDTH, $0, $12 ; SILPH_CO_ELEVATOR
+	EVENT_DISP SILPH_CO_7F_WIDTH, $7, $5 ; SILPH_CO_11F
+	EVENT_DISP SILPH_CO_7F_WIDTH, $3, $5 ; SILPH_CO_3F
+	EVENT_DISP SILPH_CO_7F_WIDTH, $f, $15 ; SILPH_CO_5F
 
 SilphCo7Blocks: ; 51f57 (14:5f57)
 	INCBIN "maps/silphco7.blk"
@@ -81113,7 +81114,7 @@ Mansion2Text5: ; 52087 (14:6087)
 	set 5, [hl]
 	ld hl, UnnamedText_520c7
 	call PrintText
-	ld a, $ad
+	ld a, (SFX_02_57 - SFX_Headers_02) / 3
 	call PlaySound
 	ld hl, $d796
 	bit 0, [hl]
@@ -81157,10 +81158,10 @@ Mansion2Object: ; 0x520d1 (size=63)
 	db SPRITE_BOOK_MAP_DEX, $16 + 4, $3 + 4, $ff, $ff, $4 ; person
 
 	; warp-to
-	EVENT_DISP $f, $a, $5 ; MANSION_1
-	EVENT_DISP $f, $a, $7 ; MANSION_3
-	EVENT_DISP $f, $e, $19 ; MANSION_3
-	EVENT_DISP $f, $1, $6 ; MANSION_3
+	EVENT_DISP MANSION_2_WIDTH, $a, $5 ; MANSION_1
+	EVENT_DISP MANSION_2_WIDTH, $a, $7 ; MANSION_3
+	EVENT_DISP MANSION_2_WIDTH, $e, $19 ; MANSION_3
+	EVENT_DISP MANSION_2_WIDTH, $1, $6 ; MANSION_3
 
 Mansion2Blocks: ; 52110 (14:6110)
 	INCBIN "maps/mansion2.blk"
@@ -81344,9 +81345,9 @@ Mansion3Object: ; 0x522e6 (size=64)
 	db SPRITE_BOOK_MAP_DEX, $c + 4, $6 + 4, $ff, $ff, $5 ; person
 
 	; warp-to
-	EVENT_DISP $f, $a, $7 ; MANSION_2
-	EVENT_DISP $f, $1, $6 ; MANSION_2
-	EVENT_DISP $f, $e, $19 ; MANSION_2
+	EVENT_DISP MANSION_3_WIDTH, $a, $7 ; MANSION_2
+	EVENT_DISP MANSION_3_WIDTH, $1, $6 ; MANSION_2
+	EVENT_DISP MANSION_3_WIDTH, $e, $19 ; MANSION_2
 
 Mansion3Blocks: ; 52326 (14:6326)
 	INCBIN "maps/mansion3.blk"
@@ -81510,7 +81511,7 @@ Mansion4Object: ; 0x52498 (size=69)
 	db SPRITE_BALL, $d + 4, $5 + 4, $ff, $ff, $88, SECRET_KEY ; item
 
 	; warp-to
-	EVENT_DISP $f, $16, $17 ; MANSION_1
+	EVENT_DISP MANSION_4_WIDTH, $16, $17 ; MANSION_1
 
 Mansion4Blocks: ; 524dd (14:64dd)
 	INCBIN "maps/mansion4.blk"
@@ -81640,7 +81641,7 @@ Func_52673: ; 52673 (14:6673)
 	cp $5e
 	ret nz
 .asm_5269c
-	ld b, $30
+	ld b, CARD_KEY
 	call IsItemInBag
 	jr z, .asm_526dc
 	call Func_526fd
@@ -81670,7 +81671,7 @@ Func_52673: ; 52673 (14:6673)
 	call Predef ; indirect jump to Func_ee9e
 	ld hl, $d126
 	set 5, [hl]
-	ld a, $ad
+	ld a, (SFX_1f_57 - SFX_Headers_1f) / 3
 	jp PlaySound
 .asm_526dc
 	ld a, $2
@@ -82270,12 +82271,12 @@ Route2Object: ; 0x54022 (size=72)
 	db SPRITE_BALL, $2d + 4, $d + 4, $ff, $ff, $82, HP_UP ; item
 
 	; warp-to
-	EVENT_DISP $a, $9, $c ; DIGLETTS_CAVE_EXIT
-	EVENT_DISP $a, $b, $3 ; VIRIDIAN_FOREST_EXIT
-	EVENT_DISP $a, $13, $f ; ROUTE_2_HOUSE
-	EVENT_DISP $a, $23, $10 ; ROUTE_2_GATE
-	EVENT_DISP $a, $27, $f ; ROUTE_2_GATE
-	EVENT_DISP $a, $2b, $3 ; VIRIDIAN_FOREST_ENTRANCE
+	EVENT_DISP ROUTE_2_WIDTH, $9, $c ; DIGLETTS_CAVE_EXIT
+	EVENT_DISP ROUTE_2_WIDTH, $b, $3 ; VIRIDIAN_FOREST_EXIT
+	EVENT_DISP ROUTE_2_WIDTH, $13, $f ; ROUTE_2_HOUSE
+	EVENT_DISP ROUTE_2_WIDTH, $23, $10 ; ROUTE_2_GATE
+	EVENT_DISP ROUTE_2_WIDTH, $27, $f ; ROUTE_2_GATE
+	EVENT_DISP ROUTE_2_WIDTH, $2b, $3 ; VIRIDIAN_FOREST_ENTRANCE
 
 	; unused
 	EVENT_DISP $4, $7, $2
@@ -82346,9 +82347,9 @@ Route4Object: ; 0x543b2 (size=58)
 	db SPRITE_BALL, $3 + 4, $39 + 4, $ff, $ff, $83, TM_04 ; item
 
 	; warp-to
-	EVENT_DISP $2d, $5, $b ; MT_MOON_POKECENTER
-	EVENT_DISP $2d, $5, $12 ; MT_MOON_1
-	EVENT_DISP $2d, $5, $18 ; MT_MOON_2
+	EVENT_DISP ROUTE_4_WIDTH, $5, $b ; MT_MOON_POKECENTER
+	EVENT_DISP ROUTE_4_WIDTH, $5, $12 ; MT_MOON_1
+	EVENT_DISP ROUTE_4_WIDTH, $5, $18 ; MT_MOON_2
 
 Route4Blocks: ; 543ec (15:43ec)
 	INCBIN "maps/route4.blk"
@@ -82378,11 +82379,11 @@ Route5Object: ; 0x545a3 (size=47)
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $a, $1d, $a ; ROUTE_5_GATE
-	EVENT_DISP $a, $1d, $9 ; ROUTE_5_GATE
-	EVENT_DISP $a, $21, $a ; ROUTE_5_GATE
-	EVENT_DISP $a, $1b, $11 ; PATH_ENTRANCE_ROUTE_5
-	EVENT_DISP $a, $15, $a ; DAYCAREM
+	EVENT_DISP ROUTE_5_WIDTH, $1d, $a ; ROUTE_5_GATE
+	EVENT_DISP ROUTE_5_WIDTH, $1d, $9 ; ROUTE_5_GATE
+	EVENT_DISP ROUTE_5_WIDTH, $21, $a ; ROUTE_5_GATE
+	EVENT_DISP ROUTE_5_WIDTH, $1b, $11 ; PATH_ENTRANCE_ROUTE_5
+	EVENT_DISP ROUTE_5_WIDTH, $15, $a ; DAYCAREM
 
 Route5Blocks: ; 545d2 (15:45d2)
 	INCBIN "maps/route5.blk"
@@ -85189,8 +85190,8 @@ VermilionHouse2Object: ; 0x560cf (size=26)
 	db SPRITE_FISHER, $4 + 4, $2 + 4, $ff, $d3, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP VERMILION_HOUSE_2_WIDTH, $7, $2
+	EVENT_DISP VERMILION_HOUSE_2_WIDTH, $7, $3
 
 CeladonMart2_h: ; 0x560e9 to 0x560f5 (12 bytes) (id=123)
 	db LOBBY ; tileset
@@ -85239,9 +85240,9 @@ CeladonMart2Object: ; 0x56111 (size=55)
 	db SPRITE_GIRL, $4 + 4, $e + 4, $fe, $1, $4 ; person
 
 	; warp-to
-	EVENT_DISP $a, $1, $c ; CELADON_MART_1
-	EVENT_DISP $a, $1, $10 ; CELADON_MART_3
-	EVENT_DISP $a, $1, $1 ; CELADON_MART_ELEVATOR
+	EVENT_DISP CELADON_MART_2_WIDTH, $1, $c ; CELADON_MART_1
+	EVENT_DISP CELADON_MART_2_WIDTH, $1, $10 ; CELADON_MART_3
+	EVENT_DISP CELADON_MART_2_WIDTH, $1, $1 ; CELADON_MART_ELEVATOR
 
 CeladonMart2Blocks: ; 56148 (15:6148)
 	INCBIN "maps/celadonmart2.blk"
@@ -85343,9 +85344,9 @@ FuchsiaHouse3Object: ; 0x56221 (size=34)
 	db SPRITE_FISHER, $3 + 4, $5 + 4, $ff, $d3, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $0, $2
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP FUCHSIA_HOUSE_3_WIDTH, $0, $2
+	EVENT_DISP FUCHSIA_HOUSE_3_WIDTH, $7, $2
+	EVENT_DISP FUCHSIA_HOUSE_3_WIDTH, $7, $3
 
 DayCareM_h: ; 0x56243 to 0x5624f (12 bytes) (id=72)
 	db HOUSE ; tileset
@@ -85520,7 +85521,7 @@ Func_562e1: ; 562e1 (15:62e1)
 	ld c, $3
 	ld a, $c
 	call Predef
-	ld a, $b2
+	ld a, (SFX_02_5a - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent
 	ld a, $13
 	ld [$d125], a
@@ -85642,8 +85643,8 @@ DayCareMObject: ; 0x56459 (size=26)
 	db SPRITE_GENTLEMAN, $3 + 4, $2 + 4, $ff, $d3, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP DAYCAREM_WIDTH, $7, $2
+	EVENT_DISP DAYCAREM_WIDTH, $7, $3
 
 Route12House_h: ; 0x56473 to 0x5647f (12 bytes) (id=189)
 	db HOUSE ; tileset
@@ -85723,8 +85724,8 @@ Route12HouseObject: ; 0x564de (size=26)
 	db SPRITE_FISHER, $4 + 4, $2 + 4, $ff, $d3, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP ROUTE_12_HOUSE_WIDTH, $7, $2
+	EVENT_DISP ROUTE_12_HOUSE_WIDTH, $7, $3
 
 SilphCo8_h: ; 0x564f8 to 0x56504 (12 bytes) (id=213)
 	db FACILITY ; tileset
@@ -85942,13 +85943,13 @@ SilphCo8Object: ; 0x56613 (size=90)
 	db SPRITE_ROCKET, $f + 4, $c + 4, $ff, $d3, $44, ROCKET + $C8, $24 ; trainer
 
 	; warp-to
-	EVENT_DISP $d, $0, $10 ; SILPH_CO_9F
-	EVENT_DISP $d, $0, $e ; SILPH_CO_7F
-	EVENT_DISP $d, $0, $12 ; SILPH_CO_ELEVATOR
-	EVENT_DISP $d, $b, $3 ; SILPH_CO_8F
-	EVENT_DISP $d, $f, $3 ; SILPH_CO_2F
-	EVENT_DISP $d, $5, $b ; SILPH_CO_2F
-	EVENT_DISP $d, $9, $b ; SILPH_CO_8F
+	EVENT_DISP SILPH_CO_8F_WIDTH, $0, $10 ; SILPH_CO_9F
+	EVENT_DISP SILPH_CO_8F_WIDTH, $0, $e ; SILPH_CO_7F
+	EVENT_DISP SILPH_CO_8F_WIDTH, $0, $12 ; SILPH_CO_ELEVATOR
+	EVENT_DISP SILPH_CO_8F_WIDTH, $b, $3 ; SILPH_CO_8F
+	EVENT_DISP SILPH_CO_8F_WIDTH, $f, $3 ; SILPH_CO_2F
+	EVENT_DISP SILPH_CO_8F_WIDTH, $5, $b ; SILPH_CO_2F
+	EVENT_DISP SILPH_CO_8F_WIDTH, $9, $b ; SILPH_CO_8F
 
 SilphCo8Blocks: ; 5666d (15:666d)
 	INCBIN "maps/silphco8.blk"
@@ -86519,10 +86520,10 @@ Route6Object: ; 0x58022 (size=87)
 	db SPRITE_BUG_CATCHER, $1a + 4, $13 + 4, $ff, $d2, $46, BUG_CATCHER + $C8, $b ; trainer
 
 	; warp-to
-	EVENT_DISP $a, $1, $9 ; ROUTE_6_GATE
-	EVENT_DISP $a, $1, $a ; ROUTE_6_GATE
-	EVENT_DISP $a, $7, $a ; ROUTE_6_GATE
-	EVENT_DISP $a, $d, $11 ; PATH_ENTRANCE_ROUTE_6
+	EVENT_DISP ROUTE_6_WIDTH, $1, $9 ; ROUTE_6_GATE
+	EVENT_DISP ROUTE_6_WIDTH, $1, $a ; ROUTE_6_GATE
+	EVENT_DISP ROUTE_6_WIDTH, $7, $a ; ROUTE_6_GATE
+	EVENT_DISP ROUTE_6_WIDTH, $d, $11 ; PATH_ENTRANCE_ROUTE_6
 
 Route6Blocks: ; 58079 (16:4079)
 	INCBIN "maps/route6.blk"
@@ -86561,11 +86562,11 @@ Route8Object: ; 0x5814f (size=119)
 	db SPRITE_LASS, $c + 4, $33 + 4, $ff, $d2, $49, LASS + $C8, $10 ; trainer
 
 	; warp-to
-	EVENT_DISP $1e, $9, $1 ; ROUTE_8_GATE
-	EVENT_DISP $1e, $a, $1 ; ROUTE_8_GATE
-	EVENT_DISP $1e, $9, $8 ; ROUTE_8_GATE
-	EVENT_DISP $1e, $a, $8 ; ROUTE_8_GATE
-	EVENT_DISP $1e, $3, $d ; PATH_ENTRANCE_ROUTE_8
+	EVENT_DISP ROUTE_8_WIDTH, $9, $1 ; ROUTE_8_GATE
+	EVENT_DISP ROUTE_8_WIDTH, $a, $1 ; ROUTE_8_GATE
+	EVENT_DISP ROUTE_8_WIDTH, $9, $8 ; ROUTE_8_GATE
+	EVENT_DISP ROUTE_8_WIDTH, $a, $8 ; ROUTE_8_GATE
+	EVENT_DISP ROUTE_8_WIDTH, $3, $d ; PATH_ENTRANCE_ROUTE_8
 
 Route8Blocks: ; 581c6 (16:41c6)
 	INCBIN "maps/route8.blk"
@@ -86603,10 +86604,10 @@ Route10Object: ; 0x582f6 (size=96)
 	db SPRITE_LASS, $36 + 4, $7 + 4, $ff, $d0, $46, JR__TRAINER_F + $C8, $8 ; trainer
 
 	; warp-to
-	EVENT_DISP $a, $13, $b ; ROCK_TUNNEL_POKECENTER
-	EVENT_DISP $a, $11, $8 ; ROCK_TUNNEL_1
-	EVENT_DISP $a, $35, $8 ; ROCK_TUNNEL_1
-	EVENT_DISP $a, $27, $6 ; POWER_PLANT
+	EVENT_DISP ROUTE_10_WIDTH, $13, $b ; ROCK_TUNNEL_POKECENTER
+	EVENT_DISP ROUTE_10_WIDTH, $11, $8 ; ROCK_TUNNEL_1
+	EVENT_DISP ROUTE_10_WIDTH, $35, $8 ; ROCK_TUNNEL_1
+	EVENT_DISP ROUTE_10_WIDTH, $27, $6 ; POWER_PLANT
 
 Route10Blocks: ; 58356 (16:4356)
 	INCBIN "maps/route10.blk"
@@ -86646,11 +86647,11 @@ Route11Object: ; 0x584e0 (size=127)
 	db SPRITE_BUG_CATCHER, $c + 4, $16 + 4, $ff, $d1, $4a, YOUNGSTER + $C8, $c ; trainer
 
 	; warp-to
-	EVENT_DISP $1e, $8, $31 ; ROUTE_11_GATE_1F
-	EVENT_DISP $1e, $9, $31 ; ROUTE_11_GATE_1F
-	EVENT_DISP $1e, $8, $3a ; ROUTE_11_GATE_1F
-	EVENT_DISP $1e, $9, $3a ; ROUTE_11_GATE_1F
-	EVENT_DISP $1e, $5, $4 ; DIGLETTS_CAVE_ENTRANCE
+	EVENT_DISP ROUTE_11_WIDTH, $8, $31 ; ROUTE_11_GATE_1F
+	EVENT_DISP ROUTE_11_WIDTH, $9, $31 ; ROUTE_11_GATE_1F
+	EVENT_DISP ROUTE_11_WIDTH, $8, $3a ; ROUTE_11_GATE_1F
+	EVENT_DISP ROUTE_11_WIDTH, $9, $3a ; ROUTE_11_GATE_1F
+	EVENT_DISP ROUTE_11_WIDTH, $5, $4 ; DIGLETTS_CAVE_ENTRANCE
 
 Route11Blocks: ; 5855f (16:455f)
 	INCBIN "maps/route11.blk"
@@ -86669,9 +86670,9 @@ Route12Object: ; 0x5869a (size=118)
 	db $43 ; border tile
 
 	db $4 ; warps
-	db $f, $a, $0, ROUTE_12_GATE
-	db $f, $b, $1, ROUTE_12_GATE
-	db $15, $a, $2, ROUTE_12_GATE
+	db $f, $a, $0, ROUTE_12_GATE_1F
+	db $f, $b, $1, ROUTE_12_GATE_1F
+	db $15, $a, $2, ROUTE_12_GATE_1F
 	db $4d, $b, $0, ROUTE_12_HOUSE
 
 	db $2 ; signs
@@ -86691,10 +86692,10 @@ Route12Object: ; 0x5869a (size=118)
 	db SPRITE_BALL, $59 + 4, $5 + 4, $ff, $ff, $8a, IRON ; item
 
 	; warp-to
-	EVENT_DISP $a, $f, $a ; ROUTE_12_GATE
-	EVENT_DISP $a, $f, $b ; ROUTE_12_GATE
-	EVENT_DISP $a, $15, $a ; ROUTE_12_GATE
-	EVENT_DISP $a, $4d, $b ; ROUTE_12_HOUSE
+	EVENT_DISP ROUTE_12_WIDTH, $f, $a ; ROUTE_12_GATE_1F
+	EVENT_DISP ROUTE_12_WIDTH, $f, $b ; ROUTE_12_GATE_1F
+	EVENT_DISP ROUTE_12_WIDTH, $15, $a ; ROUTE_12_GATE_1F
+	EVENT_DISP ROUTE_12_WIDTH, $4d, $b ; ROUTE_12_HOUSE
 
 Route12Blocks: ; 58710 (16:4710)
 	INCBIN "maps/route12.blk"
@@ -86734,10 +86735,10 @@ Route15Object: ; 0x5894e (size=126)
 	db SPRITE_BALL, $5 + 4, $12 + 4, $ff, $ff, $8b, TM_20 ; item
 
 	; warp-to
-	EVENT_DISP $1e, $8, $7 ; ROUTE_15_GATE_1F
-	EVENT_DISP $1e, $9, $7 ; ROUTE_15_GATE_1F
-	EVENT_DISP $1e, $8, $e ; ROUTE_15_GATE_1F
-	EVENT_DISP $1e, $9, $e ; ROUTE_15_GATE_1F
+	EVENT_DISP ROUTE_15_WIDTH, $8, $7 ; ROUTE_15_GATE_1F
+	EVENT_DISP ROUTE_15_WIDTH, $9, $7 ; ROUTE_15_GATE_1F
+	EVENT_DISP ROUTE_15_WIDTH, $8, $e ; ROUTE_15_GATE_1F
+	EVENT_DISP ROUTE_15_WIDTH, $9, $e ; ROUTE_15_GATE_1F
 
 Route15Blocks: ; 589cc (16:49cc)
 	INCBIN "maps/route15.blk"
@@ -86779,15 +86780,15 @@ Route16Object: ; 0x58afc (size=136)
 	db SPRITE_SNORLAX, $a + 4, $1a + 4, $ff, $d0, $7 ; person
 
 	; warp-to
-	EVENT_DISP $14, $a, $11 ; ROUTE_16_GATE_1F
-	EVENT_DISP $14, $b, $11 ; ROUTE_16_GATE_1F
-	EVENT_DISP $14, $a, $18 ; ROUTE_16_GATE_1F
-	EVENT_DISP $14, $b, $18 ; ROUTE_16_GATE_1F
-	EVENT_DISP $14, $4, $11 ; ROUTE_16_GATE_1F
-	EVENT_DISP $14, $5, $11 ; ROUTE_16_GATE_1F
-	EVENT_DISP $14, $4, $18 ; ROUTE_16_GATE_1F
-	EVENT_DISP $14, $5, $18 ; ROUTE_16_GATE_1F
-	EVENT_DISP $14, $5, $7 ; ROUTE_16_HOUSE
+	EVENT_DISP ROUTE_16_WIDTH, $a, $11 ; ROUTE_16_GATE_1F
+	EVENT_DISP ROUTE_16_WIDTH, $b, $11 ; ROUTE_16_GATE_1F
+	EVENT_DISP ROUTE_16_WIDTH, $a, $18 ; ROUTE_16_GATE_1F
+	EVENT_DISP ROUTE_16_WIDTH, $b, $18 ; ROUTE_16_GATE_1F
+	EVENT_DISP ROUTE_16_WIDTH, $4, $11 ; ROUTE_16_GATE_1F
+	EVENT_DISP ROUTE_16_WIDTH, $5, $11 ; ROUTE_16_GATE_1F
+	EVENT_DISP ROUTE_16_WIDTH, $4, $18 ; ROUTE_16_GATE_1F
+	EVENT_DISP ROUTE_16_WIDTH, $5, $18 ; ROUTE_16_GATE_1F
+	EVENT_DISP ROUTE_16_WIDTH, $5, $7 ; ROUTE_16_HOUSE
 
 Route16Blocks: ; 58b84 (16:4b84)
 	INCBIN "maps/route16.blk"
@@ -86820,10 +86821,10 @@ Route18Object: ; 0x58c5a (size=66)
 	db SPRITE_BLACK_HAIR_BOY_1, $d + 4, $2a + 4, $ff, $d2, $43, BIRD_KEEPER + $C8, $a ; trainer
 
 	; warp-to
-	EVENT_DISP $19, $8, $21 ; ROUTE_18_GATE_1F
-	EVENT_DISP $19, $9, $21 ; ROUTE_18_GATE_1F
-	EVENT_DISP $19, $8, $28 ; ROUTE_18_GATE_1F
-	EVENT_DISP $19, $9, $28 ; ROUTE_18_GATE_1F
+	EVENT_DISP ROUTE_18_WIDTH, $8, $21 ; ROUTE_18_GATE_1F
+	EVENT_DISP ROUTE_18_WIDTH, $9, $21 ; ROUTE_18_GATE_1F
+	EVENT_DISP ROUTE_18_WIDTH, $8, $28 ; ROUTE_18_GATE_1F
+	EVENT_DISP ROUTE_18_WIDTH, $9, $28 ; ROUTE_18_GATE_1F
 
 Route18Blocks: ; 58c9c (16:4c9c)
 	INCBIN "maps/route18.blk"
@@ -86863,11 +86864,11 @@ Func_58d99: ; 58d99 (16:4d99)
 	call PrintText
 	jr asm_58e3a
 .asm_58dd8
-	ld b, $48
+	ld b, SILPH_SCOPE
 	call IsItemInBag
 	ld a, [W_ENEMYMONID]
 	ld [$cf91], a
-	cp $91
+	cp MAROWAK
 	jr z, .asm_58e03
 	ld a, b
 	and a
@@ -86904,7 +86905,7 @@ Func_58e29: ; 58e29 (16:4e29)
 	ld [$c0f1], a
 	ld a, $80
 	ld [$c0f2], a
-	ld a, $e9
+	ld a, (SFX_08_77 - SFX_Headers_08) / 3
 	call PlaySound
 	jp WaitForSoundToFinish
 asm_58e3a: ; 58e3a (16:4e3a)
@@ -89255,10 +89256,10 @@ Func_59b73: ; 59b73 (16:5b73)
 	ld a, [$d771]
 	bit 1, a
 	ret nz
-	ld b, $6
+	ld b, BICYCLE
 	call IsItemInBag
 	ret nz
-	ld b, $2d
+	ld b, BIKE_VOUCHER
 	jp IsItemInBag
 
 FanClubTextPointers: ; 59b84 (16:5b84)
@@ -89441,8 +89442,8 @@ FanClubObject: ; 0x59c97 (size=62)
 	db SPRITE_CABLE_CLUB_WOMAN, $1 + 4, $5 + 4, $ff, $d0, $6 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP POKEMON_FAN_CLUB_WIDTH, $7, $2
+	EVENT_DISP POKEMON_FAN_CLUB_WIDTH, $7, $3
 
 FanClubBlocks: ; 59cd5 (16:5cd5)
 	INCBIN "maps/fanclub.blk"
@@ -89725,13 +89726,13 @@ SilphCo2Object: ; 0x59e66 (size=98)
 	db SPRITE_ROCKET, $7 + 4, $18 + 4, $ff, $d1, $45, ROCKET + $C8, $18 ; trainer
 
 	; warp-to
-	EVENT_DISP $f, $0, $18 ; SILPH_CO_1F
-	EVENT_DISP $f, $0, $1a ; SILPH_CO_3F
-	EVENT_DISP $f, $0, $14 ; SILPH_CO_ELEVATOR
-	EVENT_DISP $f, $3, $3 ; SILPH_CO_3F
-	EVENT_DISP $f, $3, $d ; SILPH_CO_8F
-	EVENT_DISP $f, $f, $1b ; SILPH_CO_8F
-	EVENT_DISP $f, $f, $9 ; SILPH_CO_6F
+	EVENT_DISP SILPH_CO_2F_WIDTH, $0, $18 ; SILPH_CO_1F
+	EVENT_DISP SILPH_CO_2F_WIDTH, $0, $1a ; SILPH_CO_3F
+	EVENT_DISP SILPH_CO_2F_WIDTH, $0, $14 ; SILPH_CO_ELEVATOR
+	EVENT_DISP SILPH_CO_2F_WIDTH, $3, $3 ; SILPH_CO_3F
+	EVENT_DISP SILPH_CO_2F_WIDTH, $3, $d ; SILPH_CO_8F
+	EVENT_DISP SILPH_CO_2F_WIDTH, $f, $1b ; SILPH_CO_8F
+	EVENT_DISP SILPH_CO_2F_WIDTH, $f, $9 ; SILPH_CO_6F
 
 SilphCo2Blocks: ; 59ec8 (16:5ec8)
 	INCBIN "maps/silphco2.blk"
@@ -89907,16 +89908,16 @@ SilphCo3Object: ; 0x5a035 (size=113)
 	db SPRITE_BALL, $5 + 4, $8 + 4, $ff, $ff, $84, HYPER_POTION ; item
 
 	; warp-to
-	EVENT_DISP $f, $0, $1a ; SILPH_CO_2F
-	EVENT_DISP $f, $0, $18 ; SILPH_CO_4F
-	EVENT_DISP $f, $0, $14 ; SILPH_CO_ELEVATOR
-	EVENT_DISP $f, $b, $17 ; SILPH_CO_3F
-	EVENT_DISP $f, $3, $3 ; SILPH_CO_5F
-	EVENT_DISP $f, $f, $3 ; SILPH_CO_5F
-	EVENT_DISP $f, $3, $1b ; SILPH_CO_2F
-	EVENT_DISP $f, $b, $3 ; SILPH_CO_9F
-	EVENT_DISP $f, $b, $b ; SILPH_CO_7F
-	EVENT_DISP $f, $f, $1b ; SILPH_CO_3F
+	EVENT_DISP SILPH_CO_3F_WIDTH, $0, $1a ; SILPH_CO_2F
+	EVENT_DISP SILPH_CO_3F_WIDTH, $0, $18 ; SILPH_CO_4F
+	EVENT_DISP SILPH_CO_3F_WIDTH, $0, $14 ; SILPH_CO_ELEVATOR
+	EVENT_DISP SILPH_CO_3F_WIDTH, $b, $17 ; SILPH_CO_3F
+	EVENT_DISP SILPH_CO_3F_WIDTH, $3, $3 ; SILPH_CO_5F
+	EVENT_DISP SILPH_CO_3F_WIDTH, $f, $3 ; SILPH_CO_5F
+	EVENT_DISP SILPH_CO_3F_WIDTH, $3, $1b ; SILPH_CO_2F
+	EVENT_DISP SILPH_CO_3F_WIDTH, $b, $3 ; SILPH_CO_9F
+	EVENT_DISP SILPH_CO_3F_WIDTH, $b, $b ; SILPH_CO_7F
+	EVENT_DISP SILPH_CO_3F_WIDTH, $f, $1b ; SILPH_CO_3F
 
 SilphCo3Blocks: ; 5a0a6 (16:60a6)
 	INCBIN "maps/silphco3.blk"
@@ -90077,12 +90078,12 @@ SilphCo10Object: ; 0x5a1fb (size=95)
 	db SPRITE_BALL, $b + 4, $5 + 4, $ff, $ff, $86, CARBOS ; item
 
 	; warp-to
-	EVENT_DISP $8, $0, $8 ; SILPH_CO_9F
-	EVENT_DISP $8, $0, $a ; SILPH_CO_11F
-	EVENT_DISP $8, $0, $c ; SILPH_CO_ELEVATOR
-	EVENT_DISP $8, $b, $9 ; SILPH_CO_4F
-	EVENT_DISP $8, $f, $d ; SILPH_CO_4F
-	EVENT_DISP $8, $7, $d ; SILPH_CO_4F
+	EVENT_DISP SILPH_CO_10F_WIDTH, $0, $8 ; SILPH_CO_9F
+	EVENT_DISP SILPH_CO_10F_WIDTH, $0, $a ; SILPH_CO_11F
+	EVENT_DISP SILPH_CO_10F_WIDTH, $0, $c ; SILPH_CO_ELEVATOR
+	EVENT_DISP SILPH_CO_10F_WIDTH, $b, $9 ; SILPH_CO_4F
+	EVENT_DISP SILPH_CO_10F_WIDTH, $f, $d ; SILPH_CO_4F
+	EVENT_DISP SILPH_CO_10F_WIDTH, $7, $d ; SILPH_CO_4F
 
 SilphCo10Blocks: ; 5a25a (16:625a)
 	INCBIN "maps/silphco10.blk"
@@ -90172,7 +90173,7 @@ LanceScript0: ; 5a305 (16:6305)
 	ret nz
 	ld hl, $d126
 	set 5, [hl]
-	ld a, $ad
+	ld a, (SFX_02_57 - SFX_Headers_02) / 3
 	call PlaySound
 	jp LanceScript_5a2c4
 
@@ -90275,9 +90276,9 @@ LanceObject: ; 0x5a3c5 (size=36)
 	db SPRITE_LANCE, $1 + 4, $6 + 4, $ff, $d0, $41, LANCE + $C8, $1 ; trainer
 
 	; warp-to
-	EVENT_DISP $d, $10, $18 ; AGATHAS_ROOM
-	EVENT_DISP $d, $0, $5 ; CHAMPIONS_ROOM
-	EVENT_DISP $d, $0, $6 ; CHAMPIONS_ROOM
+	EVENT_DISP LANCES_ROOM_WIDTH, $10, $18 ; AGATHAS_ROOM
+	EVENT_DISP LANCES_ROOM_WIDTH, $0, $5 ; CHAMPIONS_ROOM
+	EVENT_DISP LANCES_ROOM_WIDTH, $0, $6 ; CHAMPIONS_ROOM
 
 LanceBlocks: ; 5a3e9 (16:63e9)
 	INCBIN "maps/lance.blk"
@@ -90420,8 +90421,8 @@ HallofFameRoomObject: ; 0x5a571 (size=26)
 	db SPRITE_OAK, $2 + 4, $5 + 4, $ff, $d0, $1 ; person
 
 	; warp-to
-	EVENT_DISP $5, $7, $4 ; CHAMPIONS_ROOM
-	EVENT_DISP $5, $7, $5 ; CHAMPIONS_ROOM
+	EVENT_DISP HALL_OF_FAME_WIDTH, $7, $4 ; CHAMPIONS_ROOM
+	EVENT_DISP HALL_OF_FAME_WIDTH, $7, $5 ; CHAMPIONS_ROOM
 
 HallofFameRoomBlocks: ; 5a58b (16:658b)
 	INCBIN "maps/halloffameroom.blk"
@@ -90453,15 +90454,15 @@ CeruleanMartBlocks: ; 5c000 (17:4000)
 VermilionMartBlocks: ; 5c000 (17:4000)
 	INCBIN "maps/vermilionmart.blk"
 
-CopycatsHouseF2Blocks: ; 5c010 (17:4010)
+CopycatsHouse2FBlocks: ; 5c010 (17:4010)
 RedsHouse2FBlocks: ; 0x5c010 16?
 	INCBIN "maps/redshouse2f.blk"
 
-MuseumF1Blocks: ; 5c020 (17:4020)
-	INCBIN "maps/museumf1.blk"
+Museum1FBlocks: ; 5c020 (17:4020)
+	INCBIN "maps/museum1f.blk"
 
-MuseumF2Blocks: ; 5c048 (17:4048)
-	INCBIN "maps/museumf2.blk"
+Museum2FBlocks: ; 5c048 (17:4048)
+	INCBIN "maps/museum2f.blk"
 
 SaffronPokecenterBlocks: ; 5c064 (17:4064)
 VermilionPokecenterBlocks: ; 5c064 (17:4064)
@@ -90477,7 +90478,7 @@ UndergroundTunnelEntranceRoute5Blocks: ; 5c080 (17:4080)
 
 Route2GateBlocks: ; 5c090 (17:4090)
 ViridianForestEntranceBlocks: ; 5c090 (17:4090)
-ViridianForestexitBlocks: ; 5c090 (17:4090)
+ViridianForestExitBlocks: ; 5c090 (17:4090)
 	INCBIN "maps/viridianforestexit.blk"
 
 RedsHouse2F_h: ; 5c0a4 (17:40a4)
@@ -90534,27 +90535,27 @@ Func_5c0dc: ; 5c0dc (17:40dc)
 	ld [wPokedexOwned], a ; $d2f7
 	ret
 
-MuseumF1_h: ; 0x5c0eb to 0x5c0f7 (12 bytes) (id=52)
+Museum1F_h: ; 0x5c0eb to 0x5c0f7 (12 bytes) (id=52)
 	db MUSEUM ; tileset
 	db MUSEUM_1F_HEIGHT, MUSEUM_1F_WIDTH ; dimensions (y, x)
-	dw MuseumF1Blocks, MuseumF1TextPointers, MuseumF1Script ; blocks, texts, scripts
+	dw Museum1FBlocks, Museum1FTextPointers, Museum1FScript ; blocks, texts, scripts
 	db $00 ; connections
-	dw MuseumF1Object ; objects
+	dw Museum1FObject ; objects
 
-MuseumF1Script: ; 5c0f7 (17:40f7)
+Museum1FScript: ; 5c0f7 (17:40f7)
 	ld a, $1
 	ld [$cf0c], a
 	xor a
 	ld [$cc3c], a
-	ld hl, MuseumF1ScriptPointers
-	ld a, [W_MUSEUMF1CURSCRIPT]
+	ld hl, Museum1FScriptPointers
+	ld a, [W_MUSEUM1FCURSCRIPT]
 	jp CallFunctionInTable
 
-MuseumF1ScriptPointers: ; 5c109 (17:4109)
-	dw MuseumF1Script0
-	dw MuseumF1Script1
+Museum1FScriptPointers: ; 5c109 (17:4109)
+	dw Museum1FScript0
+	dw Museum1FScript1
 
-MuseumF1Script0: ; 5c10d (17:410d)
+Museum1FScript0: ; 5c10d (17:410d)
 	ld a, [$d361]
 	cp $4
 	ret nz
@@ -90571,17 +90572,17 @@ MuseumF1Script0: ; 5c10d (17:410d)
 	ld [$ff8c], a
 	jp DisplayTextID
 
-MuseumF1Script1: ; 5c12a (17:412a)
+Museum1FScript1: ; 5c12a (17:412a)
 	ret
 
-MuseumF1TextPointers: ; 5c12b (17:412b)
-	dw MuseumF1Text1
-	dw MuseumF1Text2
-	dw MuseumF1Text3
-	dw MuseumF1Text4
-	dw MuseumF1Text5
+Museum1FTextPointers: ; 5c12b (17:412b)
+	dw Museum1FText1
+	dw Museum1FText2
+	dw Museum1FText3
+	dw Museum1FText4
+	dw Museum1FText5
 
-MuseumF1Text1: ; 5c135 (17:4135)
+Museum1FText1: ; 5c135 (17:4135)
 	db $8
 	ld a, [$d361]
 	cp $4
@@ -90651,7 +90652,7 @@ asm_0f3e3: ; 5c1a4 (17:41a4)
 	ld a, $13
 	ld [$d125], a
 	call DisplayTextBoxID
-	ld a, $b2
+	ld a, (SFX_02_5a - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent
 	call WaitForSoundToFinish
 	jr asm_0b094 ; 0x5c1d8 $18
@@ -90667,7 +90668,7 @@ asm_de133: ; 5c1da (17:41da)
 	jr asm_d1145 ; 0x5c1f0 $25
 asm_0b094: ; 5c1f2 (17:41f2)
 	ld a, $1
-	ld [W_MUSEUMF1CURSCRIPT], a
+	ld [W_MUSEUM1FCURSCRIPT], a
 	jr asm_d1145 ; 0x5c1f7 $1e
 
 Func_5c1f9: ; 5c1f9 (17:41f9)
@@ -90722,7 +90723,7 @@ UnnamedText_5c242: ; 5c242 (17:4242)
 	TX_FAR _UnnamedText_5c242
 	db "@"
 
-MuseumF1Text2: ; 5c247 (17:4247)
+Museum1FText2: ; 5c247 (17:4247)
 	db $08 ; asm
 	ld hl, UnnamedText_5c251
 	call PrintText
@@ -90732,7 +90733,7 @@ UnnamedText_5c251: ; 5c251 (17:4251)
 	TX_FAR _UnnamedText_5c251
 	db "@"
 
-MuseumF1Text3: ; 5c256 (17:4256)
+Museum1FText3: ; 5c256 (17:4256)
 	db $08 ; asm
 	ld a, [$d754]
 	bit 1, a
@@ -90775,7 +90776,7 @@ UnnamedText_5c29e: ; 5c29e (17:429e)
 	TX_FAR _UnnamedText_5c29e
 	db "@"
 
-MuseumF1Text4: ; 5c2a3 (17:42a3)
+Museum1FText4: ; 5c2a3 (17:42a3)
 	db $08 ; asm
 	ld hl, UnnamedText_5c2ad
 	call PrintText
@@ -90785,7 +90786,7 @@ UnnamedText_5c2ad: ; 5c2ad (17:42ad)
 	TX_FAR _UnnamedText_5c2ad
 	db "@"
 
-MuseumF1Text5: ; 5c2b2 (17:42b2)
+Museum1FText5: ; 5c2b2 (17:42b2)
 	db $08 ; asm
 	ld hl, UnnamedText_5c2bc
 	call PrintText
@@ -90795,7 +90796,7 @@ UnnamedText_5c2bc: ; 5c2bc (17:42bc)
 	TX_FAR _UnnamedText_5c2bc
 	db "@"
 
-MuseumF1Object: ; 0x5c2c1 (size=74)
+Museum1FObject: ; 0x5c2c1 (size=74)
 	db $a ; border tile
 
 	db $5 ; warps
@@ -90815,68 +90816,68 @@ MuseumF1Object: ; 0x5c2c1 (size=74)
 	db SPRITE_OLD_AMBER, $2 + 4, $10 + 4, $ff, $ff, $5 ; person
 
 	; warp-to
-	EVENT_DISP $a, $7, $a
-	EVENT_DISP $a, $7, $b
-	EVENT_DISP $a, $7, $10
-	EVENT_DISP $a, $7, $11
-	EVENT_DISP $a, $7, $7 ; MUSEUM_2F
+	EVENT_DISP MUSEUM_1F_WIDTH, $7, $a
+	EVENT_DISP MUSEUM_1F_WIDTH, $7, $b
+	EVENT_DISP MUSEUM_1F_WIDTH, $7, $10
+	EVENT_DISP MUSEUM_1F_WIDTH, $7, $11
+	EVENT_DISP MUSEUM_1F_WIDTH, $7, $7 ; MUSEUM_2F
 
-MuseumF2_h: ; 0x5c30b to 0x5c317 (12 bytes) (id=53)
+Museum2F_h: ; 0x5c30b to 0x5c317 (12 bytes) (id=53)
 	db MUSEUM ; tileset
 	db MUSEUM_2F_HEIGHT, MUSEUM_2F_WIDTH ; dimensions (y, x)
-	dw MuseumF2Blocks, MuseumF2TextPointers, MuseumF2Script ; blocks, texts, scripts
+	dw Museum2FBlocks, Museum2FTextPointers, Museum2FScript ; blocks, texts, scripts
 	db $00 ; connections
-	dw MuseumF2Object ; objects
+	dw Museum2FObject ; objects
 
-MuseumF2Script: ; 5c317 (17:4317)
+Museum2FScript: ; 5c317 (17:4317)
 	jp EnableAutoTextBoxDrawing
 
-MuseumF2TextPointers: ; 5c31a (17:431a)
-	dw MuseumF2Text1
-	dw MuseumF2Text2
-	dw MuseumF2Text3
-	dw MuseumF2Text4
-	dw MuseumF2Text5
-	dw MuseumF2Text6
-	dw MuseumF2Text7
+Museum2FTextPointers: ; 5c31a (17:431a)
+	dw Museum2FText1
+	dw Museum2FText2
+	dw Museum2FText3
+	dw Museum2FText4
+	dw Museum2FText5
+	dw Museum2FText6
+	dw Museum2FText7
 
-MuseumF2Text1: ; 5c328 (17:4328)
-	TX_FAR _MuseumF2Text1
+Museum2FText1: ; 5c328 (17:4328)
+	TX_FAR _Museum2FText1
 	db "@"
 
-MuseumF2Text2: ; 5c32d (17:432d)
-	TX_FAR _MuseumF2Text2
+Museum2FText2: ; 5c32d (17:432d)
+	TX_FAR _Museum2FText2
 	db "@"
 
-MuseumF2Text3: ; 5c332 (17:4332)
-	TX_FAR _MuseumF2Text3
+Museum2FText3: ; 5c332 (17:4332)
+	TX_FAR _Museum2FText3
 	db "@"
 
-MuseumF2Text4: ; 5c337 (17:4337)
-	TX_FAR _MuseumF2Text4
+Museum2FText4: ; 5c337 (17:4337)
+	TX_FAR _Museum2FText4
 	db "@"
 
-MuseumF2Text5: ; 5c33c (17:433c)
-	TX_FAR _MuseumF2Text5
+Museum2FText5: ; 5c33c (17:433c)
+	TX_FAR _Museum2FText5
 	db "@"
 
-MuseumF2Text6: ; 5c341 (17:4341)
-	TX_FAR _MuseumF2Text6
+Museum2FText6: ; 5c341 (17:4341)
+	TX_FAR _Museum2FText6
 	db "@"
 
-MuseumF2Text7: ; 5c346 (17:4346)
-	TX_FAR _MuseumF2Text7
+Museum2FText7: ; 5c346 (17:4346)
+	TX_FAR _Museum2FText7
 	db "@"
 
-MuseumF2Object: ; 0x5c34b (size=48)
+Museum2FObject: ; 0x5c34b (size=48)
 	db $a ; border tile
 
 	db $1 ; warps
 	db $7, $7, $4, MUSEUM_1F
 
 	db $2 ; signs
-	db $2, $b, $6 ; MuseumF2Text6
-	db $5, $2, $7 ; MuseumF2Text7
+	db $2, $b, $6 ; Museum2FText6
+	db $5, $2, $7 ; Museum2FText7
 
 	db $5 ; people
 	db SPRITE_BUG_CATCHER, $7 + 4, $1 + 4, $fe, $2, $1 ; person
@@ -90886,7 +90887,7 @@ MuseumF2Object: ; 0x5c34b (size=48)
 	db SPRITE_HIKER, $5 + 4, $c + 4, $ff, $d0, $5 ; person
 
 	; warp-to
-	EVENT_DISP $7, $7, $7 ; MUSEUM_1F
+	EVENT_DISP MUSEUM_2F_WIDTH, $7, $7 ; MUSEUM_1F
 
 PewterGym_h: ; 0x5c37b to 0x5c387 (12 bytes) (id=54)
 	db GYM ; tileset
@@ -91143,8 +91144,8 @@ PewterGymObject: ; 0x5c52e (size=42)
 	db SPRITE_GYM_HELPER, $a + 4, $7 + 4, $ff, $d0, $3 ; person
 
 	; warp-to
-	EVENT_DISP $5, $d, $4
-	EVENT_DISP $5, $d, $5
+	EVENT_DISP PEWTER_GYM_WIDTH, $d, $4
+	EVENT_DISP PEWTER_GYM_WIDTH, $d, $5
 
 PewterGymBlocks: ; 5c558 (17:4558)
 	INCBIN "maps/pewtergym.blk"
@@ -91248,8 +91249,8 @@ PewterPokecenterObject: ; 0x5c60d (size=44)
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
 
 	; warp-to
-	EVENT_DISP $7, $7, $3
-	EVENT_DISP $7, $7, $4
+	EVENT_DISP PEWTER_POKECENTER_WIDTH, $7, $3
+	EVENT_DISP PEWTER_POKECENTER_WIDTH, $7, $4
 
 CeruleanPokecenter_h: ; 0x5c639 to 0x5c645 (12 bytes) (id=64)
 	db POKECENTER ; tileset
@@ -91298,8 +91299,8 @@ CeruleanPokecenterObject: ; 0x5c65f (size=44)
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
 
 	; warp-to
-	EVENT_DISP $7, $7, $3
-	EVENT_DISP $7, $7, $4
+	EVENT_DISP CERULEAN_POKECENTER_WIDTH, $7, $3
+	EVENT_DISP CERULEAN_POKECENTER_WIDTH, $7, $4
 
 CeruleanPokecenterBlocks: ; 5c68b (17:468b)
 	INCBIN "maps/ceruleanpokecenter.blk"
@@ -91549,8 +91550,8 @@ CeruleanGymObject: ; 0x5c834 (size=50)
 	db SPRITE_GYM_HELPER, $a + 4, $7 + 4, $ff, $d0, $4 ; person
 
 	; warp-to
-	EVENT_DISP $5, $d, $4
-	EVENT_DISP $5, $d, $5
+	EVENT_DISP CERULEAN_GYM_WIDTH, $d, $4
+	EVENT_DISP CERULEAN_GYM_WIDTH, $d, $5
 
 CeruleanGymBlocks: ; 5c866 (17:4866)
 	INCBIN "maps/ceruleangym.blk"
@@ -91593,8 +91594,8 @@ CeruleanMartObject: ; 0x5c8a8 (size=38)
 	db SPRITE_LASS, $2 + 4, $6 + 4, $fe, $2, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $7, $4
+	EVENT_DISP CERULEAN_MART_WIDTH, $7, $3
+	EVENT_DISP CERULEAN_MART_WIDTH, $7, $4
 
 LavenderPokecenter_h: ; 0x5c8ce to 0x5c8da (12 bytes) (id=141)
 	db POKECENTER ; tileset
@@ -91643,8 +91644,8 @@ LavenderPokecenterObject: ; 0x5c8f4 (size=44)
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
 
 	; warp-to
-	EVENT_DISP $7, $7, $3
-	EVENT_DISP $7, $7, $4
+	EVENT_DISP LAVENDER_POKECENTER_WIDTH, $7, $3
+	EVENT_DISP LAVENDER_POKECENTER_WIDTH, $7, $4
 
 LavenderMart_h: ; 0x5c920 to 0x5c92c (12 bytes) (id=150)
 	db MART ; tileset
@@ -91702,8 +91703,8 @@ LavenderMartObject: ; 0x5c95d (size=38)
 	db SPRITE_BLACK_HAIR_BOY_1, $2 + 4, $7 + 4, $ff, $ff, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $7, $4
+	EVENT_DISP LAVENDER_MART_WIDTH, $7, $3
+	EVENT_DISP LAVENDER_MART_WIDTH, $7, $4
 
 VermilionPokecenter_h: ; 0x5c983 to 0x5c98f (12 bytes) (id=89)
 	db POKECENTER ; tileset
@@ -91752,8 +91753,8 @@ VermilionPokecenterObject: ; 0x5c9a9 (size=44)
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
 
 	; warp-to
-	EVENT_DISP $7, $7, $3
-	EVENT_DISP $7, $7, $4
+	EVENT_DISP VERMILION_POKECENTER_WIDTH, $7, $3
+	EVENT_DISP VERMILION_POKECENTER_WIDTH, $7, $4
 
 VermilionMart_h: ; 0x5c9d5 to 0x5c9e1 (12 bytes) (id=91)
 	db MART ; tileset
@@ -91793,8 +91794,8 @@ VermilionMartObject: ; 0x5c9f4 (size=38)
 	db SPRITE_LASS, $3 + 4, $3 + 4, $fe, $2, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $7, $4
+	EVENT_DISP VERMILION_MART_WIDTH, $7, $3
+	EVENT_DISP VERMILION_MART_WIDTH, $7, $4
 
 VermilionGym_h: ; 0x5ca1a to 0x5ca26 (12 bytes) (id=92)
 	db GYM ; tileset
@@ -91839,7 +91840,7 @@ VermilionGymScript_5ca6d: ; 5ca6d (17:4a6d)
 	ld a, $24
 	jr .asm_5ca7f
 .asm_5ca78
-	ld a, $ad
+	ld a, (SFX_02_57 - SFX_Headers_02) / 3
 	call PlaySound
 	ld a, $5
 .asm_5ca7f
@@ -92093,32 +92094,32 @@ VermilionGymObject: ; 0x5cbfe (size=58)
 	db SPRITE_GYM_HELPER, $e + 4, $4 + 4, $ff, $d0, $5 ; person
 
 	; warp-to
-	EVENT_DISP $5, $11, $4
-	EVENT_DISP $5, $11, $5
+	EVENT_DISP VERMILION_GYM_WIDTH, $11, $4
+	EVENT_DISP VERMILION_GYM_WIDTH, $11, $5
 
 VermilionGymBlocks: ; 5cc38 (17:4c38)
 	INCBIN "maps/vermiliongym.blk"
 
-CopycatsHouseF2_h: ; 0x5cc65 to 0x5cc71 (12 bytes) (id=176)
+CopycatsHouse2F_h: ; 0x5cc65 to 0x5cc71 (12 bytes) (id=176)
 	db REDS_HOUSE_2 ; tileset
 	db COPYCATS_HOUSE_2F_HEIGHT, COPYCATS_HOUSE_2F_WIDTH ; dimensions (y, x)
-	dw CopycatsHouseF2Blocks, CopycatsHouseF2TextPointers, CopycatsHouseF2Script ; blocks, texts, scripts
+	dw CopycatsHouse2FBlocks, CopycatsHouse2FTextPointers, CopycatsHouse2FScript ; blocks, texts, scripts
 	db $00 ; connections
-	dw CopycatsHouseF2Object ; objects
+	dw CopycatsHouse2FObject ; objects
 
-CopycatsHouseF2Script: ; 5cc71 (17:4c71)
+CopycatsHouse2FScript: ; 5cc71 (17:4c71)
 	jp EnableAutoTextBoxDrawing
 
-CopycatsHouseF2TextPointers: ; 5cc74 (17:4c74)
-	dw CopycatsHouseF2Text1
-	dw CopycatsHouseF2Text2
-	dw CopycatsHouseF2Text3
-	dw CopycatsHouseF2Text4
-	dw CopycatsHouseF2Text5
-	dw CopycatsHouseF2Text6
-	dw CopycatsHouseF2Text7
+CopycatsHouse2FTextPointers: ; 5cc74 (17:4c74)
+	dw CopycatsHouse2FText1
+	dw CopycatsHouse2FText2
+	dw CopycatsHouse2FText3
+	dw CopycatsHouse2FText4
+	dw CopycatsHouse2FText5
+	dw CopycatsHouse2FText6
+	dw CopycatsHouse2FText7
 
-CopycatsHouseF2Text1: ; 5cc82 (17:4c82)
+CopycatsHouse2FText1: ; 5cc82 (17:4c82)
 	db $08 ; asm
 	ld a, [$d7af]
 	bit 0, a
@@ -92178,21 +92179,21 @@ TM31NoRoomText: ; 5ccee (17:4cee)
 	TX_FAR _TM31NoRoomText ; 0xa1733
 	db $d, "@"
 
-CopycatsHouseF2Text2: ; 5ccf4 (17:4cf4)
-	TX_FAR _CopycatsHouseF2Text2
+CopycatsHouse2FText2: ; 5ccf4 (17:4cf4)
+	TX_FAR _CopycatsHouse2FText2
 	db "@"
 
-CopycatsHouseF2Text5: ; 5ccf9 (17:4cf9)
-CopycatsHouseF2Text4: ; 5ccf9 (17:4cf9)
-CopycatsHouseF2Text3: ; 5ccf9 (17:4cf9)
-	TX_FAR _CopycatsHouseF2Text3
+CopycatsHouse2FText5: ; 5ccf9 (17:4cf9)
+CopycatsHouse2FText4: ; 5ccf9 (17:4cf9)
+CopycatsHouse2FText3: ; 5ccf9 (17:4cf9)
+	TX_FAR _CopycatsHouse2FText3
 	db "@"
 
-CopycatsHouseF2Text6: ; 5ccfe (17:4cfe)
-	TX_FAR _CopycatsHouseF2Text6
+CopycatsHouse2FText6: ; 5ccfe (17:4cfe)
+	TX_FAR _CopycatsHouse2FText6
 	db "@"
 
-CopycatsHouseF2Text7: ; 5cd03 (17:4d03)
+CopycatsHouse2FText7: ; 5cd03 (17:4d03)
 	db $08 ; asm
 	ld a, [$c109]
 	cp $4
@@ -92211,15 +92212,15 @@ UnnamedText_5cd1c: ; 5cd1c (17:4d1c)
 	TX_FAR _UnnamedText_5cd1c
 	db "@"
 
-CopycatsHouseF2Object: ; 0x5cd21 (size=48)
+CopycatsHouse2FObject: ; 0x5cd21 (size=48)
 	db $a ; border tile
 
 	db $1 ; warps
 	db $1, $7, $2, COPYCATS_HOUSE_1F
 
 	db $2 ; signs
-	db $5, $3, $6 ; CopycatsHouseF2Text6
-	db $1, $0, $7 ; CopycatsHouseF2Text7
+	db $5, $3, $6 ; CopycatsHouse2FText6
+	db $1, $0, $7 ; CopycatsHouse2FText7
 
 	db $5 ; people
 	db SPRITE_BRUNETTE_GIRL, $3 + 4, $4 + 4, $fe, $0, $1 ; person
@@ -92229,11 +92230,11 @@ CopycatsHouseF2Object: ; 0x5cd21 (size=48)
 	db SPRITE_CLEFAIRY, $6 + 4, $1 + 4, $ff, $d3, $5 ; person
 
 	; warp-to
-	EVENT_DISP $4, $1, $7 ; COPYCATS_HOUSE_1F
+	EVENT_DISP COPYCATS_HOUSE_2F_WIDTH, $1, $7 ; COPYCATS_HOUSE_1F
 
 FightingDojo_h: ; 0x5cd51 to 0x5cd5d (12 bytes) (id=177)
 	db DOJO ; tileset
-	db FIGHTINGDOJO_HEIGHT, FIGHTINGDOJO_WIDTH ; dimensions (y, x)
+	db FIGHTING_DOJO_HEIGHT, FIGHTING_DOJO_WIDTH ; dimensions (y, x)
 	dw FightingDojoBlocks, FightingDojoTextPointers, FightingDojoScript ; blocks, texts, scripts
 	db $00 ; connections
 	dw FightingDojoObject ; objects
@@ -92595,8 +92596,8 @@ FightingDojoObject: ; 0x5cf9b (size=72)
 	db SPRITE_BALL, $1 + 4, $5 + 4, $ff, $ff, $7 ; person
 
 	; warp-to
-	EVENT_DISP $5, $b, $4
-	EVENT_DISP $5, $b, $5
+	EVENT_DISP FIGHTING_DOJO_WIDTH, $b, $4
+	EVENT_DISP FIGHTING_DOJO_WIDTH, $b, $5
 
 FightingDojoBlocks: ; 5cfe3 (17:4fe3)
 	INCBIN "maps/fightingdojo.blk"
@@ -93024,38 +93025,38 @@ SaffronGymObject: ; 0x5d259 (size=330)
 	db SPRITE_GYM_HELPER, $f + 4, $a + 4, $ff, $d0, $9 ; person
 
 	; warp-to
-	EVENT_DISP $a, $11, $8
-	EVENT_DISP $a, $11, $9
-	EVENT_DISP $a, $3, $1 ; SAFFRON_GYM
-	EVENT_DISP $a, $3, $5 ; SAFFRON_GYM
-	EVENT_DISP $a, $5, $1 ; SAFFRON_GYM
-	EVENT_DISP $a, $5, $5 ; SAFFRON_GYM
-	EVENT_DISP $a, $9, $1 ; SAFFRON_GYM
-	EVENT_DISP $a, $9, $5 ; SAFFRON_GYM
-	EVENT_DISP $a, $b, $1 ; SAFFRON_GYM
-	EVENT_DISP $a, $b, $5 ; SAFFRON_GYM
-	EVENT_DISP $a, $f, $1 ; SAFFRON_GYM
-	EVENT_DISP $a, $f, $5 ; SAFFRON_GYM
-	EVENT_DISP $a, $11, $1 ; SAFFRON_GYM
-	EVENT_DISP $a, $11, $5 ; SAFFRON_GYM
-	EVENT_DISP $a, $3, $9 ; SAFFRON_GYM
-	EVENT_DISP $a, $3, $b ; SAFFRON_GYM
-	EVENT_DISP $a, $5, $9 ; SAFFRON_GYM
-	EVENT_DISP $a, $5, $b ; SAFFRON_GYM
-	EVENT_DISP $a, $b, $b ; SAFFRON_GYM
-	EVENT_DISP $a, $f, $b ; SAFFRON_GYM
-	EVENT_DISP $a, $3, $f ; SAFFRON_GYM
-	EVENT_DISP $a, $3, $13 ; SAFFRON_GYM
-	EVENT_DISP $a, $5, $f ; SAFFRON_GYM
-	EVENT_DISP $a, $5, $13 ; SAFFRON_GYM
-	EVENT_DISP $a, $9, $f ; SAFFRON_GYM
-	EVENT_DISP $a, $9, $13 ; SAFFRON_GYM
-	EVENT_DISP $a, $b, $f ; SAFFRON_GYM
-	EVENT_DISP $a, $b, $13 ; SAFFRON_GYM
-	EVENT_DISP $a, $f, $f ; SAFFRON_GYM
-	EVENT_DISP $a, $f, $13 ; SAFFRON_GYM
-	EVENT_DISP $a, $11, $f ; SAFFRON_GYM
-	EVENT_DISP $a, $11, $13 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $11, $8
+	EVENT_DISP SAFFRON_GYM_WIDTH, $11, $9
+	EVENT_DISP SAFFRON_GYM_WIDTH, $3, $1 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $3, $5 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $5, $1 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $5, $5 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $9, $1 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $9, $5 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $b, $1 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $b, $5 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $f, $1 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $f, $5 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $11, $1 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $11, $5 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $3, $9 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $3, $b ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $5, $9 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $5, $b ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $b, $b ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $f, $b ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $3, $f ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $3, $13 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $5, $f ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $5, $13 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $9, $f ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $9, $13 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $b, $f ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $b, $13 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $f, $f ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $f, $13 ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $11, $f ; SAFFRON_GYM
+	EVENT_DISP SAFFRON_GYM_WIDTH, $11, $13 ; SAFFRON_GYM
 
 SaffronGymBlocks: ; 5d3a3 (17:53a3)
 	INCBIN "maps/saffrongym.blk"
@@ -93098,8 +93099,8 @@ SaffronMartObject: ; 0x5d41c (size=38)
 	db SPRITE_LASS, $5 + 4, $6 + 4, $fe, $0, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $7, $4
+	EVENT_DISP SAFFRON_MART_WIDTH, $7, $3
+	EVENT_DISP SAFFRON_MART_WIDTH, $7, $4
 
 SilphCo1_h: ; 0x5d442 to 0x5d44e (12 bytes) (id=181)
 	db FACILITY ; tileset
@@ -93145,11 +93146,11 @@ SilphCo1Object: ; 0x5d470 (size=50)
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $4 + 4, $ff, $d0, $1 ; person
 
 	; warp-to
-	EVENT_DISP $f, $11, $a
-	EVENT_DISP $f, $11, $b
-	EVENT_DISP $f, $0, $1a ; SILPH_CO_2F
-	EVENT_DISP $f, $0, $14 ; SILPH_CO_ELEVATOR
-	EVENT_DISP $f, $a, $10 ; SILPH_CO_3F
+	EVENT_DISP SILPH_CO_1F_WIDTH, $11, $a
+	EVENT_DISP SILPH_CO_1F_WIDTH, $11, $b
+	EVENT_DISP SILPH_CO_1F_WIDTH, $0, $1a ; SILPH_CO_2F
+	EVENT_DISP SILPH_CO_1F_WIDTH, $0, $14 ; SILPH_CO_ELEVATOR
+	EVENT_DISP SILPH_CO_1F_WIDTH, $a, $10 ; SILPH_CO_3F
 
 SilphCo1Blocks: ; 5d4a2 (17:54a2)
 	INCBIN "maps/silphco1.blk"
@@ -93201,32 +93202,32 @@ SaffronPokecenterObject: ; 0x5d54f (size=44)
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
 
 	; warp-to
-	EVENT_DISP $7, $7, $3
-	EVENT_DISP $7, $7, $4
+	EVENT_DISP SAFFRON_POKECENTER_WIDTH, $7, $3
+	EVENT_DISP SAFFRON_POKECENTER_WIDTH, $7, $4
 
-ViridianForestexit_h: ; 0x5d57b to 0x5d587 (12 bytes) (id=47)
+ViridianForestExit_h: ; 0x5d57b to 0x5d587 (12 bytes) (id=47)
 	db FOREST_GATE ; tileset
 	db VIRIDIAN_FOREST_EXIT_HEIGHT, VIRIDIAN_FOREST_EXIT_WIDTH ; dimensions (y, x)
-	dw ViridianForestexitBlocks, ViridianForestexitTextPointers, ViridianForestexitScript ; blocks, texts, scripts
+	dw ViridianForestExitBlocks, ViridianForestExitTextPointers, ViridianForestExitScript ; blocks, texts, scripts
 	db $00 ; connections
-	dw ViridianForestexitObject ; objects
+	dw ViridianForestExitObject ; objects
 
-ViridianForestexitScript: ; 5d587 (17:5587)
+ViridianForestExitScript: ; 5d587 (17:5587)
 	jp EnableAutoTextBoxDrawing
 
-ViridianForestexitTextPointers: ; 5d58a (17:558a)
-	dw ViridianForestexitText1
-	dw ViridianForestexitText2
+ViridianForestExitTextPointers: ; 5d58a (17:558a)
+	dw ViridianForestExitText1
+	dw ViridianForestExitText2
 
-ViridianForestexitText1: ; 5d58e (17:558e)
-	TX_FAR _ViridianForestexitText1
+ViridianForestExitText1: ; 5d58e (17:558e)
+	TX_FAR _ViridianForestExitText1
 	db "@"
 
-ViridianForestexitText2: ; 5d593 (17:5593)
-	TX_FAR _ViridianForestexitText2
+ViridianForestExitText2: ; 5d593 (17:5593)
+	TX_FAR _ViridianForestExitText2
 	db "@"
 
-ViridianForestexitObject: ; 0x5d598 (size=48)
+ViridianForestExitObject: ; 0x5d598 (size=48)
 	db $a ; border tile
 
 	db $4 ; warps
@@ -93242,10 +93243,10 @@ ViridianForestexitObject: ; 0x5d598 (size=48)
 	db SPRITE_OLD_PERSON, $5 + 4, $2 + 4, $ff, $ff, $2 ; person
 
 	; warp-to
-	EVENT_DISP $5, $0, $4
-	EVENT_DISP $5, $0, $5
-	EVENT_DISP $5, $7, $4 ; VIRIDIAN_FOREST
-	EVENT_DISP $5, $7, $5 ; VIRIDIAN_FOREST
+	EVENT_DISP VIRIDIAN_FOREST_EXIT_WIDTH, $0, $4
+	EVENT_DISP VIRIDIAN_FOREST_EXIT_WIDTH, $0, $5
+	EVENT_DISP VIRIDIAN_FOREST_EXIT_WIDTH, $7, $4 ; VIRIDIAN_FOREST
+	EVENT_DISP VIRIDIAN_FOREST_EXIT_WIDTH, $7, $5 ; VIRIDIAN_FOREST
 
 Route2Gate_h: ; 0x5d5c8 to 0x5d5d4 (12 bytes) (id=49)
 	db GATE ; tileset
@@ -93313,10 +93314,10 @@ Route2GateObject: ; 0x5d620 (size=48)
 	db SPRITE_BUG_CATCHER, $4 + 4, $5 + 4, $fe, $2, $2 ; person
 
 	; warp-to
-	EVENT_DISP $5, $0, $4
-	EVENT_DISP $5, $0, $5
-	EVENT_DISP $5, $7, $4
-	EVENT_DISP $5, $7, $5
+	EVENT_DISP ROUTE_2_GATE_WIDTH, $0, $4
+	EVENT_DISP ROUTE_2_GATE_WIDTH, $0, $5
+	EVENT_DISP ROUTE_2_GATE_WIDTH, $7, $4
+	EVENT_DISP ROUTE_2_GATE_WIDTH, $7, $5
 
 ViridianForestEntrance_h: ; 0x5d650 to 0x5d65c (12 bytes) (id=50)
 	db FOREST_GATE ; tileset
@@ -93356,10 +93357,10 @@ ViridianForestEntranceObject: ; 0x5d66d (size=48)
 	db SPRITE_LITTLE_GIRL, $4 + 4, $2 + 4, $fe, $1, $2 ; person
 
 	; warp-to
-	EVENT_DISP $5, $0, $4 ; VIRIDIAN_FOREST
-	EVENT_DISP $5, $0, $5 ; VIRIDIAN_FOREST
-	EVENT_DISP $5, $7, $4
-	EVENT_DISP $5, $7, $5
+	EVENT_DISP VIRIDIAN_FOREST_ENTRANCE_WIDTH, $0, $4 ; VIRIDIAN_FOREST
+	EVENT_DISP VIRIDIAN_FOREST_ENTRANCE_WIDTH, $0, $5 ; VIRIDIAN_FOREST
+	EVENT_DISP VIRIDIAN_FOREST_ENTRANCE_WIDTH, $7, $4
+	EVENT_DISP VIRIDIAN_FOREST_ENTRANCE_WIDTH, $7, $5
 
 UndergroundTunnelEntranceRoute5_h: ; 0x5d69d to 0x5d6a9 (12 bytes) (id=71)
 	db GATE ; tileset
@@ -93402,9 +93403,9 @@ UndergroundTunnelEntranceRoute5Object: ; 0x5d6c1 (size=34)
 	db SPRITE_LITTLE_GIRL, $3 + 4, $2 + 4, $ff, $ff, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $7, $4
-	EVENT_DISP $4, $4, $4 ; UNDERGROUND_PATH_NS
+	EVENT_DISP PATH_ENTRANCE_ROUTE_5_WIDTH, $7, $3
+	EVENT_DISP PATH_ENTRANCE_ROUTE_5_WIDTH, $7, $4
+	EVENT_DISP PATH_ENTRANCE_ROUTE_5_WIDTH, $4, $4 ; UNDERGROUND_PATH_NS
 
 UndergroundTunnelEntranceRoute6_h: ; 0x5d6e3 to 0x5d6ef (12 bytes) (id=74)
 	db GATE ; tileset
@@ -93439,9 +93440,9 @@ UndergroundTunnelEntranceRoute6Object: ; 0x5d6fe (size=34)
 	db SPRITE_GIRL, $3 + 4, $2 + 4, $ff, $ff, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $7, $4
-	EVENT_DISP $4, $4, $4 ; UNDERGROUND_PATH_NS
+	EVENT_DISP PATH_ENTRANCE_ROUTE_6_WIDTH, $7, $3
+	EVENT_DISP PATH_ENTRANCE_ROUTE_6_WIDTH, $7, $4
+	EVENT_DISP PATH_ENTRANCE_ROUTE_6_WIDTH, $4, $4 ; UNDERGROUND_PATH_NS
 
 UndergroundPathEntranceRoute7_h: ; 0x5d720 to 0x5d72c (12 bytes) (id=77)
 	db GATE ; tileset
@@ -93476,9 +93477,9 @@ UndergroundPathEntranceRoute7Object: ; 0x5d73b (size=34)
 	db SPRITE_FAT_BALD_GUY, $4 + 4, $2 + 4, $ff, $ff, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $7, $4
-	EVENT_DISP $4, $4, $4 ; UNDERGROUND_PATH_WE
+	EVENT_DISP PATH_ENTRANCE_ROUTE_7_WIDTH, $7, $3
+	EVENT_DISP PATH_ENTRANCE_ROUTE_7_WIDTH, $7, $4
+	EVENT_DISP PATH_ENTRANCE_ROUTE_7_WIDTH, $4, $4 ; UNDERGROUND_PATH_WE
 
 UndergroundPathEntranceRoute7Copy_h: ; 5d75d (17:575d)
 	db GATE ; tileset
@@ -93527,9 +93528,9 @@ UndergroundPathEntranceRoute7CopyObject: ; 5d787 (17:5787)
 	db SPRITE_FAT_BALD_GUY, $4 + 4, $2 + 4, $ff, $ff, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $7, $4
-	EVENT_DISP $4, $4, $4 ; UNDERGROUND_PATH_WE
+	EVENT_DISP PATH_ENTRANCE_ROUTE_7_COPY_WIDTH, $7, $3
+	EVENT_DISP PATH_ENTRANCE_ROUTE_7_COPY_WIDTH, $7, $4
+	EVENT_DISP PATH_ENTRANCE_ROUTE_7_COPY_WIDTH, $4, $4 ; UNDERGROUND_PATH_WE
 
 SilphCo9_h: ; 0x5d7af to 0x5d7bb (12 bytes) (id=233)
 	db FACILITY ; tileset
@@ -93806,11 +93807,11 @@ SilphCo9Object: ; 0x5d93f (size=74)
 	db SPRITE_ROCKET, $10 + 4, $d + 4, $ff, $d1, $44, ROCKET + $C8, $26 ; trainer
 
 	; warp-to
-	EVENT_DISP $d, $0, $e ; SILPH_CO_10F
-	EVENT_DISP $d, $0, $10 ; SILPH_CO_8F
-	EVENT_DISP $d, $0, $12 ; SILPH_CO_ELEVATOR
-	EVENT_DISP $d, $3, $9 ; SILPH_CO_3F
-	EVENT_DISP $d, $f, $11 ; SILPH_CO_5F
+	EVENT_DISP SILPH_CO_9F_WIDTH, $0, $e ; SILPH_CO_10F
+	EVENT_DISP SILPH_CO_9F_WIDTH, $0, $10 ; SILPH_CO_8F
+	EVENT_DISP SILPH_CO_9F_WIDTH, $0, $12 ; SILPH_CO_ELEVATOR
+	EVENT_DISP SILPH_CO_9F_WIDTH, $3, $9 ; SILPH_CO_3F
+	EVENT_DISP SILPH_CO_9F_WIDTH, $f, $11 ; SILPH_CO_5F
 
 SilphCo9Blocks: ; 5d989 (17:5989)
 	INCBIN "maps/silphco9.blk"
@@ -93951,9 +93952,9 @@ VictoryRoad1Object: ; 0x5dab8 (size=76)
 	db SPRITE_BOULDER, $a + 4, $2 + 4, $ff, $10, $7 ; person
 
 	; warp-to
-	EVENT_DISP $a, $11, $8
-	EVENT_DISP $a, $11, $9
-	EVENT_DISP $a, $1, $1 ; VICTORY_ROAD_2
+	EVENT_DISP VICTORY_ROAD_1_WIDTH, $11, $8
+	EVENT_DISP VICTORY_ROAD_1_WIDTH, $11, $9
+	EVENT_DISP VICTORY_ROAD_1_WIDTH, $1, $1 ; VICTORY_ROAD_2
 
 VictoryRoad1Blocks: ; 5db04 (17:5b04)
 	INCBIN "maps/victoryroad1.blk"
@@ -94407,7 +94408,7 @@ VermilionGymTrashSuccesText1: ; 5dec8 (17:5ec8)
 	TX_FAR _VermilionGymTrashSuccesText1
 	db $08 ; asm
 	call WaitForSoundToFinish
-	ld a, $9d
+	ld a, (SFX_02_49 - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 	jp TextScriptEnd
@@ -94419,7 +94420,7 @@ VermilionGymTrashSuccesText2: ; 5dedb (17:5edb)
 UnnamedText_5dee0: ; 5dee0 (17:5ee0)
 	db $08 ; asm
 	call WaitForSoundToFinish
-	ld a, $9d
+	ld a, (SFX_02_49 - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 	jp TextScriptEnd
@@ -94428,7 +94429,7 @@ VermilionGymTrashSuccesText3: ; 5deef (17:5eef)
 	TX_FAR _VermilionGymTrashSuccesText3
 	db $08 ; asm
 	call WaitForSoundToFinish
-	ld a, $ad
+	ld a, (SFX_02_57 - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 	jp TextScriptEnd
@@ -94437,7 +94438,7 @@ VermilionGymTrashFailText: ; 5df02 (17:5f02)
 	TX_FAR _VermilionGymTrashFailText
 	db $08 ; asm
 	call WaitForSoundToFinish
-	ld a, $a5
+	ld a, (SFX_02_51 - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 	jp TextScriptEnd
@@ -94514,9 +94515,9 @@ PokemonTower1Object: ; 0x60452 (size=58)
 	db SPRITE_MEDIUM, $7 + 4, $11 + 4, $ff, $d2, $5 ; person
 
 	; warp-to
-	EVENT_DISP $a, $11, $a
-	EVENT_DISP $a, $11, $b
-	EVENT_DISP $a, $9, $12 ; POKEMONTOWER_2
+	EVENT_DISP POKEMONTOWER_1_WIDTH, $11, $a
+	EVENT_DISP POKEMONTOWER_1_WIDTH, $11, $b
+	EVENT_DISP POKEMONTOWER_1_WIDTH, $9, $12 ; POKEMONTOWER_2
 
 PokemonTower1Blocks: ; 6048c (18:448c)
 	INCBIN "maps/pokemontower1.blk"
@@ -94723,8 +94724,8 @@ PokemonTower2Object: ; 0x60646 (size=32)
 	db SPRITE_MEDIUM, $7 + 4, $3 + 4, $ff, $d3, $2 ; person
 
 	; warp-to
-	EVENT_DISP $a, $9, $3 ; POKEMONTOWER_3
-	EVENT_DISP $a, $9, $12 ; POKEMONTOWER_1
+	EVENT_DISP POKEMONTOWER_2_WIDTH, $9, $3 ; POKEMONTOWER_3
+	EVENT_DISP POKEMONTOWER_2_WIDTH, $9, $12 ; POKEMONTOWER_1
 
 PokemonTower2Blocks: ; 60666 (18:4666)
 	INCBIN "maps/pokemontower2.blk"
@@ -94855,8 +94856,8 @@ PokemonTower3Object: ; 0x6075d (size=51)
 	db SPRITE_BALL, $1 + 4, $c + 4, $ff, $ff, $84, ESCAPE_ROPE ; item
 
 	; warp-to
-	EVENT_DISP $a, $9, $3 ; POKEMONTOWER_2
-	EVENT_DISP $a, $9, $12 ; POKEMONTOWER_4
+	EVENT_DISP POKEMONTOWER_3_WIDTH, $9, $3 ; POKEMONTOWER_2
+	EVENT_DISP POKEMONTOWER_3_WIDTH, $9, $12 ; POKEMONTOWER_4
 
 PokemonTower3Blocks: ; 60790 (18:4790)
 	INCBIN "maps/pokemontower3.blk"
@@ -94992,8 +94993,8 @@ PokemonTower4Object: ; 0x6088b (size=65)
 	db SPRITE_BALL, $10 + 4, $c + 4, $ff, $ff, $86, HP_UP ; item
 
 	; warp-to
-	EVENT_DISP $a, $9, $3 ; POKEMONTOWER_5
-	EVENT_DISP $a, $9, $12 ; POKEMONTOWER_3
+	EVENT_DISP POKEMONTOWER_4_WIDTH, $9, $3 ; POKEMONTOWER_5
+	EVENT_DISP POKEMONTOWER_4_WIDTH, $9, $12 ; POKEMONTOWER_3
 
 PokemonTower4Blocks: ; 608cc (18:48cc)
 	INCBIN "maps/pokemontower4.blk"
@@ -95205,8 +95206,8 @@ PokemonTower5Object: ; 0x60a48 (size=65)
 	db SPRITE_BALL, $e + 4, $6 + 4, $ff, $ff, $86, NUGGET ; item
 
 	; warp-to
-	EVENT_DISP $a, $9, $3 ; POKEMONTOWER_4
-	EVENT_DISP $a, $9, $12 ; POKEMONTOWER_6
+	EVENT_DISP POKEMONTOWER_5_WIDTH, $9, $3 ; POKEMONTOWER_4
+	EVENT_DISP POKEMONTOWER_5_WIDTH, $9, $12 ; POKEMONTOWER_6
 
 PokemonTower5Blocks: ; 60a89 (18:4a89)
 	INCBIN "maps/pokemontower5.blk"
@@ -95451,8 +95452,8 @@ PokemonTower6Object: ; 0x60c5b (size=58)
 	db SPRITE_BALL, $e + 4, $e + 4, $ff, $ff, $85, X_ACCURACY ; item
 
 	; warp-to
-	EVENT_DISP $a, $9, $12 ; POKEMONTOWER_5
-	EVENT_DISP $a, $10, $9 ; POKEMONTOWER_7
+	EVENT_DISP POKEMONTOWER_6_WIDTH, $9, $12 ; POKEMONTOWER_5
+	EVENT_DISP POKEMONTOWER_6_WIDTH, $10, $9 ; POKEMONTOWER_7
 
 PokemonTower6Blocks: ; 60c95 (18:4c95)
 	INCBIN "maps/pokemontower6.blk"
@@ -95764,7 +95765,7 @@ PokemonTower7Object: ; 0x60ef6 (size=42)
 	db SPRITE_MR_FUJI, $3 + 4, $a + 4, $ff, $d0, $4 ; person
 
 	; warp-to
-	EVENT_DISP $a, $10, $9 ; POKEMONTOWER_6
+	EVENT_DISP POKEMONTOWER_7_WIDTH, $10, $9 ; POKEMONTOWER_6
 
 PokemonTower7Blocks: ; 60f20 (18:4f20)
 	INCBIN "maps/pokemontower7.blk"
@@ -95815,12 +95816,12 @@ CeladonMart1Object: ; 0x60f9e (size=64)
 	db SPRITE_CABLE_CLUB_WOMAN, $3 + 4, $8 + 4, $ff, $d0, $1 ; person
 
 	; warp-to
-	EVENT_DISP $a, $7, $2
-	EVENT_DISP $a, $7, $3
-	EVENT_DISP $a, $7, $10
-	EVENT_DISP $a, $7, $11
-	EVENT_DISP $a, $1, $c ; CELADON_MART_2
-	EVENT_DISP $a, $1, $1 ; CELADON_MART_ELEVATOR
+	EVENT_DISP CELADON_MART_1_WIDTH, $7, $2
+	EVENT_DISP CELADON_MART_1_WIDTH, $7, $3
+	EVENT_DISP CELADON_MART_1_WIDTH, $7, $10
+	EVENT_DISP CELADON_MART_1_WIDTH, $7, $11
+	EVENT_DISP CELADON_MART_1_WIDTH, $1, $c ; CELADON_MART_2
+	EVENT_DISP CELADON_MART_1_WIDTH, $1, $1 ; CELADON_MART_ELEVATOR
 
 CeladonMart1Blocks: ; 60fde (18:4fde)
 	INCBIN "maps/celadonmart1.blk"
@@ -96136,12 +96137,12 @@ ViridianForestObject: ; 0x611da (size=127)
 	db SPRITE_BUG_CATCHER, $28 + 4, $1b + 4, $ff, $ff, $8 ; person
 
 	; warp-to
-	EVENT_DISP $11, $0, $1 ; VIRIDIAN_FOREST_EXIT
-	EVENT_DISP $11, $0, $2 ; VIRIDIAN_FOREST_EXIT
-	EVENT_DISP $11, $2f, $f ; VIRIDIAN_FOREST_ENTRANCE
-	EVENT_DISP $11, $2f, $10 ; VIRIDIAN_FOREST_ENTRANCE
-	EVENT_DISP $11, $2f, $11 ; VIRIDIAN_FOREST_ENTRANCE
-	EVENT_DISP $11, $2f, $12 ; VIRIDIAN_FOREST_ENTRANCE
+	EVENT_DISP VIRIDIAN_FOREST_WIDTH, $0, $1 ; VIRIDIAN_FOREST_EXIT
+	EVENT_DISP VIRIDIAN_FOREST_WIDTH, $0, $2 ; VIRIDIAN_FOREST_EXIT
+	EVENT_DISP VIRIDIAN_FOREST_WIDTH, $2f, $f ; VIRIDIAN_FOREST_ENTRANCE
+	EVENT_DISP VIRIDIAN_FOREST_WIDTH, $2f, $10 ; VIRIDIAN_FOREST_ENTRANCE
+	EVENT_DISP VIRIDIAN_FOREST_WIDTH, $2f, $11 ; VIRIDIAN_FOREST_ENTRANCE
+	EVENT_DISP VIRIDIAN_FOREST_WIDTH, $2f, $12 ; VIRIDIAN_FOREST_ENTRANCE
 
 SSAnne1_h: ; 0x61259 to 0x61265 (12 bytes) (id=95)
 	db SHIP ; tileset
@@ -96189,17 +96190,17 @@ SSAnne1Object: ; 0x61277 (size=104)
 	db SPRITE_SAILOR, $5 + 4, $1b + 4, $ff, $ff, $2 ; person
 
 	; warp-to
-	EVENT_DISP $14, $0, $1a ; VERMILION_DOCK
-	EVENT_DISP $14, $0, $1b ; VERMILION_DOCK
-	EVENT_DISP $14, $8, $1f ; SS_ANNE_8
-	EVENT_DISP $14, $8, $17 ; SS_ANNE_8
-	EVENT_DISP $14, $8, $13 ; SS_ANNE_8
-	EVENT_DISP $14, $8, $f ; SS_ANNE_8
-	EVENT_DISP $14, $8, $b ; SS_ANNE_8
-	EVENT_DISP $14, $8, $7 ; SS_ANNE_8
-	EVENT_DISP $14, $6, $2 ; SS_ANNE_2
-	EVENT_DISP $14, $f, $25 ; SS_ANNE_4
-	EVENT_DISP $14, $10, $3 ; SS_ANNE_6
+	EVENT_DISP SS_ANNE_1_WIDTH, $0, $1a ; VERMILION_DOCK
+	EVENT_DISP SS_ANNE_1_WIDTH, $0, $1b ; VERMILION_DOCK
+	EVENT_DISP SS_ANNE_1_WIDTH, $8, $1f ; SS_ANNE_8
+	EVENT_DISP SS_ANNE_1_WIDTH, $8, $17 ; SS_ANNE_8
+	EVENT_DISP SS_ANNE_1_WIDTH, $8, $13 ; SS_ANNE_8
+	EVENT_DISP SS_ANNE_1_WIDTH, $8, $f ; SS_ANNE_8
+	EVENT_DISP SS_ANNE_1_WIDTH, $8, $b ; SS_ANNE_8
+	EVENT_DISP SS_ANNE_1_WIDTH, $8, $7 ; SS_ANNE_8
+	EVENT_DISP SS_ANNE_1_WIDTH, $6, $2 ; SS_ANNE_2
+	EVENT_DISP SS_ANNE_1_WIDTH, $f, $25 ; SS_ANNE_4
+	EVENT_DISP SS_ANNE_1_WIDTH, $10, $3 ; SS_ANNE_6
 
 SSAnne1Blocks: ; 612df (18:52df)
 	INCBIN "maps/ssanne1.blk"
@@ -96443,15 +96444,15 @@ SSAnne2Object: ; 0x61514 (size=90)
 	db SPRITE_BLUE, $4 + 4, $24 + 4, $ff, $d0, $42, SONY1 + $C8, $1 ; trainer
 
 	; warp-to
-	EVENT_DISP $14, $b, $9 ; SS_ANNE_9
-	EVENT_DISP $14, $b, $d ; SS_ANNE_9
-	EVENT_DISP $14, $b, $11 ; SS_ANNE_9
-	EVENT_DISP $14, $b, $15 ; SS_ANNE_9
-	EVENT_DISP $14, $b, $19 ; SS_ANNE_9
-	EVENT_DISP $14, $b, $1d ; SS_ANNE_9
-	EVENT_DISP $14, $4, $2 ; SS_ANNE_1
-	EVENT_DISP $14, $c, $2 ; SS_ANNE_3
-	EVENT_DISP $14, $4, $24 ; SS_ANNE_7
+	EVENT_DISP SS_ANNE_2_WIDTH, $b, $9 ; SS_ANNE_9
+	EVENT_DISP SS_ANNE_2_WIDTH, $b, $d ; SS_ANNE_9
+	EVENT_DISP SS_ANNE_2_WIDTH, $b, $11 ; SS_ANNE_9
+	EVENT_DISP SS_ANNE_2_WIDTH, $b, $15 ; SS_ANNE_9
+	EVENT_DISP SS_ANNE_2_WIDTH, $b, $19 ; SS_ANNE_9
+	EVENT_DISP SS_ANNE_2_WIDTH, $b, $1d ; SS_ANNE_9
+	EVENT_DISP SS_ANNE_2_WIDTH, $4, $2 ; SS_ANNE_1
+	EVENT_DISP SS_ANNE_2_WIDTH, $c, $2 ; SS_ANNE_3
+	EVENT_DISP SS_ANNE_2_WIDTH, $4, $24 ; SS_ANNE_7
 
 SSAnne2Blocks: ; 6156e (18:556e)
 	INCBIN "maps/ssanne2.blk"
@@ -96485,12 +96486,12 @@ SSAnne4Object: ; 0x61632 (size=52)
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $f, $3, $17 ; SS_ANNE_10
-	EVENT_DISP $f, $3, $13 ; SS_ANNE_10
-	EVENT_DISP $f, $3, $f ; SS_ANNE_10
-	EVENT_DISP $f, $3, $b ; SS_ANNE_10
-	EVENT_DISP $f, $3, $7 ; SS_ANNE_10
-	EVENT_DISP $f, $5, $1b ; SS_ANNE_1
+	EVENT_DISP SS_ANNE_4_WIDTH, $3, $17 ; SS_ANNE_10
+	EVENT_DISP SS_ANNE_4_WIDTH, $3, $13 ; SS_ANNE_10
+	EVENT_DISP SS_ANNE_4_WIDTH, $3, $f ; SS_ANNE_10
+	EVENT_DISP SS_ANNE_4_WIDTH, $3, $b ; SS_ANNE_10
+	EVENT_DISP SS_ANNE_4_WIDTH, $3, $7 ; SS_ANNE_10
+	EVENT_DISP SS_ANNE_4_WIDTH, $5, $1b ; SS_ANNE_1
 
 SSAnne4Blocks: ; 61666 (18:5666)
 	INCBIN "maps/ssanne4.blk"
@@ -96609,8 +96610,8 @@ SSAnne5Object: ; 0x6172b (size=54)
 	db SPRITE_SAILOR, $8 + 4, $a + 4, $ff, $d1, $45, SAILOR + $C8, $2 ; trainer
 
 	; warp-to
-	EVENT_DISP $a, $6, $d ; SS_ANNE_3
-	EVENT_DISP $a, $7, $d ; SS_ANNE_3
+	EVENT_DISP SS_ANNE_5_WIDTH, $6, $d ; SS_ANNE_3
+	EVENT_DISP SS_ANNE_5_WIDTH, $7, $d ; SS_ANNE_3
 
 SSAnne5Blocks: ; 61761 (18:5761)
 	INCBIN "maps/ssanne5.blk"
@@ -96713,7 +96714,7 @@ SSAnne6Object: ; 0x6181b (size=54)
 	db SPRITE_COOK, $d + 4, $b + 4, $ff, $d1, $7 ; person
 
 	; warp-to
-	EVENT_DISP $7, $0, $6 ; SS_ANNE_1
+	EVENT_DISP SS_ANNE_6_WIDTH, $0, $6 ; SS_ANNE_1
 
 SSAnne6Blocks: ; 61851 (18:5851)
 	INCBIN "maps/ssanne6.blk"
@@ -96836,7 +96837,7 @@ SSAnne7Object: ; 0x61946 (size=24)
 	db SPRITE_SS_CAPTAIN, $2 + 4, $4 + 4, $ff, $d1, $1 ; person
 
 	; warp-to
-	EVENT_DISP $3, $7, $0 ; SS_ANNE_2
+	EVENT_DISP SS_ANNE_7_WIDTH, $7, $0 ; SS_ANNE_2
 
 SSAnne7Blocks: ; 6195e (18:595e)
 	INCBIN "maps/ssanne7.blk"
@@ -97040,12 +97041,12 @@ SSAnne8Object: ; 0x61a60 (size=127)
 	db SPRITE_GENTLEMAN, $d + 4, $15 + 4, $fe, $2, $b ; person
 
 	; warp-to
-	EVENT_DISP $c, $0, $0 ; SS_ANNE_1
-	EVENT_DISP $c, $0, $a ; SS_ANNE_1
-	EVENT_DISP $c, $0, $14 ; SS_ANNE_1
-	EVENT_DISP $c, $a, $0 ; SS_ANNE_1
-	EVENT_DISP $c, $a, $a ; SS_ANNE_1
-	EVENT_DISP $c, $a, $14 ; SS_ANNE_1
+	EVENT_DISP SS_ANNE_8_WIDTH, $0, $0 ; SS_ANNE_1
+	EVENT_DISP SS_ANNE_8_WIDTH, $0, $a ; SS_ANNE_1
+	EVENT_DISP SS_ANNE_8_WIDTH, $0, $14 ; SS_ANNE_1
+	EVENT_DISP SS_ANNE_8_WIDTH, $a, $0 ; SS_ANNE_1
+	EVENT_DISP SS_ANNE_8_WIDTH, $a, $a ; SS_ANNE_1
+	EVENT_DISP SS_ANNE_8_WIDTH, $a, $14 ; SS_ANNE_1
 
 SSAnne8Blocks: ; 61adf (18:5adf)
 	INCBIN "maps/ssanne8.blk"
@@ -97309,18 +97310,18 @@ SSAnne9Object: ; 0x61c8d (size=188)
 	db SPRITE_FOULARD_WOMAN, $c + 4, $14 + 4, $ff, $d3, $d ; person
 
 	; warp-to
-	EVENT_DISP $c, $5, $2 ; SS_ANNE_2
-	EVENT_DISP $c, $5, $3 ; SS_ANNE_2
-	EVENT_DISP $c, $5, $c ; SS_ANNE_2
-	EVENT_DISP $c, $5, $d ; SS_ANNE_2
-	EVENT_DISP $c, $5, $16 ; SS_ANNE_2
-	EVENT_DISP $c, $5, $17 ; SS_ANNE_2
-	EVENT_DISP $c, $f, $2 ; SS_ANNE_2
-	EVENT_DISP $c, $f, $3 ; SS_ANNE_2
-	EVENT_DISP $c, $f, $c ; SS_ANNE_2
-	EVENT_DISP $c, $f, $d ; SS_ANNE_2
-	EVENT_DISP $c, $f, $16 ; SS_ANNE_2
-	EVENT_DISP $c, $f, $17 ; SS_ANNE_2
+	EVENT_DISP SS_ANNE_9_WIDTH, $5, $2 ; SS_ANNE_2
+	EVENT_DISP SS_ANNE_9_WIDTH, $5, $3 ; SS_ANNE_2
+	EVENT_DISP SS_ANNE_9_WIDTH, $5, $c ; SS_ANNE_2
+	EVENT_DISP SS_ANNE_9_WIDTH, $5, $d ; SS_ANNE_2
+	EVENT_DISP SS_ANNE_9_WIDTH, $5, $16 ; SS_ANNE_2
+	EVENT_DISP SS_ANNE_9_WIDTH, $5, $17 ; SS_ANNE_2
+	EVENT_DISP SS_ANNE_9_WIDTH, $f, $2 ; SS_ANNE_2
+	EVENT_DISP SS_ANNE_9_WIDTH, $f, $3 ; SS_ANNE_2
+	EVENT_DISP SS_ANNE_9_WIDTH, $f, $c ; SS_ANNE_2
+	EVENT_DISP SS_ANNE_9_WIDTH, $f, $d ; SS_ANNE_2
+	EVENT_DISP SS_ANNE_9_WIDTH, $f, $16 ; SS_ANNE_2
+	EVENT_DISP SS_ANNE_9_WIDTH, $f, $17 ; SS_ANNE_2
 
 SSAnne10_h: ; 0x61d49 to 0x61d55 (12 bytes) (id=104)
 	db SHIP ; tileset
@@ -97563,16 +97564,16 @@ SSAnne10Object: ; 0x61e75 (size=165)
 	db SPRITE_BALL, $b + 4, $c + 4, $ff, $ff, $8b, MAX_POTION ; item
 
 	; warp-to
-	EVENT_DISP $c, $5, $2 ; SS_ANNE_4
-	EVENT_DISP $c, $5, $3 ; SS_ANNE_4
-	EVENT_DISP $c, $5, $c ; SS_ANNE_4
-	EVENT_DISP $c, $5, $d ; SS_ANNE_4
-	EVENT_DISP $c, $5, $16 ; SS_ANNE_4
-	EVENT_DISP $c, $5, $17 ; SS_ANNE_4
-	EVENT_DISP $c, $f, $2 ; SS_ANNE_4
-	EVENT_DISP $c, $f, $3 ; SS_ANNE_4
-	EVENT_DISP $c, $f, $c ; SS_ANNE_4
-	EVENT_DISP $c, $f, $d ; SS_ANNE_4
+	EVENT_DISP SS_ANNE_10_WIDTH, $5, $2 ; SS_ANNE_4
+	EVENT_DISP SS_ANNE_10_WIDTH, $5, $3 ; SS_ANNE_4
+	EVENT_DISP SS_ANNE_10_WIDTH, $5, $c ; SS_ANNE_4
+	EVENT_DISP SS_ANNE_10_WIDTH, $5, $d ; SS_ANNE_4
+	EVENT_DISP SS_ANNE_10_WIDTH, $5, $16 ; SS_ANNE_4
+	EVENT_DISP SS_ANNE_10_WIDTH, $5, $17 ; SS_ANNE_4
+	EVENT_DISP SS_ANNE_10_WIDTH, $f, $2 ; SS_ANNE_4
+	EVENT_DISP SS_ANNE_10_WIDTH, $f, $3 ; SS_ANNE_4
+	EVENT_DISP SS_ANNE_10_WIDTH, $f, $c ; SS_ANNE_4
+	EVENT_DISP SS_ANNE_10_WIDTH, $f, $d ; SS_ANNE_4
 
 UndergroundPathNS_h: ; 0x61f1a to 0x61f26 (12 bytes) (id=119)
 	db UNDERGROUND ; tileset
@@ -97599,8 +97600,8 @@ UndergroundPathNSObject: ; 0x61f2a (size=20)
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $4, $4, $5 ; PATH_ENTRANCE_ROUTE_5
-	EVENT_DISP $4, $29, $2 ; PATH_ENTRANCE_ROUTE_6
+	EVENT_DISP UNDERGROUND_PATH_NS_WIDTH, $4, $5 ; PATH_ENTRANCE_ROUTE_5
+	EVENT_DISP UNDERGROUND_PATH_NS_WIDTH, $29, $2 ; PATH_ENTRANCE_ROUTE_6
 
 UndergroundPathWE_h: ; 0x61f3e to 0x61f4a (12 bytes) (id=121)
 	db UNDERGROUND ; tileset
@@ -97627,8 +97628,8 @@ UndergroundPathWEObject: ; 0x61f4e (size=20)
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $19, $5, $2 ; PATH_ENTRANCE_ROUTE_7
-	EVENT_DISP $19, $2, $2f ; PATH_ENTRANCE_ROUTE_8
+	EVENT_DISP UNDERGROUND_PATH_WE_WIDTH, $5, $2 ; PATH_ENTRANCE_ROUTE_7
+	EVENT_DISP UNDERGROUND_PATH_WE_WIDTH, $2, $2f ; PATH_ENTRANCE_ROUTE_8
 
 DiglettsCave_h: ; 0x61f62 to 0x61f6e (12 bytes) (id=197)
 	db CAVERN ; tileset
@@ -97655,8 +97656,8 @@ DiglettsCaveObject: ; 0x61f72 (size=20)
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $14, $5, $5 ; DIGLETTS_CAVE_EXIT
-	EVENT_DISP $14, $1f, $25 ; DIGLETTS_CAVE_ENTRANCE
+	EVENT_DISP DIGLETTS_CAVE_WIDTH, $5, $5 ; DIGLETTS_CAVE_EXIT
+	EVENT_DISP DIGLETTS_CAVE_WIDTH, $1f, $25 ; DIGLETTS_CAVE_ENTRANCE
 
 DiglettsCaveBlocks: ; 61f86 (18:5f86)
 	INCBIN "maps/diglettscave.blk"
@@ -98057,10 +98058,10 @@ SilphCo11Object: ; 0x62380 (size=72)
 	db SPRITE_ROCKET, $9 + 4, $f + 4, $ff, $d1, $45, ROCKET + $C8, $28 ; trainer
 
 	; warp-to
-	EVENT_DISP $9, $0, $9 ; SILPH_CO_10F
-	EVENT_DISP $9, $0, $d ; SILPH_CO_ELEVATOR
-	EVENT_DISP $9, $5, $5
-	EVENT_DISP $9, $2, $3 ; SILPH_CO_7F
+	EVENT_DISP SILPH_CO_11F_WIDTH, $0, $9 ; SILPH_CO_10F
+	EVENT_DISP SILPH_CO_11F_WIDTH, $0, $d ; SILPH_CO_ELEVATOR
+	EVENT_DISP SILPH_CO_11F_WIDTH, $5, $5
+	EVENT_DISP SILPH_CO_11F_WIDTH, $2, $3 ; SILPH_CO_7F
 
 SilphCo11Blocks: ; 623c8 (18:63c8)
 	INCBIN "maps/silphco11.blk"
@@ -98431,7 +98432,7 @@ Func_70000: ; 70000 (1c:4000)
 
 Func_70044: ; 70044 (1c:4044)
 	call Func_70000
-	ld a, $c2
+	ld a, (SFX_1f_67 - SFX_Headers_1f) / 3
 	call PlaySound
 	ld hl, wOAMBuffer
 	ld bc, $a004
@@ -98962,7 +98963,7 @@ Func_70433: ; 70433 (1c:4433)
 	ld b, a
 .asm_7046e
 	call Func_70503
-	ld a, $9e
+	ld a, (SFX_02_4a - SFX_Headers_02) / 3
 	call PlaySound
 	ld c, $1e
 	call DelayFrames
@@ -99046,7 +99047,7 @@ Func_70510: ; 70510 (1c:4510)
 	bit 7, [hl]
 	res 7, [hl]
 	jr nz, .asm_70568
-	ld a, $a0
+	ld a, (SFX_02_4c - SFX_Headers_02) / 3
 	call PlaySound
 	ld hl, $d732
 	bit 4, [hl]
@@ -99054,7 +99055,7 @@ Func_70510: ; 70510 (1c:4510)
 	pop hl
 	jr nz, .asm_7055e
 	call Func_705aa
-	ld a, $a3
+	ld a, (SFX_02_4f - SFX_Headers_02) / 3
 	call PlaySound
 	call Func_70787
 	ld a, b
@@ -99086,7 +99087,7 @@ Func_70510: ; 70510 (1c:4510)
 	ld bc, (BANK(BirdSprite) << 8) + $0c
 	call CopyVideoData
 	call Func_706d7
-	ld a, $a4
+	ld a, (SFX_02_50 - SFX_Headers_02) / 3
 	call PlaySound
 	ld hl, wWhichTrade ; $cd3d
 	xor a
@@ -99135,7 +99136,7 @@ _DoFlyOrTeleportAwayGraphics: ; 705ba (1c:45ba)
 	dec a
 	jp nz, Func_7067d
 .asm_705c8
-	ld a, $9f
+	ld a, (SFX_02_4b - SFX_Headers_02) / 3
 	call PlaySound
 	ld hl, wWhichTrade ; $cd3d
 	ld a, $f0
@@ -99180,7 +99181,7 @@ _DoFlyOrTeleportAwayGraphics: ; 705ba (1c:45ba)
 	ld [hli], a
 	ld [hl], $c
 	call Func_706ae
-	ld a, $a4
+	ld a, (SFX_02_50 - SFX_Headers_02) / 3
 	call PlaySound
 	ld hl, wWhichTrade ; $cd3d
 	xor a
@@ -100545,7 +100546,7 @@ Func_70e92: ; 70e92 (1c:4e92)
 	ld b, a
 	and $c3
 	jr z, .asm_70ec8
-	ld a, $8c
+	ld a, (SFX_02_3c - SFX_Headers_02) / 3
 	call PlaySound
 	bit 6, b
 	jr nz, .asm_70ef2
@@ -100723,7 +100724,7 @@ Func_70fd6: ; 70fd6 (1c:4fd6)
 	jr z, .asm_71004
 	bit 0, b
 	jr nz, .asm_71026
-	ld a, $8c
+	ld a, (SFX_02_3c - SFX_Headers_02) / 3
 	call PlaySound
 	bit 6, b
 	jr nz, .asm_71042
@@ -100731,7 +100732,7 @@ Func_70fd6: ; 70fd6 (1c:4fd6)
 	jr nz, .asm_71058
 	jr .asm_71037
 .asm_71026
-	ld a, $8e
+	ld a, (SFX_02_3e - SFX_Headers_02) / 3
 	call PlaySound
 	ld a, [hl]
 	ld [$d71a], a
@@ -103396,7 +103397,7 @@ SaveSAV: ;$770a
 	call DelayFrames
 	ld hl,GameSavedText
 	call PrintText
-	ld a,$b6        ;sound for saved game
+	ld a, (SFX_02_5d - SFX_Headers_02) / 3 ;sound for saved game
 	call PlaySoundWaitForCurrent
 	call WaitForSoundToFinish
 	ld c,$1e
@@ -103611,7 +103612,7 @@ Func_738a1:: ; 738a1 (1c:78a1)
 	call SaveSAVtoSRAM
 	ld hl, wWhichTrade ; $cd3d
 	call Func_3f0f
-	ld a, $b6
+	ld a, (SFX_02_5d - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent
 	call WaitForSoundToFinish
 	ret
@@ -103932,8 +103933,8 @@ PadSRAM_FF: ; 73b8f (1c:7b8f)
 
 SECTION "bank1D",ROMX,BANK[$1D]
 
-CopycatsHouseF1Blocks: ; 74000 (1d:4000)
-	INCBIN "maps/copycatshousef1.blk"
+CopycatsHouse1FBlocks: ; 74000 (1d:4000)
+	INCBIN "maps/copycatshouse1f.blk"
 
 CinnabarMartBlocks: ; 74010 (1d:4010)
 PewterMartBlocks: ; 74010 (1d:4010)
@@ -104638,7 +104639,7 @@ ViridianGymScript0: ; 748eb (1d:48eb)
 	call Func_3486
 	ld hl, $d736
 	set 7, [hl]
-	ld a, $a7
+	ld a, (SFX_02_52 - SFX_Headers_02) / 3
 	call PlaySound
 	ld a, $ff
 	ld [wJoypadForbiddenButtonsMask], a
@@ -105130,8 +105131,8 @@ ViridianGymObject: ; 0x74bde (size=105)
 	db SPRITE_BALL, $9 + 4, $10 + 4, $ff, $ff, $8b, REVIVE ; item
 
 	; warp-to
-	EVENT_DISP $a, $11, $10
-	EVENT_DISP $a, $11, $11
+	EVENT_DISP VIRIDIAN_GYM_WIDTH, $11, $10
+	EVENT_DISP VIRIDIAN_GYM_WIDTH, $11, $11
 
 ViridianGymBlocks: ; 74c47 (1d:4c47)
 	INCBIN "maps/viridiangym.blk"
@@ -105189,8 +105190,8 @@ PewterMartObject: ; 0x74cda (size=38)
 	db SPRITE_BLACK_HAIR_BOY_2, $5 + 4, $5 + 4, $ff, $ff, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $7, $4
+	EVENT_DISP PEWTER_MART_WIDTH, $7, $3
+	EVENT_DISP PEWTER_MART_WIDTH, $7, $4
 
 UnknownDungeon1_h: ; 0x74d00 to 0x74d0c (12 bytes) (id=228)
 	db CAVERN ; tileset
@@ -105229,15 +105230,15 @@ UnknownDungeon1Object: ; 0x74d15 (size=97)
 	db SPRITE_BALL, $0 + 4, $5 + 4, $ff, $ff, $83, NUGGET ; item
 
 	; warp-to
-	EVENT_DISP $f, $11, $18
-	EVENT_DISP $f, $11, $19
-	EVENT_DISP $f, $1, $1b ; UNKNOWN_DUNGEON_2
-	EVENT_DISP $f, $7, $17 ; UNKNOWN_DUNGEON_2
-	EVENT_DISP $f, $9, $12 ; UNKNOWN_DUNGEON_2
-	EVENT_DISP $f, $1, $7 ; UNKNOWN_DUNGEON_2
-	EVENT_DISP $f, $3, $1 ; UNKNOWN_DUNGEON_2
-	EVENT_DISP $f, $b, $3 ; UNKNOWN_DUNGEON_2
-	EVENT_DISP $f, $6, $0 ; UNKNOWN_DUNGEON_3
+	EVENT_DISP UNKNOWN_DUNGEON_1_WIDTH, $11, $18
+	EVENT_DISP UNKNOWN_DUNGEON_1_WIDTH, $11, $19
+	EVENT_DISP UNKNOWN_DUNGEON_1_WIDTH, $1, $1b ; UNKNOWN_DUNGEON_2
+	EVENT_DISP UNKNOWN_DUNGEON_1_WIDTH, $7, $17 ; UNKNOWN_DUNGEON_2
+	EVENT_DISP UNKNOWN_DUNGEON_1_WIDTH, $9, $12 ; UNKNOWN_DUNGEON_2
+	EVENT_DISP UNKNOWN_DUNGEON_1_WIDTH, $1, $7 ; UNKNOWN_DUNGEON_2
+	EVENT_DISP UNKNOWN_DUNGEON_1_WIDTH, $3, $1 ; UNKNOWN_DUNGEON_2
+	EVENT_DISP UNKNOWN_DUNGEON_1_WIDTH, $b, $3 ; UNKNOWN_DUNGEON_2
+	EVENT_DISP UNKNOWN_DUNGEON_1_WIDTH, $6, $0 ; UNKNOWN_DUNGEON_3
 
 UnknownDungeon1Blocks: ; 74d76 (1d:4d76)
 	INCBIN "maps/unknowndungeon1.blk"
@@ -105373,9 +105374,9 @@ CeruleanHouse2Object: ; 0x74ebe (size=34)
 	db SPRITE_FAT_BALD_GUY, $3 + 4, $5 + 4, $ff, $d3, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $0, $2
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP CERULEAN_HOUSE_2_WIDTH, $0, $2
+	EVENT_DISP CERULEAN_HOUSE_2_WIDTH, $7, $2
+	EVENT_DISP CERULEAN_HOUSE_2_WIDTH, $7, $3
 
 VendingMachineMenu: ; 74ee0 (1d:4ee0)
 	ld hl, VendingMachineText1
@@ -105439,7 +105440,7 @@ VendingMachineMenu: ; 74ee0 (1d:4ee0)
 	ld c, $2
 	call DelayFrames
 	push bc
-	ld a, $a8
+	ld a, (SFX_02_53 - SFX_Headers_02) / 3
 	call PlaySound
 	pop bc
 	dec b
@@ -105559,8 +105560,8 @@ FuchsiaHouse1Object: ; 0x75031 (size=38)
 	db SPRITE_BUG_CATCHER, $5 + 4, $5 + 4, $ff, $ff, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP FUCHSIA_HOUSE_1_WIDTH, $7, $2
+	EVENT_DISP FUCHSIA_HOUSE_1_WIDTH, $7, $3
 
 FuchsiaPokecenter_h: ; 0x75057 to 0x75063 (12 bytes) (id=154)
 	db POKECENTER ; tileset
@@ -105609,8 +105610,8 @@ FuchsiaPokecenterObject: ; 0x7507d (size=44)
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
 
 	; warp-to
-	EVENT_DISP $7, $7, $3
-	EVENT_DISP $7, $7, $4
+	EVENT_DISP FUCHSIA_POKECENTER_WIDTH, $7, $3
+	EVENT_DISP FUCHSIA_POKECENTER_WIDTH, $7, $4
 
 FuchsiaHouse2_h: ; 0x750a9 to 0x750b5 (12 bytes) (id=155)
 	db LAB ; tileset
@@ -105755,15 +105756,15 @@ FuchsiaHouse2Object: ; 0x75180 (size=45)
 	db SPRITE_BOULDER, $4 + 4, $8 + 4, $ff, $10, $3 ; person
 
 	; warp-to
-	EVENT_DISP $5, $7, $4
-	EVENT_DISP $5, $7, $5
+	EVENT_DISP FUCHSIA_HOUSE_2_WIDTH, $7, $4
+	EVENT_DISP FUCHSIA_HOUSE_2_WIDTH, $7, $5
 
 FuchsiaHouse2Blocks: ; 751ad (1d:51ad)
 	INCBIN "maps/fuchsiahouse2.blk"
 
 SafariZoneEntrance_h: ; 0x751c1 to 0x751cd (12 bytes) (id=156)
 	db GATE ; tileset
-	db SAFARIZONEENTRANCE_HEIGHT, SAFARIZONEENTRANCE_WIDTH ; dimensions (y, x)
+	db SAFARI_ZONE_ENTRANCE_HEIGHT, SAFARI_ZONE_ENTRANCE_WIDTH ; dimensions (y, x)
 	dw SafariZoneEntranceBlocks, SafariZoneEntranceTextPointers, SafariZoneEntranceScript ; blocks, texts, scripts
 	db $00 ; connections
 	dw SafariZoneEntranceObject ; objects
@@ -106085,10 +106086,10 @@ SafariZoneEntranceObject: ; 0x753f5 (size=48)
 	db SPRITE_WHITE_PLAYER, $4 + 4, $1 + 4, $ff, $d3, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $5, $3
-	EVENT_DISP $4, $5, $4
-	EVENT_DISP $4, $0, $3 ; SAFARI_ZONE_CENTER
-	EVENT_DISP $4, $0, $4 ; SAFARI_ZONE_CENTER
+	EVENT_DISP SAFARI_ZONE_ENTRANCE_WIDTH, $5, $3
+	EVENT_DISP SAFARI_ZONE_ENTRANCE_WIDTH, $5, $4
+	EVENT_DISP SAFARI_ZONE_ENTRANCE_WIDTH, $0, $3 ; SAFARI_ZONE_CENTER
+	EVENT_DISP SAFARI_ZONE_ENTRANCE_WIDTH, $0, $4 ; SAFARI_ZONE_CENTER
 
 SafariZoneEntranceBlocks: ; 75425 (1d:5425)
 	INCBIN "maps/safarizoneentrance.blk"
@@ -106454,15 +106455,15 @@ FuchsiaGymObject: ; 0x75658 (size=82)
 	db SPRITE_GYM_HELPER, $f + 4, $7 + 4, $ff, $d0, $8 ; person
 
 	; warp-to
-	EVENT_DISP $5, $11, $4
-	EVENT_DISP $5, $11, $5
+	EVENT_DISP FUCHSIA_GYM_WIDTH, $11, $4
+	EVENT_DISP FUCHSIA_GYM_WIDTH, $11, $5
 
 FuchsiaGymBlocks: ; 756aa (1d:56aa)
 	INCBIN "maps/fuchsiagym.blk"
 
 FuchsiaMeetingRoom_h: ; 0x756d7 to 0x756e3 (12 bytes) (id=158)
 	db LAB ; tileset
-	db FUCHSIAMEETINGROOM_HEIGHT, FUCHSIAMEETINGROOM_WIDTH ; dimensions (y, x)
+	db FUCHSIA_MEETING_ROOM_HEIGHT, FUCHSIA_MEETING_ROOM_WIDTH ; dimensions (y, x)
 	dw FuchsiaMeetingRoomBlocks, FuchsiaMeetingRoomTextPointers, FuchsiaMeetingRoomScript ; blocks, texts, scripts
 	db $00 ; connections
 	dw FuchsiaMeetingRoomObject ; objects
@@ -106503,8 +106504,8 @@ FuchsiaMeetingRoomObject: ; 0x756fc (size=38)
 	db SPRITE_WHITE_PLAYER, $1 + 4, $a + 4, $ff, $d0, $3 ; person
 
 	; warp-to
-	EVENT_DISP $7, $7, $4
-	EVENT_DISP $7, $7, $5
+	EVENT_DISP FUCHSIA_MEETING_ROOM_WIDTH, $7, $4
+	EVENT_DISP FUCHSIA_MEETING_ROOM_WIDTH, $7, $5
 
 FuchsiaMeetingRoomBlocks: ; 75722 (1d:5722)
 	INCBIN "maps/fuchsiameetingroom.blk"
@@ -106622,7 +106623,7 @@ CinnabarGymScript2: ; 757f6 (1d:57f6)
 	and a
 	jr nz, .asm_7581b ; 0x7580e $b
 	call WaitForSoundToFinish
-	ld a, $ad
+	ld a, (SFX_02_57 - SFX_Headers_02) / 3
 	call PlaySound
 	call WaitForSoundToFinish
 .asm_7581b
@@ -107017,8 +107018,8 @@ CinnabarGymObject: ; 0x75acc (size=90)
 	db SPRITE_GYM_HELPER, $d + 4, $10 + 4, $ff, $d0, $9 ; person
 
 	; warp-to
-	EVENT_DISP $a, $11, $10
-	EVENT_DISP $a, $11, $11
+	EVENT_DISP CINNABAR_GYM_WIDTH, $11, $10
+	EVENT_DISP CINNABAR_GYM_WIDTH, $11, $11
 
 CinnabarGymBlocks: ; 75b26 (1d:5b26)
 	INCBIN "maps/cinnabargym.blk"
@@ -107081,11 +107082,11 @@ Lab1Object: ; 0x75bb3 (size=62)
 	db SPRITE_FISHER, $3 + 4, $1 + 4, $ff, $ff, $1 ; person
 
 	; warp-to
-	EVENT_DISP $9, $7, $2
-	EVENT_DISP $9, $7, $3
-	EVENT_DISP $9, $4, $8 ; CINNABAR_LAB_2
-	EVENT_DISP $9, $4, $c ; CINNABAR_LAB_3
-	EVENT_DISP $9, $4, $10 ; CINNABAR_LAB_4
+	EVENT_DISP CINNABAR_LAB_1_WIDTH, $7, $2
+	EVENT_DISP CINNABAR_LAB_1_WIDTH, $7, $3
+	EVENT_DISP CINNABAR_LAB_1_WIDTH, $4, $8 ; CINNABAR_LAB_2
+	EVENT_DISP CINNABAR_LAB_1_WIDTH, $4, $c ; CINNABAR_LAB_3
+	EVENT_DISP CINNABAR_LAB_1_WIDTH, $4, $10 ; CINNABAR_LAB_4
 
 Lab1Blocks: ; 75bf1 (1d:5bf1)
 	INCBIN "maps/lab1.blk"
@@ -107139,8 +107140,8 @@ Lab2Object: ; 0x75c45 (size=38)
 	db SPRITE_FOULARD_WOMAN, $5 + 4, $5 + 4, $ff, $d1, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2 ; CINNABAR_LAB_1
-	EVENT_DISP $4, $7, $3 ; CINNABAR_LAB_1
+	EVENT_DISP CINNABAR_LAB_2_WIDTH, $7, $2 ; CINNABAR_LAB_1
+	EVENT_DISP CINNABAR_LAB_2_WIDTH, $7, $3 ; CINNABAR_LAB_1
 
 Lab2Blocks: ; 75c6b (1d:5c6b)
 	INCBIN "maps/lab2.blk"
@@ -107233,8 +107234,8 @@ Lab3Object: ; 0x75cec (size=41)
 	db SPRITE_OAK_AIDE, $3 + 4, $2 + 4, $fe, $2, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2 ; CINNABAR_LAB_1
-	EVENT_DISP $4, $7, $3 ; CINNABAR_LAB_1
+	EVENT_DISP CINNABAR_LAB_3_WIDTH, $7, $2 ; CINNABAR_LAB_1
+	EVENT_DISP CINNABAR_LAB_3_WIDTH, $7, $3 ; CINNABAR_LAB_1
 
 Lab3Blocks: ; 75d15 (1d:5d15)
 	INCBIN "maps/lab3.blk"
@@ -107378,8 +107379,8 @@ Lab4Object: ; 0x75df0 (size=32)
 	db SPRITE_OAK_AIDE, $6 + 4, $7 + 4, $ff, $d1, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2 ; CINNABAR_LAB_1
-	EVENT_DISP $4, $7, $3 ; CINNABAR_LAB_1
+	EVENT_DISP CINNABAR_LAB_4_WIDTH, $7, $2 ; CINNABAR_LAB_1
+	EVENT_DISP CINNABAR_LAB_4_WIDTH, $7, $3 ; CINNABAR_LAB_1
 
 Lab4Blocks: ; 75e10 (1d:5e10)
 	INCBIN "maps/lab4.blk"
@@ -107431,8 +107432,8 @@ CinnabarPokecenterObject: ; 0x75e46 (size=44)
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
 
 	; warp-to
-	EVENT_DISP $7, $7, $3
-	EVENT_DISP $7, $7, $4
+	EVENT_DISP CINNABAR_POKECENTER_WIDTH, $7, $3
+	EVENT_DISP CINNABAR_POKECENTER_WIDTH, $7, $4
 
 CinnabarMart_h: ; 0x75e72 to 0x75e7e (12 bytes) (id=172)
 	db MART ; tileset
@@ -107472,40 +107473,40 @@ CinnabarMartObject: ; 0x75e91 (size=38)
 	db SPRITE_OAK_AIDE, $4 + 4, $3 + 4, $ff, $ff, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $7, $4
+	EVENT_DISP CINNABAR_MART_WIDTH, $7, $3
+	EVENT_DISP CINNABAR_MART_WIDTH, $7, $4
 
-CopycatsHouseF1_h: ; 0x75eb7 to 0x75ec3 (12 bytes) (id=175)
+CopycatsHouse1F_h: ; 0x75eb7 to 0x75ec3 (12 bytes) (id=175)
 	db REDS_HOUSE_1 ; tileset
 	db COPYCATS_HOUSE_1F_HEIGHT, COPYCATS_HOUSE_1F_WIDTH ; dimensions (y, x)
-	dw CopycatsHouseF1Blocks, CopycatsHouseF1TextPointers, CopycatsHouseF1Script ; blocks, texts, scripts
+	dw CopycatsHouse1FBlocks, CopycatsHouse1FTextPointers, CopycatsHouse1FScript ; blocks, texts, scripts
 	db $00 ; connections
-	dw CopycatsHouseF1Object ; objects
+	dw CopycatsHouse1FObject ; objects
 
-CopycatsHouseF1Script: ; 75ec3 (1d:5ec3)
+CopycatsHouse1FScript: ; 75ec3 (1d:5ec3)
 	jp EnableAutoTextBoxDrawing
 
-CopycatsHouseF1TextPointers: ; 75ec6 (1d:5ec6)
-	dw CopycatsHouseF1Text1
-	dw CopycatsHouseF1Text2
-	dw CopycatsHouseF1Text3
+CopycatsHouse1FTextPointers: ; 75ec6 (1d:5ec6)
+	dw CopycatsHouse1FText1
+	dw CopycatsHouse1FText2
+	dw CopycatsHouse1FText3
 
-CopycatsHouseF1Text1: ; 75ecc (1d:5ecc)
-	TX_FAR _CopycatsHouseF1Text1
+CopycatsHouse1FText1: ; 75ecc (1d:5ecc)
+	TX_FAR _CopycatsHouse1FText1
 	db "@"
 
-CopycatsHouseF1Text2: ; 75ed1 (1d:5ed1)
-	TX_FAR _CopycatsHouseF1Text2
+CopycatsHouse1FText2: ; 75ed1 (1d:5ed1)
+	TX_FAR _CopycatsHouse1FText2
 	db "@"
 
-CopycatsHouseF1Text3: ; 75ed6 (1d:5ed6)
-	TX_FAR _CopycatsHouseF1Text3
+CopycatsHouse1FText3: ; 75ed6 (1d:5ed6)
+	TX_FAR _CopycatsHouse1FText3
 	db $8
 	ld a, CHANSEY
 	call PlayCry
 	jp TextScriptEnd
 
-CopycatsHouseF1Object: ; 0x75ee3 (size=46)
+CopycatsHouse1FObject: ; 0x75ee3 (size=46)
 	db $a ; border tile
 
 	db $3 ; warps
@@ -107521,9 +107522,9 @@ CopycatsHouseF1Object: ; 0x75ee3 (size=46)
 	db SPRITE_CLEFAIRY, $4 + 4, $1 + 4, $fe, $1, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $1, $7 ; COPYCATS_HOUSE_2F
+	EVENT_DISP COPYCATS_HOUSE_1F_WIDTH, $7, $2
+	EVENT_DISP COPYCATS_HOUSE_1F_WIDTH, $7, $3
+	EVENT_DISP COPYCATS_HOUSE_1F_WIDTH, $1, $7 ; COPYCATS_HOUSE_2F
 
 Gary_h: ; 75f11 (1d:5f11)
 	db GYM ;tileset
@@ -107846,10 +107847,10 @@ GaryObject: ; 0x7612f (size=48)
 	db SPRITE_OAK, $7 + 4, $3 + 4, $ff, $d1, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $3 ; LANCES_ROOM
-	EVENT_DISP $4, $7, $4 ; LANCES_ROOM
-	EVENT_DISP $4, $0, $3 ; HALL_OF_FAME
-	EVENT_DISP $4, $0, $4 ; HALL_OF_FAME
+	EVENT_DISP CHAMPIONS_ROOM_WIDTH, $7, $3 ; LANCES_ROOM
+	EVENT_DISP CHAMPIONS_ROOM_WIDTH, $7, $4 ; LANCES_ROOM
+	EVENT_DISP CHAMPIONS_ROOM_WIDTH, $0, $3 ; HALL_OF_FAME
+	EVENT_DISP CHAMPIONS_ROOM_WIDTH, $0, $4 ; HALL_OF_FAME
 
 GaryBlocks: ; 7615f (1d:615f)
 	INCBIN "maps/gary.blk"
@@ -108030,10 +108031,10 @@ LoreleiObject: ; 0x76280 (size=44)
 	db SPRITE_LORELEI, $2 + 4, $5 + 4, $ff, $d0, $41, LORELEI + $C8, $1 ; trainer
 
 	; warp-to
-	EVENT_DISP $5, $b, $4 ; INDIGO_PLATEAU_LOBBY
-	EVENT_DISP $5, $b, $5 ; INDIGO_PLATEAU_LOBBY
-	EVENT_DISP $5, $0, $4 ; BRUNOS_ROOM
-	EVENT_DISP $5, $0, $5 ; BRUNOS_ROOM
+	EVENT_DISP LORELEIS_ROOM_WIDTH, $b, $4 ; INDIGO_PLATEAU_LOBBY
+	EVENT_DISP LORELEIS_ROOM_WIDTH, $b, $5 ; INDIGO_PLATEAU_LOBBY
+	EVENT_DISP LORELEIS_ROOM_WIDTH, $0, $4 ; BRUNOS_ROOM
+	EVENT_DISP LORELEIS_ROOM_WIDTH, $0, $5 ; BRUNOS_ROOM
 
 LoreleiBlocks: ; 762ac (1d:62ac)
 	INCBIN "maps/lorelei.blk"
@@ -108215,10 +108216,10 @@ BrunoObject: ; 0x763d7 (size=44)
 	db SPRITE_BRUNO, $2 + 4, $5 + 4, $ff, $d0, $41, BRUNO + $C8, $1 ; trainer
 
 	; warp-to
-	EVENT_DISP $5, $b, $4 ; LORELEIS_ROOM
-	EVENT_DISP $5, $b, $5 ; LORELEIS_ROOM
-	EVENT_DISP $5, $0, $4 ; AGATHAS_ROOM
-	EVENT_DISP $5, $0, $5 ; AGATHAS_ROOM
+	EVENT_DISP BRUNOS_ROOM_WIDTH, $b, $4 ; LORELEIS_ROOM
+	EVENT_DISP BRUNOS_ROOM_WIDTH, $b, $5 ; LORELEIS_ROOM
+	EVENT_DISP BRUNOS_ROOM_WIDTH, $0, $4 ; AGATHAS_ROOM
+	EVENT_DISP BRUNOS_ROOM_WIDTH, $0, $5 ; AGATHAS_ROOM
 
 BrunoBlocks: ; 76403 (1d:6403)
 	INCBIN "maps/bruno.blk"
@@ -108403,10 +108404,10 @@ AgathaObject: ; 0x76534 (size=44)
 	db SPRITE_AGATHA, $2 + 4, $5 + 4, $ff, $d0, $41, AGATHA + $C8, $1 ; trainer
 
 	; warp-to
-	EVENT_DISP $5, $b, $4 ; BRUNOS_ROOM
-	EVENT_DISP $5, $b, $5 ; BRUNOS_ROOM
-	EVENT_DISP $5, $0, $4 ; LANCES_ROOM
-	EVENT_DISP $5, $0, $5 ; LANCES_ROOM
+	EVENT_DISP AGATHAS_ROOM_WIDTH, $b, $4 ; BRUNOS_ROOM
+	EVENT_DISP AGATHAS_ROOM_WIDTH, $b, $5 ; BRUNOS_ROOM
+	EVENT_DISP AGATHAS_ROOM_WIDTH, $0, $4 ; LANCES_ROOM
+	EVENT_DISP AGATHAS_ROOM_WIDTH, $0, $5 ; LANCES_ROOM
 
 AgathaBlocks: ; 76560 (1d:6560)
 	INCBIN "maps/agatha.blk"
@@ -108578,7 +108579,7 @@ HiddenItemCoords: ; 766b8 (1d:66b8)
 	db ROUTE_13,$0e,$01
 	db ROUTE_13,$0d,$10
 	db MANSION_4,$09,$01
-	db SAFARIZONEENTRANCE,$01,$0a
+	db SAFARI_ZONE_ENTRANCE,$01,$0a
 	db SAFARI_ZONE_WEST,$05,$06
 	db SILPH_CO_5F,$03,$0c
 	db SILPH_CO_9F,$0f,$02
@@ -108633,7 +108634,7 @@ FoundHiddenItemText: ; 7675b (1d:675b)
 	ld b, $1
 	ld a, $10
 	call Predef
-	ld a, $89
+	ld a, (SFX_02_3b - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent ; play sound
 	call WaitForSoundToFinish ; wait for sound to finish playing
 	jp TextScriptEnd
@@ -109516,7 +109517,7 @@ DoBallTossSpecialEffects: ; 78f3e (1e:4f3e)
 	cp a,11 ; is it the beginning of the subanimation?
 	jr nz,.skipPlayingSound
 ; if it is the beginning of the subanimation, play a sound
-	ld a,$91
+	ld a,(SFX_08_41 - SFX_Headers_08) / 3
 	call PlaySound ; play sound
 .skipPlayingSound
 	ld a,[W_ISINBATTLE]
@@ -109563,7 +109564,7 @@ DoBallShakeSpecialEffects: ; 78f96 (1e:4f96)
 	cp a,4 ; is it the beginning of a shake?
 	jr nz,.skipPlayingSound
 ; if it is the beginning of a shake, play a sound and wait 2/3 of a second
-	ld a,$8c
+	ld a,(SFX_08_3c - SFX_Headers_08) / 3
 	call PlaySound ; play sound
 	ld c,40
 	call DelayFrames
@@ -109596,7 +109597,7 @@ DoPoofSpecialEffects: ; 78fce (1e:4fce)
 	ld a,[W_SUBANIMCOUNTER]
 	cp a,5
 	ret nz
-	ld a,$93
+	ld a,(SFX_08_42 - SFX_Headers_08) / 3
 	jp PlaySound
 
 DoRockSlideSpecialEffects: ; 78fd9 (1e:4fd9)
@@ -109702,7 +109703,7 @@ Func_7904c: ; 7904c (1e:504c)
 	jr .loop
 .done
 	call AnimationCleanOAM
-	ld a,$98
+	ld a,(SFX_02_44 - SFX_Headers_02) / 3
 	jp PlaySound ; play sound
 
 BallMoveDistances1: ; 79078 (1e:5078)
@@ -109734,7 +109735,7 @@ Func_7907c ; 507C
 	cp a,$ff
 	jr nz,.skipPlayingSound
 .playSound ; play sound if next move distance is 12 or this is the last one
-	ld a,$ae
+	ld a,(SFX_08_58 - SFX_Headers_08) / 3
 	call PlaySound
 .skipPlayingSound
 	push bc
@@ -111657,7 +111658,7 @@ TossBallAnimation: ; 79e16 (1e:5e16)
 	ld a,$C1
 	ld [W_ANIMATIONID],a
 	call PlayAnimation
-	ld a,$95
+	ld a,(SFX_08_43 - SFX_Headers_08) / 3
 	call PlaySound ; play sound effect
 	ld a,BLOCKBALL_ANIM
 	ld [W_ANIMATIONID],a
@@ -111671,15 +111672,15 @@ Func_79e6a: ; 79e6a (1e:5e6a)
 	cp $a
 	ld a, $20
 	ld b, $30
-	ld c, $a6
+	ld c, (SFX_08_50 - SFX_Headers_08) / 3
 	jr z, .asm_79e8b
 	ld a, $e0
 	ld b, $ff
-	ld c, $b0
+	ld c, (SFX_08_5a - SFX_Headers_08) / 3
 	jr nc, .asm_79e8b
 	ld a, $50
 	ld b, $1
-	ld c, $a7
+	ld c, (SFX_08_51 - SFX_Headers_08) / 3
 .asm_79e8b
 	ld [$c0f1], a
 	ld a, b
@@ -115525,7 +115526,7 @@ Func_7bde9: ; 7bde9 (1e:7de9)
 	call PlaySound
 	ld a, $1
 	ld [H_AUTOBGTRANSFERENABLED], a ; $ffba
-	ld a, $8c
+	ld a, (SFX_08_3c - SFX_Headers_08) / 3
 	call PlaySound
 	call Delay3
 	xor a
