@@ -31,4 +31,4 @@ db %11000001
 db %11000011
 db %00011000
 db %01000010
-db BANK(JolteonPicFront)	
+db BANK(JolteonPicFront)

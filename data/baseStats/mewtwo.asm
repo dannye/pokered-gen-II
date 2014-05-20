@@ -26,4 +26,4 @@ db %11110001
 db %10101111
 db %00111000
 db %01100011
-db BANK(MewtwoPicFront)	
+db BANK(MewtwoPicFront)

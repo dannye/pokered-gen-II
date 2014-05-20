@@ -33,4 +33,4 @@ db %11001110
 db %10100010
 db %00001000
 db %00100010
-db BANK(MarowakPicFront)	
+db BANK(MarowakPicFront)

@@ -26,4 +26,4 @@ db %11110000
 db %10000111
 db %00101000
 db %00000010
-db BANK(JynxPicFront)	
+db BANK(JynxPicFront)

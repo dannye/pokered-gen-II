@@ -26,4 +26,4 @@ db %11000000
 db %10000011
 db %00001000
 db %00010010
-db BANK(OmastarPicFront)	
+db BANK(OmastarPicFront)

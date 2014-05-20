@@ -26,4 +26,4 @@ db %11000000
 db %11000110
 db %00001000
 db %00100010
-db BANK(HitmonleePicFront)	
+db BANK(HitmonleePicFront)

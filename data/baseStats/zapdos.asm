@@ -26,4 +26,4 @@ db %11000001
 db %01000011
 db %00011100
 db %01001010
-db BANK(ZapdosPicFront)	
+db BANK(ZapdosPicFront)

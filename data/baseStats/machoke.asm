@@ -26,4 +26,4 @@ db %11001110
 db %10100110
 db %10001000
 db %00100010
-db BANK(MachokePicFront)	
+db BANK(MachokePicFront)

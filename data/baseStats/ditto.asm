@@ -26,4 +26,4 @@ db %00000000
 db %00000000
 db %00000000
 db %00000000
-db BANK(DittoPicFront)	
+db BANK(DittoPicFront)

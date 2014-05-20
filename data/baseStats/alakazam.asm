@@ -32,4 +32,4 @@ db %11111000
 db %10000111
 db %00111000
 db %01000011
-db BANK(AlakazamPicFront)	
+db BANK(AlakazamPicFront)

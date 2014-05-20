@@ -34,4 +34,4 @@ db %11000001
 db %10100011
 db %00001000
 db %00110010
-db BANK(GyaradosPicFront)	
+db BANK(GyaradosPicFront)

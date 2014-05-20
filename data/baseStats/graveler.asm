@@ -26,4 +26,4 @@ db %11001110
 db %00101110
 db %11001000
 db %00100010
-db BANK(GravelerPicFront)	
+db BANK(GravelerPicFront)

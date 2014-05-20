@@ -26,4 +26,4 @@ db %11110001
 db %10000111
 db %00111000
 db %01000010
-db BANK(MrMimePicFront)	
+db BANK(MrMimePicFront)

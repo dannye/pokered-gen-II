@@ -26,4 +26,4 @@ db %11000111
 db %10100010
 db %10001000
 db %00110010
-db BANK(KangaskhanPicFront)	
+db BANK(KangaskhanPicFront)

@@ -26,4 +26,4 @@ db %11110000
 db %00011011
 db %01101000
 db %00000010
-db BANK(ExeggcutePicFront)	
+db BANK(ExeggcutePicFront)
