@@ -6,6 +6,7 @@ INCLUDE "hram.asm"
 
 INCLUDE "constants/hardware_constants.asm"
 INCLUDE "constants/oam_constants.asm"
+INCLUDE "constants/misc_constants.asm"
 
 INCLUDE "constants/wram_constants.asm"
 
@@ -28,4 +29,4 @@ INCLUDE "constants/connection_constants.asm"
 INCLUDE "constants/credits_constants.asm"
 INCLUDE "constants/music_constants.asm"
 INCLUDE "constants/tilesets.asm"
-
+INCLUDE "constants/starter_mons.asm"
