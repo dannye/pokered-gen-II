@@ -5,8 +5,7 @@ HandleLedges: ; 1a672 (6:6672)
 	ld a, [W_CURMAPTILESET] ; W_CURMAPTILESET
 	and a ; OVERWORLD
 	ret nz
-	ld a, $35
-	call Predef ; indirect jump to Func_c586 (c586 (3:4586))
+	predef Func_c586
 	ld a, [wSpriteStateData1 + 9]
 	ld b, a
 	FuncCoord 8, 9
@@ -69,7 +68,7 @@ LedgeTiles: ; 1a6cf (6:66cf)
 	db $FF
 
 LoadHoppingShadowOAM: ; 1a6f0 (6:66f0)
-	ld hl, $8ff0
+	ld hl, vChars1 + $7f0
 	ld de, LedgeHoppingShadow ; $6708
 	ld bc, (BANK(LedgeHoppingShadow) << 8) + $01
 	call CopyVideoDataDouble

@@ -1,16 +1,16 @@
-HallOfFameComputer: ; 7405c (1d:405c)
+HallOfFamePC: ; 7405c (1d:405c)
 	callba AnimateHallOfFame
 	call ClearScreen
 	ld c, $64
 	call DelayFrames
 	call DisableLCD
-	ld hl, $8800
-	ld bc, $400
+	ld hl, vFont
+	ld bc, $800 / 2
 	call Func_74171
-	ld hl, $9600
-	ld bc, $100
+	ld hl, vChars2 + $600
+	ld bc, $200 / 2
 	call Func_74171
-	ld hl, $97e0
+	ld hl, vChars2 + $7e0
 	ld bc, $10
 	ld a, $ff
 	call FillMemory
@@ -66,16 +66,16 @@ DisplayCreditsMon: ; 740cb (1d:40cb)
 	ld hl,Coord
 	call GetMonHeader
 	call LoadFrontSpriteByMonIndex
-	ld hl,$980C
+	ld hl,vBGMap0 + $c
 	call Func_74164
 	xor a
 	ld [H_AUTOBGTRANSFERENABLED],a
 	call LoadScreenTilesFromBuffer1
-	ld hl,$9800
+	ld hl,vBGMap0
 	call Func_74164
 	ld a,$A7
 	ld [$FF4B],a
-	ld hl,$9C00
+	ld hl,vBGMap1
 	call Func_74164
 	call FillMiddleOfScreenWithWhite
 	ld a,$FC
@@ -238,12 +238,12 @@ Credits: ; 7418e (1d:418e)
 	call FillMiddleOfScreenWithWhite
 	pop de
 	ld de, TheEndGfx
-	ld hl, $9600
+	ld hl, vChars2 + $600
 	ld bc, (BANK(TheEndGfx) << 8) + $0a
 	call CopyVideoData
 	FuncCoord 4, 8
 	ld hl, Coord
-	ld de, UnnamedText_74229 ; $4229
+	ld de, TheEndTextString
 	call PlaceString
 	FuncCoord 4, 9
 	ld hl, Coord
@@ -251,7 +251,8 @@ Credits: ; 7418e (1d:418e)
 	call PlaceString
 	jp Func_740ba
 
-UnnamedText_74229: ; 74229 (1d:4229)
+TheEndTextString: ; 74229 (1d:4229)
+; "T H E  E N D"
 	db $60," ",$62," ",$64,"  ",$64," ",$66," ",$68,"@"
 	db $61," ",$63," ",$65,"  ",$65," ",$67," ",$69,"@"
 
@@ -260,4 +261,4 @@ INCLUDE "data/credits_order.asm"
 INCLUDE "text/credits_text.asm"
 
 TheEndGfx: ; 7473e (1d:473e) ; 473E (473F on blue)
-	INCBIN "gfx/theend.w40.interleave.2bpp"
+	INCBIN "gfx/theend.interleave.2bpp"

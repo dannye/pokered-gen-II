@@ -21,19 +21,19 @@ StatusScreen: ; 12953 (4:6953)
 	call UpdateSprites ; move sprites (?)
 	call LoadHpBarAndStatusTilePatterns
 	ld de, BattleHudTiles1  ; $6080 ; source
-	ld hl, $96d0 ; dest
+	ld hl, vChars2 + $6d0 ; dest
 	ld bc, (BANK(BattleHudTiles1) << 8) + $03 ; bank bytes/8
 	call CopyVideoDataDouble ; ·│ :L and halfarrow line end
 	ld de, BattleHudTiles2 ; $6098
-	ld hl, $9780
+	ld hl, vChars2 + $780
 	ld bc, (BANK(BattleHudTiles2) << 8) + $01
 	call CopyVideoDataDouble ; │
 	ld de, BattleHudTiles3 ; $60b0
-	ld hl, $9760
+	ld hl, vChars2 + $760
 	ld bc, (BANK(BattleHudTiles3) << 8) + $02
 	call CopyVideoDataDouble ; ─┘
 	ld de, PTile
-	ld hl, $9720
+	ld hl, vChars2 + $720
 	ld bc,(BANK(PTile) << 8 | $01)
 	call CopyVideoDataDouble ; P (for PP), inline
 	ld a, [$ffd7]
@@ -59,7 +59,7 @@ StatusScreen: ; 12953 (4:6953)
 	call PlaceString ; "TYPE1/"
 	FuncCoord 11,3
 	ld hl, Coord
-	PREDEF DrawHPBarPredef ; predef $5f
+	predef DrawHP ; predef $5f
 	ld hl, wcf25
 	call GetHealthBarColor
 	ld b, $3
@@ -84,8 +84,7 @@ StatusScreen: ; 12953 (4:6953)
 	ld a, [W_MONHDEXNUM]
 	ld [wd11e], a
 	ld [wd0b5], a
-	ld a, $3a
-	call Predef
+	predef IndexToPokedex
 	FuncCoord 3,7
 	ld hl, Coord
 	ld de, wd11e
@@ -93,8 +92,7 @@ StatusScreen: ; 12953 (4:6953)
 	call PrintNumber ; Pokémon no.
 	FuncCoord 11,10
 	ld hl, Coord
-	ld a, $4b
-	call Predef ; Prints the type (?)
+	predef Func_27d6b ; Prints the type (?)
 	ld hl, NamePointers2 ; $6a9d
 	call .unk_12a7e
 	ld d, h
@@ -143,15 +141,15 @@ StatusScreen: ; 12953 (4:6953)
 	jp SkipFixedLengthTextEntries
 
 OTPointers: ; 12a95 (4:6a95)
-	dw W_PARTYMON1OT
-	dw W_ENEMYMON1OT
-	dw W_BOXMON1OT
+	dw wPartyMonOT
+	dw wEnemyMonOT
+	dw wBoxMonOT
 	dw W_DAYCAREMONOT
 
 NamePointers2: ; 12a9d (4:6a9d)
-	dw W_PARTYMON1NAME
-	dw W_ENEMYMON1NAME
-	dw W_BOXMON1NAME
+	dw wPartyMonNicks
+	dw wEnemyMonNicks
+	dw wBoxMonNicks
 	dw W_DAYCAREMONNAME
 
 Type1Text: ; 12aa5 (4:6aa5)
@@ -352,7 +350,7 @@ StatusScreen2: ; 12b57 (4:6b57)
 	call PlaceString
 	ld a, [wcfb9] ; level
 	push af
-	cp 100
+	cp MAX_LEVEL
 	jr z, .Level100 ; 0x12c20 $4
 	inc a
 	ld [wcfb9], a ; Increase temporarily if not 100
@@ -402,7 +400,7 @@ StatusScreen2: ; 12b57 (4:6b57)
 	jp ClearScreen
 .asm_12c86 ; This does some magic with lvl/exp?
 	ld a, [wcfb9] ; Load level
-	cp $64
+	cp MAX_LEVEL
 	jr z, .asm_12ca7 ; 0x12c8b $1a ; If 100
 	inc a
 	ld d, a

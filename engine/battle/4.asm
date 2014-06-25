@@ -15,7 +15,7 @@ Func_128ea: ; 128ea (4:68ea)
 	inc b
 	ret
 
-Func_128ef: ; 128ef (4:68ef)
+DrawHP: ; 128ef (4:68ef)
 	call GetPredefRegisters
 	ld a, $1
 	jr asm_128fb
@@ -43,8 +43,7 @@ asm_128fb: ; 128fb (4:68fb)
 	ld d, a
 	ld a, [wcfbb]
 	ld e, a
-	ld a, $26
-	call Predef ; indirect jump to UpdateHPBar_LoadRegisters (f9dc (3:79dc))
+	predef HPBarLength
 	ld a, $6
 	ld d, a
 	ld c, a

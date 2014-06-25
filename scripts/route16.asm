@@ -7,7 +7,7 @@ Route16Script: ; 59933 (16:5933)
 	ld [W_ROUTE16CURSCRIPT], a
 	ret
 
-Func_59946: ; 59946 (16:5946)
+Route16Script_59946: ; 59946 (16:5946)
 	xor a
 	ld [wJoyIgnore], a
 	ld [W_ROUTE16CURSCRIPT], a
@@ -36,8 +36,7 @@ Route16Script0: ; 59959 (16:5959)
 	ld [W_CURENEMYLVL], a ; W_CURENEMYLVL
 	ld a, $21
 	ld [wcc4d], a
-	ld a, $11
-	call Predef ; indirect jump to RemoveMissableObject (f1d7 (3:71d7))
+	predef HideObject
 	call UpdateSprites
 	ld a, $3
 	ld [W_ROUTE16CURSCRIPT], a
@@ -47,7 +46,7 @@ Route16Script0: ; 59959 (16:5959)
 Route16Script3: ; 5998f (16:598f)
 	ld a, [W_ISINBATTLE] ; W_ISINBATTLE
 	cp $ff
-	jp z, Func_59946
+	jp z, Route16Script_59946
 	call UpdateSprites
 	ld a, [wcf0b]
 	cp $2

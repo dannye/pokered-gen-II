@@ -21,24 +21,20 @@ Route25Script_515e1: ; 515e1 (14:55e1)
 	res 6, [hl]
 	ld a, $61
 	ld [wcc4d], a
-	ld a, $15
-	jp Predef ; indirect jump to AddMissableObject (f1c8 (3:71c8))
+	predef_jump ShowObject
 .asm_515ff
 	bit 4, [hl]
 	ret z
 	set 7, [hl]
 	ld a, $24
 	ld [wcc4d], a
-	ld a, $11
-	call Predef ; indirect jump to RemoveMissableObject (f1d7 (3:71d7))
+	predef HideObject
 	ld a, $62
 	ld [wcc4d], a
-	ld a, $11
-	call Predef ; indirect jump to RemoveMissableObject (f1d7 (3:71d7))
+	predef HideObject
 	ld a, $63
 	ld [wcc4d], a
-	ld a, $15
-	jp Predef ; indirect jump to AddMissableObject (f1c8 (3:71c8))
+	predef_jump ShowObject
 
 Route25ScriptPointers: ; 51622 (14:5622)
 	dw CheckFightingMapTrainers

@@ -199,7 +199,7 @@ Func_417c7: ; 417c7 (10:57c7)
 	ret
 
 Func_417f0: ; 417f0 (10:57f0)
-	ld hl, $9c00
+	ld hl, vBGMap1
 	ld bc, $240
 	jr asm_417fe
 
@@ -264,33 +264,31 @@ Func_4183f: ; 4183f (10:583f)
 
 Func_41842: ; 41842 (10:5842)
 	ld c, $0
-	ld a, $31
-	jp Predef ; indirect jump to Func_79dda
+	predef_jump Func_79dda
 
 Func_41849: ; 41849 (10:5849)
-	ld a, $33
-	call Predef ; indirect jump to Func_79869
+	predef Func_79869
 	ld a, b
 	jp PlaySound
 
 LoadIntroGraphics: ; 41852 (10:5852)
 	ld hl, FightIntroBackMon ; $5a99
-	ld de, $9000
+	ld de, vChars2
 	ld bc, $600
 	ld a, BANK(FightIntroBackMon)
 	call FarCopyData2
 	ld hl, GameFreakIntro ; $5959
-	ld de, $9600
+	ld de, vChars2 + $600
 	ld bc, $140
 	ld a, BANK(GameFreakIntro)
 	call FarCopyData2
 	ld hl, GameFreakIntro ; $5959
-	ld de, $8800
+	ld de, vChars1
 	ld bc, $140
 	ld a, BANK(GameFreakIntro)
 	call FarCopyData2
 	ld hl, FightIntroFrontMon ; $6099
-	ld de, $8000
+	ld de, vChars0
 	ld bc, $6c0
 	ld a, BANK(FightIntroFrontMon)
 	jp FarCopyData2
@@ -322,7 +320,7 @@ PlayShootingStar: ; 4188a (10:588a)
 	ld c, $28
 	call DelayFrames
 .asm_418d0
-	ld a, Bank(Func_7d8ea)
+	ld a, BANK(Music_IntroBattle)
 	ld [wc0ef], a
 	ld [wc0f0], a
 	ld a, MUSIC_INTRO_BATTLE
@@ -341,10 +339,10 @@ Func_418e9: ; 418e9 (10:58e9)
 	ld hl, Coord
 	ld c, $50
 	call Func_41807
-	ld hl, $9c00
+	ld hl, vBGMap1
 	ld c, $80
 	call Func_41807
-	ld hl, $9dc0
+	ld hl, vBGMap1 + $1c0
 	ld c, $80
 	jp Func_41807
 
@@ -425,7 +423,7 @@ IntroNidorinoAnimation7: ; 41950 (10:5950)
 	db $50 ; list terminator
 
 GameFreakIntro: ; 41959 (10:5959)
-	INCBIN "gfx/gamefreak_intro.h8.2bpp"
+	INCBIN "gfx/gamefreak_intro.2bpp"
 	INCBIN "gfx/gamefreak_logo.2bpp"
 	ds $10 ; blank tile
 

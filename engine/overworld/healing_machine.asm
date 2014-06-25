@@ -1,6 +1,6 @@
 AnimateHealingMachine: ; 70433 (1c:4433)
 	ld de, PokeCenterFlashingMonitorAndHealBall ; $44b7
-	ld hl, $87c0
+	ld hl, vChars0 + $7c0
 	ld bc, (BANK(PokeCenterFlashingMonitorAndHealBall) << 8) + $03
 	call CopyVideoData
 	ld hl, wcfcb
@@ -24,7 +24,7 @@ AnimateHealingMachine: ; 70433 (1c:4433)
 	ld a, [wMusicHeaderPointer]
 	and a
 	jr nz, .asm_70464
-	ld a, [W_NUMINPARTY] ; W_NUMINPARTY
+	ld a, [wPartyCount] ; wPartyCount
 	ld b, a
 .asm_7046e
 	call Func_70503
@@ -41,7 +41,7 @@ AnimateHealingMachine: ; 70433 (1c:4433)
 	ld a, $ff
 	ld [wc0ee], a
 	call PlaySound
-	ld a, Bank(Func_9876)
+	ld a, BANK(Music_PkmnHealed)
 	ld [wc0ef], a
 .asm_70495
 	ld a, MUSIC_PKMN_HEALED

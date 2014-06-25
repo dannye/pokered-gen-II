@@ -17,7 +17,7 @@ Func_3ad1c: ; 3ad1c (e:6d1c)
 	push hl
 	push bc
 	push de
-	ld hl, W_NUMINPARTY ; W_NUMINPARTY
+	ld hl, wPartyCount ; wPartyCount
 	push hl
 asm_3ad2e: ; 3ad2e (e:6d2e)
 	ld hl, wWhichPokemon ; wWhichPokemon
@@ -107,7 +107,7 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	ld a, [hl]
 	ld [wHPBarMaxHP + 1], a
 	ld a, [wWhichPokemon] ; wWhichPokemon
-	ld hl, W_PARTYMON1NAME ; W_PARTYMON1NAME
+	ld hl, wPartyMonNicks ; wPartyMonNicks
 	call GetPartyMonName
 	call CopyStringToCF4B
 	ld hl, IsEvolvingText
@@ -152,8 +152,7 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	push af
 	ld a, [wd0b5]
 	ld [wd11e], a
-	ld a, $3a
-	call Predef ; indirect jump to IndexToPokedex (41010 (10:5010))
+	predef IndexToPokedex
 	ld a, [wd11e]
 	dec a
 	ld hl, BaseStats
@@ -170,7 +169,7 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	ld b, $1
 	call CalcStats
 	ld a, [wWhichPokemon] ; wWhichPokemon
-	ld hl, W_PARTYMON1_NUM ; W_PARTYMON1_NUM (aliases: W_PARTYMON1DATA)
+	ld hl, wPartyMon1Species ; wPartyMon1Species (aliases: wPartyMon1)
 	ld bc, $2c
 	call AddNTimes
 	ld e, l
@@ -205,13 +204,11 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	ld [wcc49], a
 	call Func_3af5b
 	pop hl
-	ld a, $42
-	call Predef ; indirect jump to SetPartyMonTypes (5db5e (17:5b5e))
+	predef SetPartyMonTypes
 	ld a, [W_ISINBATTLE] ; W_ISINBATTLE
 	and a
 	call z, Func_3af52
-	ld a, $3a
-	call Predef ; indirect jump to IndexToPokedex (41010 (10:5010))
+	predef IndexToPokedex
 	ld a, [wd11e]
 	dec a
 	ld c, a
@@ -275,7 +272,7 @@ Func_3aef7: ; 3aef7 (e:6ef7)
 	jr nz, .asm_3af0e
 	ld a, [wWhichPokemon] ; wWhichPokemon
 	ld bc, $b
-	ld hl, W_PARTYMON1NAME ; W_PARTYMON1NAME
+	ld hl, wPartyMonNicks ; wPartyMonNicks
 	call AddNTimes
 	push hl
 	call GetName
@@ -344,7 +341,7 @@ Func_3af5b: ; 3af5b (e:6f5b)
 	ld a, [wcc49]
 	and a
 	jr nz, .asm_3af96
-	ld hl, W_PARTYMON1_MOVE1 ; W_PARTYMON1_MOVE1
+	ld hl, wPartyMon1Moves ; wPartyMon1Moves
 	ld a, [wWhichPokemon] ; wWhichPokemon
 	ld bc, $2c
 	call AddNTimes
@@ -361,8 +358,7 @@ Func_3af5b: ; 3af5b (e:6f5b)
 	ld [wd11e], a
 	call GetMoveName
 	call CopyStringToCF4B
-	ld a, $1b
-	call Predef ; indirect jump to LearnMove (6e43 (1:6e43))
+	predef LearnMove
 .asm_3afb1
 	ld a, [wcf91]
 	ld [wd11e], a
@@ -489,7 +485,6 @@ WriteMonMoves_ShiftMoveData: ; 3b04e (e:704e)
 	ret
 
 Func_3b057: ; 3b057 (e:7057)
-	ld a, $10 ; FlagActionPredef
-	jp Predef
+	predef_jump FlagActionPredef
 
 INCLUDE "data/evos_moves.asm"

@@ -44,7 +44,7 @@ Func_213c8:: ; 213c8 (8:53c8)
 	call PlaceString
 	FuncCoord 2, 4
 	ld hl, Coord
-	ld de, W_PLAYERNAME ; wd158
+	ld de, wPlayerName ; wd158
 	call PlaceString
 	ld l, c
 	ld h, b
@@ -137,7 +137,7 @@ Func_214e8: ; 214e8 (8:54e8)
 BillsPCMenu:
 	ld a, [wccd3]
 	ld [wCurrentMenuItem], a ; wCurrentMenuItem
-	ld hl, $9780
+	ld hl, vChars2 + $780
 	ld de, PokeballTileGraphics ; $697e
 	ld bc, (BANK(PokeballTileGraphics) << 8) + $01
 	call CopyVideoData
@@ -232,7 +232,7 @@ Func_21588: ; 21588 (8:5588)
 
 Func_215ac: ; 215ac (8:55ac)
 BillsPCDeposit:
-	ld a, [W_NUMINPARTY] ; W_NUMINPARTY
+	ld a, [wPartyCount] ; wPartyCount
 	dec a
 	jr nz, .asm_215bb
 	ld hl, CantDepositLastMonText
@@ -246,7 +246,7 @@ BillsPCDeposit:
 	call PrintText
 	jp BillsPCMenu
 .asm_215cb
-	ld hl, W_NUMINPARTY ; W_NUMINPARTY
+	ld hl, wPartyCount ; wPartyCount
 	call Func_216be
 	jp c, BillsPCMenu
 	call Func_2174b
@@ -288,7 +288,7 @@ Func_21618: ; 21618 (8:5618)
 	call PrintText
 	jp Func_214e8
 .asm_21627
-	ld a, [W_NUMINPARTY] ; W_NUMINPARTY
+	ld a, [wPartyCount] ; wPartyCount
 	cp $6
 	jr nz, .asm_21637
 	ld hl, CantTakeMonText ; $5811
@@ -301,7 +301,7 @@ Func_21618: ; 21618 (8:5618)
 	call Func_2174b
 	jp nc, Func_214e8
 	ld a, [wWhichPokemon] ; wWhichPokemon
-	ld hl, W_BOXMON1NAME
+	ld hl, wBoxMonNicks
 	call GetPartyMonName
 	ld a, [wcf91]
 	call GetCryData
@@ -372,21 +372,21 @@ BoxNoPCText: ; 21713 (8:5713)
 	db "BOX No.@"
 
 Func_2171b:: ; 2171b (8:571b)
-	ld hl, W_PARTYMON1_MOVE1
-	ld bc, $002c
+	ld hl, wPartyMon1Moves
+	ld bc, wPartyMon2 - wPartyMon1
 	jr .asm_21729 ; 0x21721 $6
-	ld hl, wda9e
-	ld bc, $0021
+	ld hl, wBoxMon1Moves
+	ld bc, wBoxMon2 - wBoxMon1
 .asm_21729
 	ld a, [wWhichPokemon]
 	call AddNTimes
-	ld b, $4
+	ld b, NUM_MOVES
 .asm_21731
 	ld a, [hli]
 	push hl
 	push bc
 	ld hl, HMMoveArray ; $5745
-	ld de, $0001
+	ld de, 1
 	call IsInArray
 	pop bc
 	pop hl
@@ -466,10 +466,8 @@ Func_2174b: ; 2174b (8:574b)
 	ld a, $2
 .asm_217b0
 	ld [wcc49], a
-	ld a, $36
-	call Predef ; indirect jump to StatusScreen (12953 (4:6953))
-	ld a, $37
-	call Predef ; indirect jump to StatusScreen2 (12b57 (4:6b57))
+	predef StatusScreen
+	predef StatusScreen2
 	call LoadScreenTilesFromBuffer1
 	call ReloadTilesetTilePatterns
 	call GoPAL_SET_CF1C

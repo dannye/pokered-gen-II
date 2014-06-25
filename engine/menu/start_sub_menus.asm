@@ -1,6 +1,5 @@
 StartMenu_Pokedex: ; 13095 (4:7095)
-	ld a,$29
-	call Predef
+	predef ShowPokedexMenu
 	call LoadScreenTilesFromBuffer2 ; restore saved screen
 	call Delay3
 	call LoadGBPal
@@ -8,7 +7,7 @@ StartMenu_Pokedex: ; 13095 (4:7095)
 	jp RedisplayStartMenu
 
 StartMenu_Pokemon: ; 130a9 (4:70a9)
-	ld a,[W_NUMINPARTY]
+	ld a,[wPartyCount]
 	and a
 	jp z,RedisplayStartMenu
 	xor a
@@ -86,7 +85,7 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	add hl,bc
 	jp .choseOutOfBattleMove
 .choseSwitch
-	ld a,[W_NUMINPARTY]
+	ld a,[wPartyCount]
 	cp a,2 ; is there more than one pokemon in the party?
 	jp c,StartMenu_Pokemon ; if not, no switching
 	call SwitchPartyMon_Stats
@@ -98,16 +97,14 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	call ClearSprites
 	xor a
 	ld [wcc49],a
-	ld a,$36
-	call Predef
-	ld a,$37
-	call Predef
+	predef StatusScreen
+	predef StatusScreen2
 	call ReloadMapData
 	jp StartMenu_Pokemon
 .choseOutOfBattleMove
 	push hl
 	ld a,[wWhichPokemon]
-	ld hl,W_PARTYMON1NAME
+	ld hl,wPartyMonNicks
 	call GetPartyMonName
 	pop hl
 	ld a,[hl]
@@ -138,7 +135,7 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	call CheckIfInOutsideMap
 	jr z,.canFly
 	ld a,[wWhichPokemon]
-	ld hl,W_PARTYMON1NAME
+	ld hl,wPartyMonNicks
 	call GetPartyMonName
 	ld hl,.cannotFlyHereText
 	call PrintText
@@ -155,8 +152,7 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 .cut
 	bit 1,a ; does the player have the Cascade Badge?
 	jp z,.newBadgeRequired
-	ld a,$3c
-	call Predef
+	predef UsedCut
 	ld a,[wcd6a]
 	and a
 	jp z,.loop
@@ -181,8 +177,7 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 .strength
 	bit 3,a ; does the player have the Rainbow Badge?
 	jp z,.newBadgeRequired
-	ld a,$5b
-	call Predef
+	predef PrintStrengthTxt
 	call GBPalWhiteOutWithDelay3
 	jp .goBackToMap
 .flash
@@ -211,7 +206,7 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	call CheckIfInOutsideMap
 	jr z,.canTeleport
 	ld a,[wWhichPokemon]
-	ld hl,W_PARTYMON1NAME
+	ld hl,wPartyMonNicks
 	call GetPartyMonName
 	ld hl,.cannotUseTeleportNowText
 	call PrintText
@@ -239,9 +234,9 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	TX_FAR _CannotFlyHereText
 	db "@"
 .softboiled
-	ld hl,W_PARTYMON1_MAXHP
+	ld hl,wPartyMon1MaxHP
 	ld a,[wWhichPokemon]
-	ld bc,44
+	ld bc,wPartyMon2 - wPartyMon1
 	call AddNTimes
 	ld a,[hli]
 	ld [H_DIVIDEND],a
@@ -251,7 +246,7 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	ld [H_DIVISOR],a
 	ld b,2 ; number of bytes
 	call Divide
-	ld bc,-33
+	ld bc,wPartyMon1HP - wPartyMon1MaxHP
 	add hl,bc
 	ld a,[hld]
 	ld b,a
@@ -515,8 +510,7 @@ StartMenu_TrainerInfo: ; 13460 (4:7460)
 	xor a
 	ld [$ffd7],a
 	call DrawTrainerInfo
-	ld a,$2e
-	call Predef ; draw badges
+	predef DrawBadges ; draw badges
 	ld b,$0d
 	call GoPAL_SET
 	call GBPalNormal
@@ -535,8 +529,7 @@ StartMenu_TrainerInfo: ; 13460 (4:7460)
 DrawTrainerInfo: ; 1349a (4:749a)
 	ld de,RedPicFront
 	ld bc,(BANK(RedPicFront) << 8) | $01
-	ld a,$3b
-	call Predef
+	predef Predef3B
 	call DisableLCD
 	FuncCoord 0,2
 	ld hl,Coord
@@ -545,39 +538,39 @@ DrawTrainerInfo: ; 1349a (4:749a)
 	FuncCoord 1,2
 	ld hl,Coord
 	call TrainerInfo_DrawVerticalLine
-	ld hl,$9070
-	ld de,$9000
-	ld bc,$01c0
+	ld hl,vChars2 + $70
+	ld de,vChars2
+	ld bc,$70 * 4
 	call CopyData
 	ld hl,TrainerInfoTextBoxTileGraphics ; $7b98 ; trainer info text box tile patterns
-	ld de,$9770
+	ld de,vChars2 + $770
 	ld bc,$0080
 	push bc
 	call TrainerInfo_FarCopyData
 	ld hl,BlankLeaderNames ; $7c28
-	ld de,$9600
+	ld de,vChars2 + $600
 	ld bc,$0170
 	call TrainerInfo_FarCopyData
 	pop bc
 	ld hl,BadgeNumbersTileGraphics  ; $7d98 ; badge number tile patterns
-	ld de,$8d80
+	ld de,vChars1 + $580
 	call TrainerInfo_FarCopyData
 	ld hl,GymLeaderFaceAndBadgeTileGraphics  ; $6a9e ; gym leader face and badge tile patterns
-	ld de,$9200
+	ld de,vChars2 + $200
 	ld bc,$0400
 	ld a,$03
 	call FarCopyData2
 	ld hl,TextBoxGraphics ; $6288
 	ld de,$00d0
 	add hl,de ; hl = colon tile pattern
-	ld de,$8d60
+	ld de,vChars1 + $560
 	ld bc,$0010
 	ld a,$04
 	push bc
 	call FarCopyData2
 	pop bc
 	ld hl,TrainerInfoTextBoxTileGraphics + $80  ; $7c18 ; background tile pattern
-	ld de,$8d70
+	ld de,vChars1 + $570
 	call TrainerInfo_FarCopyData
 	call EnableLCD
 	ld hl,wWhichTrade
@@ -615,7 +608,7 @@ DrawTrainerInfo: ; 1349a (4:749a)
 	call PlaceString
 	FuncCoord 7,2
 	ld hl,Coord
-	ld de,W_PLAYERNAME
+	ld de,wPlayerName
 	call PlaceString
 	FuncCoord 8,4
 	ld hl,Coord
@@ -711,8 +704,7 @@ StartMenu_SaveReset: ; 135e3 (4:75e3)
 	ld a,[wd72e]
 	bit 6,a ; is the player using the link feature?
 	jp nz,Init
-	ld a,$3f
-	call Predef ; save the game
+	predef SaveSAV ; save the game
 	call LoadScreenTilesFromBuffer2 ; restore saved screen
 	jp HoldTextDisplayOpen
 
@@ -788,7 +780,7 @@ SwitchPartyMon_Stats: ; 13653 (4:7653)
 	ld [wcc35], a
 	push hl
 	push de
-	ld hl, W_PARTYMON1 ; W_PARTYMON1
+	ld hl, wPartySpecies
 	ld d, h
 	ld e, l
 	ld a, [wCurrentMenuItem] ; wCurrentMenuItem
@@ -809,15 +801,15 @@ SwitchPartyMon_Stats: ; 13653 (4:7653)
 	ld [hl], a
 	ld a, [H_DIVIDEND] ; $ff95 (aliases: H_PRODUCT, H_PASTLEADINGZEROES, H_QUOTIENT)
 	ld [de], a
-	ld hl, W_PARTYMON1_NUM ; W_PARTYMON1_NUM (aliases: W_PARTYMON1DATA)
-	ld bc, $2c
+	ld hl, wPartyMons
+	ld bc, wPartyMon2 - wPartyMon1
 	ld a, [wCurrentMenuItem] ; wCurrentMenuItem
 	call AddNTimes
 	push hl
 	ld de, wcc97
 	ld bc, $2c
 	call CopyData
-	ld hl, W_PARTYMON1_NUM ; W_PARTYMON1_NUM (aliases: W_PARTYMON1DATA)
+	ld hl, wPartyMons
 	ld bc, $2c
 	ld a, [wcc35]
 	call AddNTimes
@@ -829,14 +821,14 @@ SwitchPartyMon_Stats: ; 13653 (4:7653)
 	ld hl, wcc97
 	ld bc, $2c
 	call CopyData
-	ld hl, W_PARTYMON1OT ; wd273
+	ld hl, wPartyMonOT ; wd273
 	ld a, [wCurrentMenuItem] ; wCurrentMenuItem
 	call SkipFixedLengthTextEntries
 	push hl
 	ld de, wcc97
 	ld bc, $b
 	call CopyData
-	ld hl, W_PARTYMON1OT ; wd273
+	ld hl, wPartyMonOT ; wd273
 	ld a, [wcc35]
 	call SkipFixedLengthTextEntries
 	pop de
@@ -847,14 +839,14 @@ SwitchPartyMon_Stats: ; 13653 (4:7653)
 	ld hl, wcc97
 	ld bc, $b
 	call CopyData
-	ld hl, W_PARTYMON1NAME ; W_PARTYMON1NAME
+	ld hl, wPartyMonNicks ; wPartyMonNicks
 	ld a, [wCurrentMenuItem] ; wCurrentMenuItem
 	call SkipFixedLengthTextEntries
 	push hl
 	ld de, wcc97
 	ld bc, $b
 	call CopyData
-	ld hl, W_PARTYMON1NAME ; W_PARTYMON1NAME
+	ld hl, wPartyMonNicks ; wPartyMonNicks
 	ld a, [wcc35]
 	call SkipFixedLengthTextEntries
 	pop de

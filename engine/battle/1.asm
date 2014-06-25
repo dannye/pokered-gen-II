@@ -11,13 +11,13 @@ DrainHPEffect_: ; 783f (1:783f)
 	inc hl
 	inc [hl]
 .asm_784f
-	ld hl, W_PLAYERMONCURHP ; wd015
-	ld de, W_PLAYERMONMAXHP ; wd023
+	ld hl, wBattleMonHP ; wd015
+	ld de, wBattleMonMaxHP ; wd023
 	ld a, [H_WHOSETURN] ; $fff3
 	and a
 	jp z, Func_7861
-	ld hl, W_ENEMYMONCURHP ; W_ENEMYMONCURHP
-	ld de, W_ENEMYMONMAXHP ; W_ENEMYMONMAXHP
+	ld hl, wEnemyMonHP ; wEnemyMonHP
+	ld de, wEnemyMonMaxHP ; wEnemyMonMaxHP
 
 Func_7861: ; 7861 (1:7861)
 	ld bc, wHPBarOldHP+1
@@ -76,12 +76,9 @@ Func_7861: ; 7861 (1:7861)
 	xor a
 .asm_78aa
 	ld [wListMenuID], a ; wListMenuID
-	ld a, $48
-	call Predef ; indirect jump to UpdateHPBar (fa1d (3:7a1d))
-	ld a, $0
-	call Predef ; indirect jump to Func_3cd60 (3cd60 (f:4d60))
-	ld a, $49
-	call Predef ; indirect jump to Func_3cdec (3cdec (f:4dec))
+	predef UpdateHPBar2
+	predef Func_3cd60
+	predef Func_3cdec
 	callab ReadPlayerMonCurHPAndStatus
 	ld hl, SuckedHealthText ; $78dc
 	ld a, [H_WHOSETURN] ; $fff3

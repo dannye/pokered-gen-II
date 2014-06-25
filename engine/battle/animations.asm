@@ -341,7 +341,7 @@ LoadAnimationTileset: ; 781d2 (1e:41d2)
 	ld e,a
 	ld a,[hl]
 	ld d,a ; de = address of tileset
-	ld hl,$8310 ; destination address in VRAM
+	ld hl,vSprites + $310
 	ld b, BANK(AnimationTileset1) ; ROM bank
 	ld a,[wd07d]
 	ld c,a ; number of tiles
@@ -831,11 +831,9 @@ DoRockSlideSpecialEffects: ; 78fd9 (1e:4fd9)
 ; if the subaninmation counter is between 8 and 11, shake the screen horizontally and vertically
 .shakeScreen
 	ld b,1
-	ld a,$24
-	call Predef ; shake horizontally
+	predef Func_48125 ; shake horizontally
 	ld b,1
-	ld a,$21
-	jp Predef ; shake vertically
+	predef_jump Func_480ff ; shake vertically
 
 FlashScreenEveryEightFrameBlocks: ; 78ff7 (1e:4ff7)
 	ld a,[W_SUBANIMCOUNTER]
@@ -1227,16 +1225,14 @@ Func_791fc: ; 791fc (1e:51fc)
 	ld b, $5
 
 Func_79209: ; 79209 (1e:5209)
-	ld a, $21
-	jp Predef ; indirect jump to Func_480ff (480ff (12:40ff))
+	predef_jump Func_480ff
 
 AnimationShakeScreen: ; 7920e (1e:520e)
 ; Shakes the screen for a while. Used in Earthquake/Fissure/etc. animations.
 	ld b, $8
 
 Func_79210: ; 79210 (1e:5210)
-	ld a, $24
-	jp Predef ; indirect jump to Func_48125 (48125 (12:4125))
+	predef_jump Func_48125
 
 AnimationWaterDropletsEverywhere: ; 79215 (1e:5215)
 ; Draws water droplets all over the screen and makes them
@@ -1488,9 +1484,9 @@ AnimationBlinkMon: ; 7936f (1e:536f)
 
 AnimationFlashMonPic: ; 79389 (1e:5389)
 ; Flashes the mon's sprite on and off
-	ld a, [W_PLAYERMONID]
+	ld a, [wBattleMonSpecies]
 	ld [wHPBarMaxHP + 1], a
-	ld a, [wcfe5]
+	ld a, [wEnemyMonSpecies]
 	ld [wHPBarMaxHP], a
 	jp Func_79793
 
@@ -1960,17 +1956,17 @@ AnimationSlideMonHalfLeft: ; 79645 (1e:5645)
 Func_79652: ; 79652 (1e:5652)
 	ld a, [H_WHOSETURN] ; $fff3
 	and a
-	ld hl, $9310
+	ld hl, vBackPic
 	jr z, .asm_7965d
-	ld hl, $9000
+	ld hl, vFrontPic
 .asm_7965d
 	ld de, wTempPic
-	ld bc, $31
+	ld bc, 7 * 7
 	jp CopyVideoData
 
 AnimationWavyScreen: ; 79666 (1e:5666)
 ; used in Psywave/Psychic etc.
-	ld hl, $9800
+	ld hl, vBGMap0
 	call Func_79e0d
 	call Delay3
 	xor a
@@ -2005,7 +2001,7 @@ AnimationWavyScreen: ; 79666 (1e:5666)
 	ld [H_AUTOBGTRANSFERENABLED], a
 	call Delay3
 	call LoadScreenTilesFromBuffer2
-	ld hl, $9c00
+	ld hl, vBGMap1
 	call Func_79e0d
 	ret
 
@@ -2117,9 +2113,9 @@ AnimationBoundUpAndDown: ; 7977a (1e:577a)
 AnimationTransformMon: ; 79787 (1e:5787)
 ; Redraws this mon's sprite as the back/front sprite of the opposing mon.
 ; Used in Transform.
-	ld a, [wcfe5]
+	ld a, [wEnemyMonSpecies]
 	ld [wHPBarMaxHP + 1], a
-	ld a, [W_PLAYERMONID]
+	ld a, [wBattleMonSpecies]
 	ld [wHPBarMaxHP], a
 
 Func_79793: ; 79793 (1e:5793)
@@ -2137,20 +2133,19 @@ Func_79793: ; 79793 (1e:5793)
 	call LoadFrontSpriteByMonIndex
 	jr .asm_797d3
 .asm_797b0
-	ld a, [wcfd9]
+	ld a, [wBattleMonSpecies2]
 	push af
 	ld a, [wHPBarMaxHP + 1]
-	ld [wcfd9], a
+	ld [wBattleMonSpecies2], a
 	ld [wd0b5], a
 	call GetMonHeader
-	ld a, $4
-	call Predef ; indirect jump to LoadMonBackSprite (3f103 (f:7103))
+	predef LoadMonBackPic
 	xor a
 	call Func_79842
 	call Func_79820
 	call Func_79aae
 	pop af
-	ld [wcfd9], a
+	ld [wBattleMonSpecies2], a
 .asm_797d3
 	ld b, $1
 	jp GoPAL_SET
@@ -2291,10 +2286,10 @@ Func_7986f: ; 7986f (1e:586f)
 	ld a,[H_WHOSETURN]
 	and a
 	jr nz,.next
-	ld a,[W_PLAYERMONID] ; get number of current monster
+	ld a,[wBattleMonSpecies] ; get number of current monster
 	jr .Continue
 .next
-	ld a,[wcfe5]
+	ld a,[wEnemyMonSpecies]
 .Continue
 	push hl
 	call GetCryData
@@ -2751,22 +2746,22 @@ Unknown_79d63: ; 79d63 (1e:5d63)
 	db $00,$84,$06,$81,$02,$88,$01,$83,$05,$89,$09,$80,$07,$87,$03,$82,$04,$85,$08,$86
 
 AnimationShakeEnemyHUD: ; 79d77 (1e:5d77)
-	ld de, $9310
-	ld hl, $8000
-	ld bc, $0031
+	ld de, vBackPic
+	ld hl, vSprites
+	ld bc, 7 * 7
 	call CopyVideoData
 	xor a
 	ld [$ffae], a
-	ld hl, $9800
+	ld hl, vBGMap0
 	call Func_79e0d
 	ld a, $90
 	ld [$ffb0], a
-	ld hl, $9b20
+	ld hl, vBGMap0 + $320
 	call Func_79e0d
 	ld a, $38
 	ld [$ffb0], a
 	call Func_792fd
-	ld hl, $9800
+	ld hl, vBGMap0
 	call Func_79e0d
 	call AnimationHideMonPic
 	call Delay3
@@ -2776,17 +2771,17 @@ AnimationShakeEnemyHUD: ; 79d77 (1e:5d77)
 	call ClearSprites
 	ld a, $90
 	ld [$ffb0], a
-	ld hl, $9c00
+	ld hl, vBGMap1
 	call Func_79e0d
 	xor a
 	ld [$ffb0], a
 	call SaveScreenTilesToBuffer1
-	ld hl, $9800
+	ld hl, vBGMap0
 	call Func_79e0d
 	call ClearScreen
 	call Delay3
 	call LoadScreenTilesFromBuffer1
-	ld hl, $9c00
+	ld hl, vBGMap1
 	jp Func_79e0d
 
 Func_79dda: ; 79dda (1e:5dda)

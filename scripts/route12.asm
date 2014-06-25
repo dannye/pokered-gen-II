@@ -36,8 +36,7 @@ Route12Script0: ; 59619 (16:5619)
 	ld [W_CURENEMYLVL], a ; W_CURENEMYLVL
 	ld a, $1d
 	ld [wcc4d], a
-	ld a, $11
-	call Predef ; indirect jump to RemoveMissableObject (f1d7 (3:71d7))
+	predef HideObject
 	ld a, $3
 	ld [W_ROUTE12CURSCRIPT], a
 	ld [W_CURMAPSCRIPT], a

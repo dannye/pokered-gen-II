@@ -89,7 +89,7 @@ tileset: MACRO
 INDOOR  EQU 0
 CAVE    EQU 1
 OUTDOOR EQU 2
-	
+
 ; macro for two nibbles
 dn: MACRO
 	db (\1 << 4 | \2)
@@ -138,13 +138,23 @@ TX_BCD: MACRO
 	ENDM
 
 ; Predef macro.
-PREDEF: MACRO
-	ld a, (\1 - PredefPointers) / 3
+add_predef: MACRO
+\1Predef::
+	db BANK(\1)
+	dw \1
+	ENDM
+
+predef_id: MACRO
+	ld a, (\1Predef - PredefPointers) / 3
+	ENDM
+
+predef: MACRO
+	predef_id \1
 	call Predef
 	ENDM
-	
-PREDEF_JUMP: MACRO
-	ld a, (\1 - PredefPointers) / 3
+
+predef_jump: MACRO
+	predef_id \1
 	jp Predef
 	ENDM
 
@@ -164,41 +174,6 @@ CH5		EQU 5
 CH6		EQU 6
 CH7		EQU 7
 
-;Note Pitch
-C_		EQU $0
-C#		EQU $1
-D_		EQU $2
-D#		EQU $3
-E_		EQU $4
-F_		EQU $5
-F#		EQU $6
-G_		EQU $7
-G#		EQU $8
-A_		EQU $9
-A#		EQU $A
-B_		EQU $B
-
-;drum instruments
-snare1		EQU $01
-snare2		EQU $02
-snare3		EQU $03
-snare4		EQU $04
-snare5		EQU $05
-triangle1	EQU $06
-triangle2	EQU $07
-snare6		EQU $08
-snare7		EQU $09
-snare8		EQU $0a
-snare9		EQU $0b
-cymbal1		EQU $0c
-cymbal2		EQU $0d
-cymbal3		EQU $0e
-mutedsnare1	EQU $0f
-triangle3	EQU $10
-mutedsnare2	EQU $11
-mutedsnare3	EQU $12
-mutedsnare4	EQU $13
-
 unknownsfx0x10: MACRO
 	db $10
 	db \1
@@ -217,15 +192,149 @@ unknownnoise0x20: MACRO
 	db \3
 ENDM
 
-;format: note pitch, length (in 16ths)
-note: MACRO
-	db (\1 << 4) | (\2 - 1)
+;format: pitch length (in 16ths)
+C_: MACRO
+	db $00 | (\1 - 1)
 ENDM
 
-;format: dnote length (in 16ths), instrument
-dnote: MACRO
+C#: MACRO
+	db $10 | (\1 - 1)
+ENDM
+
+D_: MACRO
+	db $20 | (\1 - 1)
+ENDM
+
+D#: MACRO
+	db $30 | (\1 - 1)
+ENDM
+
+E_: MACRO
+	db $40 | (\1 - 1)
+ENDM
+
+F_: MACRO
+	db $50 | (\1 - 1)
+ENDM
+
+F#: MACRO
+	db $60 | (\1 - 1)
+ENDM
+
+G_: MACRO
+	db $70 | (\1 - 1)
+ENDM
+
+G#: MACRO
+	db $80 | (\1 - 1)
+ENDM
+
+A_: MACRO
+	db $90 | (\1 - 1)
+ENDM
+
+A#: MACRO
+	db $A0 | (\1 - 1)
+ENDM
+
+B_: MACRO
 	db $B0 | (\1 - 1)
-	db \2
+ENDM
+
+;format: instrument length (in 16ths)
+snare1: MACRO
+	db $B0 | (\1 - 1)
+	db $01
+ENDM
+
+snare2: MACRO
+	db $B0 | (\1 - 1)
+	db $02
+ENDM
+
+snare3: MACRO
+	db $B0 | (\1 - 1)
+	db $03
+ENDM
+
+snare4: MACRO
+	db $B0 | (\1 - 1)
+	db $04
+ENDM
+
+snare5: MACRO
+	db $B0 | (\1 - 1)
+	db $05
+ENDM
+
+triangle1: MACRO
+	db $B0 | (\1 - 1)
+	db $06
+ENDM
+
+triangle2: MACRO
+	db $B0 | (\1 - 1)
+	db $07
+ENDM
+
+snare6: MACRO
+	db $B0 | (\1 - 1)
+	db $08
+ENDM
+
+snare7: MACRO
+	db $B0 | (\1 - 1)
+	db $09
+ENDM
+
+snare8: MACRO
+	db $B0 | (\1 - 1)
+	db $0A
+ENDM
+
+snare9: MACRO
+	db $B0 | (\1 - 1)
+	db $0B
+ENDM
+
+cymbal1: MACRO
+	db $B0 | (\1 - 1)
+	db $0C
+ENDM
+
+cymbal2: MACRO
+	db $B0 | (\1 - 1)
+	db $0D
+ENDM
+
+cymbal3: MACRO
+	db $B0 | (\1 - 1)
+	db $0E
+ENDM
+
+mutedsnare1: MACRO
+	db $B0 | (\1 - 1)
+	db $0F
+ENDM
+
+triangle3: MACRO
+	db $B0 | (\1 - 1)
+	db $10
+ENDM
+
+mutedsnare2: MACRO
+	db $B0 | (\1 - 1)
+	db $11
+ENDM
+
+mutedsnare3: MACRO
+	db $B0 | (\1 - 1)
+	db $12
+ENDM
+
+mutedsnare4: MACRO
+	db $B0 | (\1 - 1)
+	db $13
 ENDM
 
 ;format: rest length (in 16ths)
@@ -247,7 +356,7 @@ octave: MACRO
 	db $E8 - \1
 ENDM
 
-togglecall: MACRO
+toggleperfectpitch: MACRO
 	db $E8
 ENDM
 
@@ -271,18 +380,18 @@ ENDM
 
 tempo: MACRO
 	db $ED
-	db \1
-	db \2
+	db \1 / $100
+	db \1 % $100
 ENDM
 
-unknownmusic0xee: MACRO
+stereopanning: MACRO
 	db $EE
 	db \1
 ENDM
 
-stereopanning: MACRO
+volume: MACRO
 	db $F0
-	db \1
+	db (\1 << 4) | \2
 ENDM
 
 executemusic: MACRO

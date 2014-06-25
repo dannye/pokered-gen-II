@@ -30,7 +30,7 @@ asm_ef82: ; ef82 (3:6f82)
 	ld a, $1
 	ld [wcd6a], a
 	ld a, [wWhichPokemon] ; wWhichPokemon
-	ld hl, W_PARTYMON1NAME ; W_PARTYMON1NAME
+	ld hl, wPartyMonNicks ; wPartyMonNicks
 	call GetPartyMonName
 	ld hl, wd730
 	set 6, [hl]
@@ -80,22 +80,22 @@ AnimateCutTree: ; eff7 (3:6ff7)
 	cp $52
 	jr z, .asm_f020
 	ld de, Overworld_GFX + $2d0 ; $42d0 ; cuttable tree sprite top row
-	ld hl, $8fc0
+	ld hl, vChars1 + $7c0
 	ld bc, (BANK(Overworld_GFX) << 8) + $02
 	call CopyVideoData
 	ld de, Overworld_GFX + $3d0 ; $43d0 ; cuttable tree sprite bottom row
-	ld hl, $8fe0
+	ld hl, vChars1 + $7e0
 	ld bc, (BANK(Overworld_GFX) << 8) + $02
 	call CopyVideoData
 	jr asm_f055
 .asm_f020
-	ld hl, $8fc0
+	ld hl, vChars1 + $7c0
 	call LoadCutTreeOAM
-	ld hl, $8fd0
+	ld hl, vChars1 + $7d0
 	call LoadCutTreeOAM
-	ld hl, $8fe0
+	ld hl, vChars1 + $7e0
 	call LoadCutTreeOAM
-	ld hl, $8ff0
+	ld hl, vChars1 + $7f0
 	call LoadCutTreeOAM
 	call asm_f055
 	ld hl, wOAMBuffer + $93

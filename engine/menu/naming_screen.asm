@@ -1,4 +1,4 @@
-AskForMonNickname: ; 64eb (1:64eb)
+AskName: ; 64eb (1:64eb)
 	call SaveScreenTilesToBuffer1
 	call GetPredefRegisters
 	push hl
@@ -67,7 +67,7 @@ Func_655c: ; 655c (1:655c)
 	ld a, [wcf4b]
 	cp $50
 	jr z, .asm_6594
-	ld hl, W_PARTYMON1NAME ; W_PARTYMON1NAME
+	ld hl, wPartyMonNicks ; wPartyMonNicks
 	ld bc, $b
 	ld a, [wWhichPokemon] ; wWhichPokemon
 	call AddNTimes
@@ -325,7 +325,7 @@ DisplayNamingScreen: ; 6596 (1:6596)
 
 LoadEDTile: ; 675b (1:675b)
 	ld de, ED_Tile
-	ld hl, $8f00
+	ld hl, vFont + $700
 	ld bc, $1
 	jp CopyVideoDataDouble
 

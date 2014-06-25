@@ -2,11 +2,11 @@ Func_137aa: ; 137aa (4:77aa)
 	ld a, [W_ISLINKBATTLE] ; W_ISLINKBATTLE
 	cp $4
 	jr nz, .asm_137eb
-	ld a, [W_ENEMYMONNUMBER] ; W_ENEMYMONNUMBER
-	ld hl, wd8a8
-	ld bc, $2c
+	ld a, [wEnemyMonPartyPos]
+	ld hl, wEnemyMon1Status
+	ld bc, wEnemyMon2 - wEnemyMon1
 	call AddNTimes
-	ld a, [W_ENEMYMONSTATUS] ; wcfe9
+	ld a, [wEnemyMonStatus] ; wcfe9
 	ld [hl], a
 	call ClearScreen
 	callab Func_372d6
@@ -36,15 +36,13 @@ Func_137aa: ; 137aa (4:77aa)
 	jr z, .asm_1380a
 	ld de, wPlayerMoney + 2 ; wd349
 	ld c, $3
-	ld a, $b ; AddBCDPredef
-	call Predef
+	predef AddBCDPredef
 	ld hl, PickUpPayDayMoneyText
 	call PrintText
 .asm_1380a
 	xor a
 	ld [wccd4], a
-	ld a, $2a
-	call Predef ; indirect jump to Func_3ad1c (3ad1c (e:6d1c))
+	predef Func_3ad1c
 .asm_13813
 	xor a
 	ld [wd083], a
@@ -151,7 +149,7 @@ Func_13870: ; 13870 (4:7870)
 	ld a, [Coord]
 	cp $14
 	jr nz, .asm_138e5
-	ld hl, W_WATERMONS ; wd8a5 (aliases: W_ENEMYMON1HP)
+	ld hl, W_WATERMONS ; wd8a5 (aliases: wEnemyMon1HP)
 .asm_138e5
 	ld b, $0
 	add hl, bc
@@ -159,11 +157,11 @@ Func_13870: ; 13870 (4:7870)
 	ld [W_CURENEMYLVL], a ; W_CURENEMYLVL
 	ld a, [hl]
 	ld [wcf91], a
-	ld [W_ENEMYMONID], a
+	ld [wEnemyMonSpecies2], a
 	ld a, [wd0db]
 	and a
 	jr z, .asm_13916
-	ld a, [W_PARTYMON1_LEVEL] ; W_PARTYMON1_LEVEL
+	ld a, [wPartyMon1Level] ; wPartyMon1Level
 	ld b, a
 	ld a, [W_CURENEMYLVL] ; W_CURENEMYLVL
 	cp b
@@ -203,10 +201,10 @@ RecoilEffect_: ; 1392c (4:792c)
 	ld a, [H_WHOSETURN] ; $fff3
 	and a
 	ld a, [W_PLAYERMOVENUM] ; wcfd2
-	ld hl, W_PLAYERMONMAXHP ; wd023
+	ld hl, wBattleMonMaxHP ; wd023
 	jr z, .asm_1393d
 	ld a, [W_ENEMYMOVENUM] ; W_ENEMYMOVENUM
-	ld hl, W_ENEMYMONMAXHP ; W_ENEMYMONMAXHP
+	ld hl, wEnemyMonMaxHP ; wEnemyMonMaxHP
 .asm_1393d
 	ld d, a
 	ld a, [W_DAMAGE] ; W_DAMAGE
@@ -263,8 +261,7 @@ RecoilEffect_: ; 1392c (4:792c)
 	xor a
 .asm_13990
 	ld [wListMenuID], a ; wListMenuID
-	ld a, $48
-	call Predef ; indirect jump to UpdateHPBar (fa1d (3:7a1d))
+	predef UpdateHPBar2
 	ld hl, HitWithRecoilText ; $799e
 	jp PrintText
 HitWithRecoilText: ; 1399e (4:799e)
@@ -272,8 +269,8 @@ HitWithRecoilText: ; 1399e (4:799e)
 	db "@"
 
 ConversionEffect_: ; 139a3 (4:79a3)
-	ld hl, W_ENEMYMONTYPE1
-	ld de, W_PLAYERMONTYPE1
+	ld hl, wEnemyMonType1
+	ld de, wBattleMonType1
 	ld a, [H_WHOSETURN]
 	and a
 	ld a, [W_ENEMYBATTSTATUS1]
@@ -313,17 +310,17 @@ HazeEffect_: ; 139da (4:79da)
 	ld hl, wEnemyMonAttackMod
 	call Func_13a43
 	ld hl, wcd12
-	ld de, W_PLAYERMONATK
+	ld de, wBattleMonAttack
 	call Func_13a4a
 	ld hl, wcd26
-	ld de, W_ENEMYMONATTACK
+	ld de, wEnemyMonAttack
 	call Func_13a4a
-	ld hl, W_ENEMYMONSTATUS
+	ld hl, wEnemyMonStatus
 	ld de, wEnemySelectedMove
 	ld a, [H_WHOSETURN]
 	and a
 	jr z, .asm_13a09
-	ld hl, W_PLAYERMONSTATUS
+	ld hl, wBattleMonStatus
 	dec de
 
 .asm_13a09

@@ -5,7 +5,7 @@ SetDefaultNames: ; 60ca (1:60ca)
 	push af
 	ld a, [wd732]
 	push af
-	ld hl, W_PLAYERNAME ; wd158
+	ld hl, wPlayerName ; wd158
 	ld bc, $d8a
 	xor a
 	call FillMemory
@@ -23,7 +23,7 @@ SetDefaultNames: ; 60ca (1:60ca)
 	and a
 	call z, Func_5bff
 	ld hl, NintenText
-	ld de, W_PLAYERNAME ; wd158
+	ld de, wPlayerName ; wd158
 	ld bc, $b
 	call CopyData
 	ld hl, SonyText
@@ -41,8 +41,7 @@ OakSpeech: ; 6115 (1:6115)
 	call ClearScreen
 	call LoadTextBoxTilePatterns
 	call SetDefaultNames
-	ld a,$18
-	call Predef ; indirect jump to InitializePlayerData
+	predef InitPlayerData2
 	ld hl,wNumBoxItems
 	ld a,POTION
 	ld [wcf91],a
@@ -117,7 +116,7 @@ Func_61bc: ; 61bc (1:61bc)
 	ld c,4
 	call DelayFrames
 	ld de,RedSprite ; $4180
-	ld hl,$8000
+	ld hl,vSprites
 	ld bc,(BANK(RedSprite) << 8) | $0C
 	call CopyVideoData
 	ld de,ShrinkPic1
@@ -131,7 +130,7 @@ Func_61bc: ; 61bc (1:61bc)
 	call ResetPlayerSpriteData
 	ld a,[H_LOADEDROMBANK]
 	push af
-	ld a,2
+	ld a, BANK(Music_PalletTown)
 	ld [wc0ef],a
 	ld [wc0f0],a
 	ld a,$A
@@ -219,9 +218,9 @@ IntroPredef3B: ; 62a4 (1:62a4)
 	call UncompressSpriteFromDE
 	ld hl,S_SPRITEBUFFER1
 	ld de,$A000
-	ld bc,$0310
+	ld bc,$310
 	call CopyData
-	ld de,$9000
+	ld de,vFrontPic
 	call InterlaceMergeSpriteBuffers
 	pop bc
 	ld a,c
@@ -234,5 +233,4 @@ IntroPredef3B: ; 62a4 (1:62a4)
 .next
 	xor a
 	ld [$FFE1],a
-	ld a,1
-	jp Predef
+	predef_jump Func_3f0c6

@@ -45,7 +45,7 @@ Func_70510: ; 70510 (1c:4510)
 .asm_70568
 	pop hl
 	ld de, BirdSprite ; $4d80
-	ld hl, $8000
+	ld hl, vNPCSprites
 	ld bc, (BANK(BirdSprite) << 8) + $0c
 	call CopyVideoData
 	call Func_706d7
@@ -89,7 +89,7 @@ Func_705aa: ; 705aa (1c:45aa)
 	ld [hl], a
 	jp Func_70755
 
-_DoFlyOrTeleportAwayGraphics: ; 705ba (1c:45ba)
+_LeaveMapAnim: ; 705ba (1c:45ba)
 	call Func_706ef
 	call Func_70787
 	ld a, b
@@ -244,11 +244,11 @@ Func_706ae: ; 706ae (1c:46ae)
 
 Func_706d7: ; 706d7 (1c:46d7)
 	ld de, BirdSprite ; $4d80
-	ld hl, $8000
+	ld hl, vNPCSprites
 	ld bc, (BANK(BirdSprite) << 8) + $0c
 	call CopyVideoData
 	ld de, BirdSprite + $c0 ; $4e40 ; moving amination sprite
-	ld hl, $8800
+	ld hl, vNPCSprites2
 	ld bc, (BANK(BirdSprite) << 8) + $0c
 	jp CopyVideoData
 
@@ -379,7 +379,7 @@ Func_707b6: ; 707b6 (1c:47b6)
 	ld hl, wd736
 	set 6, [hl]
 	ld de, RedSprite ; $4180
-	ld hl, $8000
+	ld hl, vNPCSprites
 	ld bc, (BANK(RedSprite) << 8) + $0c
 	call CopyVideoData
 	ld a, $4
@@ -421,8 +421,7 @@ Func_707b6: ; 707b6 (1c:47b6)
 	xor a
 	ld [hli], a
 	ld [hl], a
-	ld a, $4c
-	call Predef ; indirect jump to PrintEmotionBubble (17c47 (5:7c47))
+	predef EmotionBubble
 	ld a, [wSpriteStateData1 + 2]
 	cp $4
 	jr nz, .asm_70833
@@ -468,20 +467,20 @@ FishingRodGfxProperties: ; 70856 (1c:4856)
 
 RedFishingTiles: ; 70866 (1c:4866)
 	dw RedFishingTilesFront
-	db $02, $1E
-	dw $8020
+	db 2, BANK(RedFishingTilesFront)
+	dw vNPCSprites + $20
 
 	dw RedFishingTilesBack
-	db $02, $1E
-	dw $8060
+	db 2, BANK(RedFishingTilesBack)
+	dw vNPCSprites + $60
 
 	dw RedFishingTilesSide
-	db $02, $1E
-	dw $80A0
+	db 2, BANK(RedFishingTilesSide)
+	dw vNPCSprites + $a0
 
 	dw RedFishingRodTiles
-	db $03, $1E
-	dw $8FD0
+	db 3, BANK(RedFishingRodTiles)
+	dw vNPCSprites2 + $7d0
 
 _HandleMidJump: ; 7087e (1c:487e)
 	ld a, [wd714]

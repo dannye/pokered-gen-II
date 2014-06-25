@@ -1,5 +1,16 @@
 INCLUDE "constants.asm"
 
+NPC_SPRITES_1 EQU $4
+NPC_SPRITES_2 EQU $5
+
+GFX EQU $4
+
+PICS_1 EQU $9
+PICS_2 EQU $A
+PICS_3 EQU $B
+PICS_4 EQU $C
+PICS_5 EQU $D
+
 
 INCLUDE "home.asm"
 
@@ -38,8 +49,7 @@ Func_40b0::
 	ld [$ffa3], a
 	ld a, 2
 	ld [$ffa4], a
-	ld a, $d ; DivideBCDPredef
-	call Predef
+	predef DivideBCDPredef3
 	ld a, [$ffa2]
 	ld [wPlayerMoney], a
 	ld a, [$ffa2 + 1]
@@ -54,8 +64,7 @@ Func_40b0::
 	set 6, [hl]
 	ld a, %11111111
 	ld [wJoyIgnore], a
-	ld a, $7 ; HealParty
-	jp Predef
+	predef_jump HealParty
 
 	ds $149
 
@@ -78,7 +87,7 @@ LoadMonData_:
 ; Return monster id at wcf91 and its data at wcf98.
 ; Also load base stats at W_MONHDEXNUM for convenience.
 
-	ld a, [W_DAYCAREMONDATA]
+	ld a, [wDayCareMonSpecies]
 	ld [wcf91], a
 	ld a, [wcc49]
 	cp 3
@@ -93,8 +102,8 @@ LoadMonData_:
 	ld [wd0b5], a ; input for GetMonHeader
 	call GetMonHeader
 
-	ld hl, W_PARTYMON1DATA
-	ld bc, 44
+	ld hl, wPartyMons
+	ld bc, wPartyMon2 - wPartyMon1
 	ld a, [wcc49]
 	cp 1
 	jr c, .getMonEntry
@@ -103,11 +112,11 @@ LoadMonData_:
 	jr z, .getMonEntry
 
 	cp 2
-	ld hl, W_BOXMON1DATA
-	ld bc, 33
+	ld hl, wBoxMons
+	ld bc, wBoxMon2 - wBoxMon1
 	jr z, .getMonEntry
 
-	ld hl, W_DAYCAREMONDATA
+	ld hl, wDayCareMon
 	jr .copyMonData
 
 .getMonEntry
@@ -460,7 +469,7 @@ TestBattle:
 	set 0, [hl]
 
 	; Reset the party.
-	ld hl, W_NUMINPARTY
+	ld hl, wPartyCount
 	xor a
 	ld [hli], a
 	dec a
@@ -475,15 +484,14 @@ TestBattle:
 	xor a
 	ld [wcc49], a
 	ld [W_CURMAP], a
-	call AddPokemonToParty
+	call AddPartyMon
 
 	; Fight against a
 	; level 20 Rhydon.
 	ld a, RHYDON
 	ld [W_CUROPPONENT], a
 
-	ld a, $2c ; PREDEF_BATTLE
-	call Predef
+	predef InitOpponent
 
 	; When the battle ends,
 	; do it all again.
@@ -499,7 +507,7 @@ INCLUDE "engine/cable_club.asm"
 
 LoadTrainerInfoTextBoxTiles: ; 5ae6 (1:5ae6)
 	ld de, TrainerInfoTextBoxTileGraphics ; $7b98
-	ld hl, $9760
+	ld hl, vChars2 + $760
 	ld bc, (BANK(TrainerInfoTextBoxTileGraphics) << 8) +$09
 	jp CopyVideoData
 
@@ -509,8 +517,7 @@ INCLUDE "engine/oak_speech.asm"
 
 Func_62ce: ; 62ce (1:62ce)
 	call Func_62ff
-	ld a,$19
-	call Predef
+	predef Func_c754
 	ld hl,wd732
 	bit 2,[hl]
 	res 2,[hl]
@@ -674,7 +681,7 @@ SetIshiharaTeam: ; 64ca (1:64ca)
 	ld a, [de]
 	ld [W_CURENEMYLVL], a
 	inc de
-	call AddPokemonToParty
+	call AddPartyMon
 	jr .loop
 
 IshiharaTeam: ; 64df (1:64df)
@@ -703,8 +710,7 @@ SubtractAmountPaidFromMoney_: ; 6b21 (1:6b21)
 	ld de,wPlayerMoney + 2
 	ld hl,$ffa1 ; total price of items
 	ld c,3 ; length of money in bytes
-	ld a,$0c
-	call Predef ; subtract total price from money
+	predef SubBCDPredef ; subtract total price from money
 	ld a,$13
 	ld [wd125],a
 	call DisplayTextBoxID ; redraw money text box
@@ -1027,7 +1033,7 @@ DrawStartMenu: ; 710b (1:710b)
 	call PrintStartMenuItem
 	ld de,StartMenuItemText
 	call PrintStartMenuItem
-	ld de,W_PLAYERNAME ; player's name
+	ld de,wPlayerName ; player's name
 	call PrintStartMenuItem
 	ld a,[wd72e]
 	bit 6,a ; is the player using the link feature?
@@ -1744,7 +1750,7 @@ PokemonMenuEntries: ; 77c2 (1:77c2)
 
 GetMonFieldMoves: ; 77d6 (1:77d6)
 	ld a, [wWhichPokemon] ; wWhichPokemon
-	ld hl, W_PARTYMON1_MOVE1 ; W_PARTYMON1_MOVE1
+	ld hl, wPartyMon1Moves ; wPartyMon1Moves
 	ld bc, $2c
 	call AddNTimes
 	ld d, h
@@ -1818,7 +1824,7 @@ INCLUDE "engine/battle/1.asm"
 INCLUDE "engine/menu/players_pc.asm"
 
 _RemovePokemon: ; 7b68 (1:7b68)
-	ld hl, W_NUMINPARTY ; W_NUMINPARTY
+	ld hl, wPartyCount ; wPartyCount
 	ld a, [wcf95]
 	and a
 	jr z, .asm_7b74
@@ -1840,12 +1846,12 @@ _RemovePokemon: ; 7b68 (1:7b68)
 	ld [hli], a
 	inc a
 	jr nz, .asm_7b81
-	ld hl, W_PARTYMON1OT ; wd273
+	ld hl, wPartyMonOT ; wd273
 	ld d, $5
 	ld a, [wcf95]
 	and a
 	jr z, .asm_7b97
-	ld hl, W_BOXMON1OT
+	ld hl, wBoxMonOT
 	ld d, $13
 .asm_7b97
 	ld a, [wWhichPokemon] ; wWhichPokemon
@@ -1860,20 +1866,20 @@ _RemovePokemon: ; 7b68 (1:7b68)
 	ld e, l
 	ld bc, $b
 	add hl, bc
-	ld bc, W_PARTYMON1NAME ; W_PARTYMON1NAME
+	ld bc, wPartyMonNicks ; wPartyMonNicks
 	ld a, [wcf95]
 	and a
 	jr z, .asm_7bb8
-	ld bc, W_BOXMON1NAME
+	ld bc, wBoxMonNicks
 .asm_7bb8
 	call CopyDataUntil
-	ld hl, W_PARTYMON1_NUM ; W_PARTYMON1_NUM (aliases: W_PARTYMON1DATA)
-	ld bc, $2c
+	ld hl, wPartyMons
+	ld bc, wPartyMon2 - wPartyMon1
 	ld a, [wcf95]
 	and a
 	jr z, .asm_7bcd
-	ld hl, W_BOXMON1DATA
-	ld bc, $21
+	ld hl, wBoxMons
+	ld bc, wBoxMon2 - wBoxMon1
 .asm_7bcd
 	ld a, [wWhichPokemon] ; wWhichPokemon
 	call AddNTimes
@@ -1882,21 +1888,21 @@ _RemovePokemon: ; 7b68 (1:7b68)
 	ld a, [wcf95]
 	and a
 	jr z, .asm_7be4
-	ld bc, $21
+	ld bc, wBoxMon2 - wBoxMon1
 	add hl, bc
-	ld bc, W_BOXMON1OT
+	ld bc, wBoxMonOT
 	jr .asm_7beb
 .asm_7be4
-	ld bc, $2c
+	ld bc, wPartyMon2 - wPartyMon1
 	add hl, bc
-	ld bc, W_PARTYMON1OT ; wd273
+	ld bc, wPartyMonOT ; wd273
 .asm_7beb
 	call CopyDataUntil
-	ld hl, W_PARTYMON1NAME ; W_PARTYMON1NAME
+	ld hl, wPartyMonNicks ; wPartyMonNicks
 	ld a, [wcf95]
 	and a
 	jr z, .asm_7bfa
-	ld hl, W_BOXMON1NAME
+	ld hl, wBoxMonNicks
 .asm_7bfa
 	ld bc, $b
 	ld a, [wWhichPokemon] ; wWhichPokemon
@@ -1909,29 +1915,26 @@ _RemovePokemon: ; 7b68 (1:7b68)
 	ld a, [wcf95]
 	and a
 	jr z, .asm_7c15
-	ld bc, wdee2
+	ld bc, wBoxMonNicksEnd
 .asm_7c15
 	jp CopyDataUntil
 
 Func_7c18: ; 7c18 (1:7c18)
 	ld hl, wd730
 	set 6, [hl]
-	ld a, $3d
-	call Predef
+	predef ShowPokedexData
 	ld hl, wd730
 	res 6, [hl]
 	call ReloadMapData
 	ld c, $a
 	call DelayFrames
-	ld a, $3a
-	call Predef
+	predef IndexToPokedex
 	ld a, [wd11e]
 	dec a
 	ld c, a
 	ld b, $1
 	ld hl, wPokedexSeen
-	ld a, $10
-	call Predef
+	predef FlagActionPredef
 	ld a, $1
 	ld [wcc3c], a
 	ret
@@ -1955,57 +1958,7 @@ GotPaletteID:
 
 SECTION "bank3",ROMX,BANK[$3]
 
-_Joypad::
-	ld a, [hJoyInput]
-	cp A_BUTTON + B_BUTTON + SELECT + START ; soft reset
-	jp z, TrySoftReset
-	ld b, a
-	ld a, [hJoyHeldLast]
-	ld e, a
-	xor b
-	ld d, a
-	and e
-	ld [hJoyReleased], a
-	ld a, d
-	and b
-	ld [hJoyPressed], a
-	ld a, b
-	ld [hJoyHeldLast], a
-	ld a, [wd730]
-	bit 5, a
-	jr nz, DiscardButtonPresses
-	ld a, [hJoyHeldLast]
-	ld [hJoyHeld], a
-	ld a, [wJoyIgnore]
-	and a
-	ret z
-	cpl
-	ld b, a
-	ld a, [hJoyHeld]
-	and b
-	ld [hJoyHeld], a
-	ld a, [hJoyPressed]
-	and b
-	ld [hJoyPressed], a
-	ret
-
-DiscardButtonPresses:
-	xor a
-	ld [hJoyHeld], a
-	ld [hJoyPressed], a
-	ld [hJoyReleased], a
-	ret
-
-TrySoftReset:
-	call DelayFrame
-	; reset joypad (to make sure the
-	; player is really trying to reset)
-	ld a, $30
-	ld [rJOYP], a
-	ld hl, hSoftReset
-	dec [hl]
-	jp z, SoftReset
-	jp Joypad
+INCLUDE "engine/joypad.asm"
 
 INCLUDE "data/map_songs.asm"
 
@@ -2502,7 +2455,7 @@ Func_c69c: ; c69c (3:469c)
 	ld a, [wd730]
 	add a
 	jp c, .asm_c74f
-	ld a, [W_NUMINPARTY] ; W_NUMINPARTY
+	ld a, [wPartyCount] ; wPartyCount
 	and a
 	jp z, .asm_c74f
 	call Func_c8de
@@ -2510,8 +2463,8 @@ Func_c69c: ; c69c (3:469c)
 	and $3
 	jp nz, .asm_c74f
 	ld [wWhichPokemon], a ; wWhichPokemon
-	ld hl, W_PARTYMON1_STATUS ; W_PARTYMON1_STATUS
-	ld de, W_PARTYMON1 ; W_PARTYMON1
+	ld hl, wPartyMon1Status ; wPartyMon1Status
+	ld de, wPartySpecies ; wPartySpecies
 .asm_c6be
 	ld a, [hl]
 	and $8
@@ -2543,7 +2496,7 @@ Func_c69c: ; c69c (3:469c)
 	ld [wd11e], a
 	push de
 	ld a, [wWhichPokemon] ; wWhichPokemon
-	ld hl, W_PARTYMON1NAME ; W_PARTYMON1NAME
+	ld hl, wPartyMonNicks ; wPartyMonNicks
 	call GetPartyMonName
 	xor a
 	ld [wJoyIgnore], a
@@ -2569,8 +2522,8 @@ Func_c69c: ; c69c (3:469c)
 	pop hl
 	jr .asm_c6be
 .asm_c70e
-	ld hl, W_PARTYMON1_STATUS ; W_PARTYMON1_STATUS
-	ld a, [W_NUMINPARTY] ; W_NUMINPARTY
+	ld hl, wPartyMon1Status ; wPartyMon1Status
+	ld a, [wPartyCount] ; wPartyCount
 	ld d, a
 	ld e, $0
 .asm_c717
@@ -2586,13 +2539,11 @@ Func_c69c: ; c69c (3:469c)
 	and a
 	jr z, .asm_c733
 	ld b, $2
-	ld a, $1f
-	call Predef ; indirect jump to Func_480eb (480eb (12:40eb))
+	predef Func_480eb
 	ld a, (SFX_02_43 - SFX_Headers_02) / 3
 	call PlaySound
 .asm_c733
-	ld a, $14
-	call Predef ; indirect jump to AnyPlayerPokemonAliveCheck (3ca83 (f:4a83))
+	predef AnyPartyAlive
 	ld a, d
 	and a
 	jr nz, .asm_c74f
@@ -2675,7 +2626,7 @@ Func_c8de: ; c8de (3:48de)
 	ld a, [W_DAYCARE_IN_USE]
 	and a
 	ret z
-	ld hl, wda6f
+	ld hl, wDayCareMonExp + 2
 	inc [hl]
 	ret nz
 	dec hl
@@ -2692,7 +2643,7 @@ Func_c8de: ; c8de (3:48de)
 
 INCLUDE "data/hide_show_data.asm"
 
-PrintUsedStrengthText: ; cd99 (3:4d99)
+PrintStrengthTxt: ; cd99 (3:4d99)
 	ld hl, wd728
 	set 0, [hl]
 	ld hl, UsedStrengthText
@@ -3059,7 +3010,7 @@ DrawBadges: ; ea03 (3:6a03)
 	db $20, $28, $30, $38, $40, $48, $50, $58
 
 GymLeaderFaceAndBadgeTileGraphics: ; ea9e (3:6a9e)
-	INCBIN "gfx/badges.w16.2bpp"
+	INCBIN "gfx/badges.2bpp"
 
 Func_ee9e: ; ee9e (3:6e9e)
 	call GetPredefRegisters
@@ -3192,8 +3143,7 @@ Func_f113: ; f113 (3:7113)
 	ld c, a
 	ld b, $1
 	ld hl, W_TOWNVISITEDFLAG   ; mark town as visited (for flying)
-	ld a, $10 ; FlagActionPredef
-	call Predef
+	predef FlagActionPredef
 .notInTown
 	ld hl, MapHSPointers
 	ld a, [W_CURMAP] ; W_CURMAP
@@ -3285,7 +3235,7 @@ InitializeMissableObjectsFlags: ; f175 (3:7175)
 	jr .missableObjectsLoop
 
 ; tests if current sprite is a missable object that is hidden/has been removed
-IsMissableObjectHidden: ; f1a6 (3:71a6)
+IsObjectHidden: ; f1a6 (3:71a6)
 	ld a, [H_CURRENTSPRITEOFFSET]
 	swap a
 	ld b, a
@@ -3312,7 +3262,8 @@ IsMissableObjectHidden: ; f1a6 (3:71a6)
 
 ; adds missable object (items, leg. pokemon, etc.) to the map
 ; [wcc4d]: index of the missable object to be added (global index)
-AddMissableObject: ; f1c8 (3:71c8)
+ShowObject: ; f1c8 (3:71c8)
+ShowObject2:
 	ld hl, W_MISSABLEOBJECTFLAGS
 	ld a, [wcc4d]
 	ld c, a
@@ -3322,7 +3273,7 @@ AddMissableObject: ; f1c8 (3:71c8)
 
 ; removes missable object (items, leg. pokemon, etc.) from the map
 ; [wcc4d]: index of the missable object to be removed (global index)
-RemoveMissableObject: ; f1d7 (3:71d7)
+HideObject: ; f1d7 (3:71d7)
 	ld hl, W_MISSABLEOBJECTFLAGS
 	ld a, [wcc4d]
 	ld c, a
@@ -3432,8 +3383,7 @@ Func_f225: ; f225 (3:7225)
 	ld a, [hJoyHeld]
 	and $f0
 	ret z
-	ld a, $5a
-	call Predef ; indirect jump to Func_c60b (c60b (3:460b))
+	predef Func_c60b
 	ld a, [wd71c]
 	and a
 	jp nz, Func_f2dd
@@ -3506,8 +3456,8 @@ Func_f2dd: ; f2dd (3:72dd)
 	res 6, [hl]
 	ret
 
-_AddPokemonToParty: ; f2e5 (3:72e5)
-	ld de, W_NUMINPARTY ; W_NUMINPARTY
+_AddPartyMon: ; f2e5 (3:72e5)
+	ld de, wPartyCount ; wPartyCount
 	ld a, [wcc49]
 	and $f
 	jr z, .asm_f2f2
@@ -3530,41 +3480,40 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	inc de
 	ld a, $ff
 	ld [de], a
-	ld hl, W_PARTYMON1OT ; wd273
+	ld hl, wPartyMonOT ; wd273
 	ld a, [wcc49]
 	and $f
 	jr z, .asm_f315
-	ld hl, W_ENEMYMON1OT
+	ld hl, wEnemyMonOT
 .asm_f315
 	ld a, [$ffe4]
 	dec a
 	call SkipFixedLengthTextEntries
 	ld d, h
 	ld e, l
-	ld hl, W_PLAYERNAME ; wd158
+	ld hl, wPlayerName ; wd158
 	ld bc, $b
 	call CopyData
 	ld a, [wcc49]
 	and a
 	jr nz, .asm_f33f
-	ld hl, W_PARTYMON1NAME ; W_PARTYMON1NAME
+	ld hl, wPartyMonNicks ; wPartyMonNicks
 	ld a, [$ffe4]
 	dec a
 	call SkipFixedLengthTextEntries
 	ld a, $2
 	ld [wd07d], a
-	ld a, $4e
-	call Predef ; indirect jump to Func_64eb (64eb (1:64eb))
+	predef AskName
 .asm_f33f
-	ld hl, W_PARTYMON1_NUM ; W_PARTYMON1_NUM (aliases: W_PARTYMON1DATA)
+	ld hl, wPartyMons
 	ld a, [wcc49]
 	and $f
 	jr z, .asm_f34c
-	ld hl, wEnemyMons ; wEnemyMon1Species
+	ld hl, wEnemyMons
 .asm_f34c
 	ld a, [$ffe4]
 	dec a
-	ld bc, $2c
+	ld bc, wPartyMon2 - wPartyMon1
 	call AddNTimes
 	ld e, l
 	ld d, h
@@ -3586,8 +3535,7 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	ld a, [wcf91]
 	ld [wd11e], a
 	push de
-	ld a, $3a
-	call Predef ; indirect jump to IndexToPokedex (41010 (10:5010))
+	predef IndexToPokedex
 	pop de
 	ld a, [wd11e]
 	dec a
@@ -3643,20 +3591,20 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 .copyEnemyMonData
 	ld bc, $1b
 	add hl, bc
-	ld a, [W_ENEMYMONATKDEFIV] ; copy IVs from cur enemy mon
+	ld a, [wEnemyMonDVs] ; copy IVs from cur enemy mon
 	ld [hli], a
-	ld a, [W_ENEMYMONSPDSPCIV]
+	ld a, [wEnemyMonDVs + 1]
 	ld [hl], a
-	ld a, [W_ENEMYMONCURHP]    ; copy HP from cur enemy mon
+	ld a, [wEnemyMonHP]    ; copy HP from cur enemy mon
 	ld [de], a
 	inc de
-	ld a, [W_ENEMYMONCURHP+1]
+	ld a, [wEnemyMonHP+1]
 	ld [de], a
 	inc de
 	xor a
 	ld [de], a                 ; level (?)
 	inc de
-	ld a, [W_ENEMYMONSTATUS]   ; copy status ailments from cur enemy mon
+	ld a, [wEnemyMonStatus]   ; copy status ailments from cur enemy mon
 	ld [de], a
 	inc de
 .copyMonTypesAndMoves
@@ -3689,8 +3637,7 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	dec de
 	xor a
 	ld [wHPBarMaxHP], a
-	ld a, $3e
-	call Predef ; indirect jump to WriteMonMoves (3afb8 (e:6fb8))
+	predef WriteMonMoves
 	pop de
 	ld a, [wPlayerID]  ; set trainer ID to player ID
 	inc de
@@ -3722,7 +3669,7 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	inc de
 	inc de
 	pop hl
-	call AddPokemonToParty_WriteMovePP
+	call AddPartyMon_WriteMovePP
 	inc de
 	ld a, [W_CURENEMYLVL] ; W_CURENEMYLVL
 	ld [de], a
@@ -3730,7 +3677,7 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	ld a, [W_ISINBATTLE] ; W_ISINBATTLE
 	dec a
 	jr nz, .calcFreshStats
-	ld hl, W_ENEMYMONMAXHP ; W_ENEMYMONMAXHP
+	ld hl, wEnemyMonMaxHP ; wEnemyMonMaxHP
 	ld bc, $a
 	call CopyData          ; copy stats of cur enemy mon
 	pop hl
@@ -3748,7 +3695,7 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 LoadMovePPs: ; f473 (3:7473)
 	call GetPredefRegisters
 	; fallthrough
-AddPokemonToParty_WriteMovePP: ; f476 (3:7476)
+AddPartyMon_WriteMovePP: ; f476 (3:7476)
 	ld b, $4
 .pploop
 	ld a, [hli]     ; read move ID
@@ -3778,7 +3725,7 @@ AddPokemonToParty_WriteMovePP: ; f476 (3:7476)
 ; adds enemy mon [wcf91] (at position [wWhichPokemon] in enemy list) to own party
 ; used in the cable club trade center
 _AddEnemyMonToPlayerParty: ; f49d (3:749d)
-	ld hl, W_NUMINPARTY
+	ld hl, wPartyCount
 	ld a, [hl]
 	cp $6
 	scf
@@ -3791,41 +3738,40 @@ _AddEnemyMonToPlayerParty: ; f49d (3:749d)
 	ld a, [wcf91]
 	ld [hli], a      ; add mon as last list entry
 	ld [hl], $ff     ; write new sentinel
-	ld hl, W_PARTYMON1DATA
-	ld a, [W_NUMINPARTY]
+	ld hl, wPartyMons
+	ld a, [wPartyCount]
 	dec a
-	ld bc, W_PARTYMON2DATA - W_PARTYMON1DATA
+	ld bc, wPartyMon2 - wPartyMon1
 	call AddNTimes
 	ld e, l
 	ld d, h
 	ld hl, wcf98
 	call CopyData    ; write new mon's data (from wcf98)
-	ld hl, W_PARTYMON1OT
-	ld a, [W_NUMINPARTY]
+	ld hl, wPartyMonOT
+	ld a, [wPartyCount]
 	dec a
 	call SkipFixedLengthTextEntries
 	ld d, h
 	ld e, l
-	ld hl, W_ENEMYMON1OT
+	ld hl, wEnemyMonOT
 	ld a, [wWhichPokemon]
 	call SkipFixedLengthTextEntries
 	ld bc, $000b
 	call CopyData    ; write new mon's OT name (from an enemy mon)
-	ld hl, W_PARTYMON1NAME
-	ld a, [W_NUMINPARTY]
+	ld hl, wPartyMonNicks
+	ld a, [wPartyCount]
 	dec a
 	call SkipFixedLengthTextEntries
 	ld d, h
 	ld e, l
-	ld hl, W_ENEMYMON1NAME
+	ld hl, wEnemyMonNicks
 	ld a, [wWhichPokemon]
 	call SkipFixedLengthTextEntries
 	ld bc, $000b
 	call CopyData    ; write new mon's nickname (from an enemy mon)
 	ld a, [wcf91]
 	ld [wd11e], a
-	ld a, $3a
-	call Predef
+	predef IndexToPokedex
 	ld a, [wd11e]
 	dec a
 	ld c, a
@@ -3846,7 +3792,7 @@ Func_f51e: ; f51e (3:751e)
 	cp $2
 	jr z, .checkPartyMonSlots
 	cp $3
-	ld hl, W_DAYCAREMONDATA
+	ld hl, wDayCareMon
 	jr z, .asm_f575
 	ld hl, W_NUMINBOX ; wda80
 	ld a, [hl]
@@ -3854,7 +3800,7 @@ Func_f51e: ; f51e (3:751e)
 	jr nz, .partyOrBoxNotFull
 	jr .boxFull
 .checkPartyMonSlots
-	ld hl, W_NUMINPARTY ; W_NUMINPARTY
+	ld hl, wPartyCount ; wPartyCount
 	ld a, [hl]
 	cp $6
 	jr nz, .partyOrBoxNotFull
@@ -3869,7 +3815,7 @@ Func_f51e: ; f51e (3:751e)
 	add hl, bc
 	ld a, [wcf95]
 	cp $2
-	ld a, [W_DAYCAREMONDATA]
+	ld a, [wDayCareMon]
 	jr z, .asm_f556
 	ld a, [wcf91]
 .asm_f556
@@ -3877,12 +3823,12 @@ Func_f51e: ; f51e (3:751e)
 	ld [hl], $ff         ; write new sentinel
 	ld a, [wcf95]
 	dec a
-	ld hl, W_PARTYMON1DATA ; W_PARTYMON1_NUM
-	ld bc, W_PARTYMON2DATA - W_PARTYMON1DATA ; $2c
-	ld a, [W_NUMINPARTY] ; W_NUMINPARTY
+	ld hl, wPartyMons
+	ld bc, wPartyMon2 - wPartyMon1 ; $2c
+	ld a, [wPartyCount] ; wPartyCount
 	jr nz, .skipToNewMonEntry
-	ld hl, W_BOXMON1DATA
-	ld bc, W_BOXMON2DATA - W_BOXMON1DATA ; $21
+	ld hl, wBoxMons
+	ld bc, wBoxMon2 - wBoxMon1 ; $21
 	ld a, [W_NUMINBOX] ; wda80
 .skipToNewMonEntry
 	dec a
@@ -3893,21 +3839,21 @@ Func_f51e: ; f51e (3:751e)
 	ld d, h
 	ld a, [wcf95]
 	and a
-	ld hl, W_BOXMON1DATA
-	ld bc, W_BOXMON2DATA - W_BOXMON1DATA ; $21
+	ld hl, wBoxMons
+	ld bc, wBoxMon2 - wBoxMon1 ; $21
 	jr z, .asm_f591
 	cp $2
-	ld hl, W_DAYCAREMONDATA
+	ld hl, wDayCareMon
 	jr z, .asm_f597
-	ld hl, W_PARTYMON1DATA ; W_PARTYMON1_NUM
-	ld bc, W_PARTYMON2DATA - W_PARTYMON1DATA ; $2c
+	ld hl, wPartyMons
+	ld bc, wPartyMon2 - wPartyMon1 ; $2c
 .asm_f591
 	ld a, [wWhichPokemon] ; wWhichPokemon
 	call AddNTimes
 .asm_f597
 	push hl
 	push de
-	ld bc, $21
+	ld bc, wBoxMon2 - wBoxMon1
 	call CopyData
 	pop de
 	pop hl
@@ -3916,7 +3862,7 @@ Func_f51e: ; f51e (3:751e)
 	jr z, .asm_f5b4
 	cp $2
 	jr z, .asm_f5b4
-	ld bc, $21
+	ld bc, wBoxMon2 - wBoxMon1
 	add hl, bc
 	ld a, [hl]
 	inc de
@@ -3929,10 +3875,10 @@ Func_f51e: ; f51e (3:751e)
 	ld de, W_DAYCAREMONOT
 	jr z, .asm_f5d3
 	dec a
-	ld hl, W_PARTYMON1OT ; wd273
-	ld a, [W_NUMINPARTY] ; W_NUMINPARTY
+	ld hl, wPartyMonOT ; wd273
+	ld a, [wPartyCount] ; wPartyCount
 	jr nz, .asm_f5cd
-	ld hl, W_BOXMON1OT
+	ld hl, wBoxMonOT
 	ld a, [W_NUMINBOX] ; wda80
 .asm_f5cd
 	dec a
@@ -3940,14 +3886,14 @@ Func_f51e: ; f51e (3:751e)
 	ld d, h
 	ld e, l
 .asm_f5d3
-	ld hl, W_BOXMON1OT
+	ld hl, wBoxMonOT
 	ld a, [wcf95]
 	and a
 	jr z, .asm_f5e6
 	ld hl, W_DAYCAREMONOT
 	cp $2
 	jr z, .asm_f5ec
-	ld hl, W_PARTYMON1OT ; wd273
+	ld hl, wPartyMonOT ; wd273
 .asm_f5e6
 	ld a, [wWhichPokemon] ; wWhichPokemon
 	call SkipFixedLengthTextEntries
@@ -3959,10 +3905,10 @@ Func_f51e: ; f51e (3:751e)
 	ld de, W_DAYCAREMONNAME
 	jr z, .asm_f611
 	dec a
-	ld hl, W_PARTYMON1NAME ; W_PARTYMON1NAME
-	ld a, [W_NUMINPARTY] ; W_NUMINPARTY
+	ld hl, wPartyMonNicks ; wPartyMonNicks
+	ld a, [wPartyCount] ; wPartyCount
 	jr nz, .asm_f60b
-	ld hl, W_BOXMON1NAME
+	ld hl, wBoxMonNicks
 	ld a, [W_NUMINBOX] ; wda80
 .asm_f60b
 	dec a
@@ -3970,14 +3916,14 @@ Func_f51e: ; f51e (3:751e)
 	ld d, h
 	ld e, l
 .asm_f611
-	ld hl, W_BOXMON1NAME
+	ld hl, wBoxMonNicks
 	ld a, [wcf95]
 	and a
 	jr z, .asm_f624
 	ld hl, W_DAYCAREMONNAME
 	cp $2
 	jr z, .asm_f62a
-	ld hl, W_PARTYMON1NAME ; W_PARTYMON1NAME
+	ld hl, wPartyMonNicks ; wPartyMonNicks
 .asm_f624
 	ld a, [wWhichPokemon] ; wWhichPokemon
 	call SkipFixedLengthTextEntries
@@ -4091,8 +4037,8 @@ FlagAction:
 HealParty:
 ; Restore HP and PP.
 
-	ld hl, W_PARTYMON1
-	ld de, W_PARTYMON1_HP
+	ld hl, wPartySpecies
+	ld de, wPartyMon1HP
 .healmon
 	ld a, [hli]
 	cp $ff
@@ -4101,15 +4047,15 @@ HealParty:
 	push hl
 	push de
 
-	ld hl, $0003 ; status
+	ld hl, wPartyMon1Status - wPartyMon1HP
 	add hl, de
 	xor a
 	ld [hl], a
 
 	push de
-	ld b, $4 ; A Pokémon has 4 moves
+	ld b, NUM_MOVES ; A Pokémon has 4 moves
 .pp
-	ld hl, $0007 ; moves
+	ld hl, wPartyMon1Moves - wPartyMon1HP
 	add hl, de
 
 	ld a, [hl]
@@ -4117,7 +4063,7 @@ HealParty:
 	jr z, .nextmove
 
 	dec a
-	ld hl, $001c ; pp
+	ld hl, wPartyMon1PP - wPartyMon1HP
 	add hl, de
 
 	push hl
@@ -4150,7 +4096,7 @@ HealParty:
 	jr nz, .pp
 	pop de
 
-	ld hl, $0021 ; max hp - cur hp
+	ld hl, wPartyMon1MaxHP - wPartyMon1HP
 	add hl, de
 	ld a, [hli]
 	ld [de], a
@@ -4162,7 +4108,7 @@ HealParty:
 	pop hl
 
 	push hl
-	ld bc, $002c ; next mon
+	ld bc, wPartyMon2 - wPartyMon1
 	ld h, d
 	ld l, e
 	add hl, bc
@@ -4176,7 +4122,7 @@ HealParty:
 	ld [wWhichPokemon], a
 	ld [wd11e], a
 
-	ld a, [W_NUMINPARTY]
+	ld a, [wPartyCount]
 	ld b, a
 .ppup
 	push bc
@@ -4190,6 +4136,9 @@ HealParty:
 
 
 DivideBCDPredef::
+DivideBCDPredef2::
+DivideBCDPredef3::
+DivideBCDPredef4::
 	call GetPredefRegisters
 
 DivideBCD::
@@ -4340,7 +4289,7 @@ Func_f800: ; f800 (3:7800)
 	ld de, $ffa1
 	ld hl, $ffa4
 	push bc
-	call SubtractBCD
+	call SubBCD
 	pop bc
 	jr .asm_f803
 
@@ -4372,10 +4321,10 @@ AddBCD::
 	ret
 
 
-SubtractBCDPredef::
+SubBCDPredef::
 	call GetPredefRegisters
 
-SubtractBCD::
+SubBCD::
 	and a
 	ld b, c
 .sub
@@ -4400,7 +4349,8 @@ SubtractBCD::
 	ret
 
 
-InitializePlayerData:
+InitPlayerData:
+InitPlayerData2:
 
 	call Random
 	ld a, [hRandomSub]
@@ -4413,7 +4363,7 @@ InitializePlayerData:
 	ld a, $ff
 	ld [wd71b], a                 ; XXX what's this?
 
-	ld hl, W_NUMINPARTY
+	ld hl, wPartyCount
 	call InitializeEmptyList
 	ld hl, W_NUMINBOX
 	call InitializeEmptyList
@@ -4672,7 +4622,7 @@ INCLUDE "engine/hp_bar.asm"
 INCLUDE "engine/hidden_object_functions3.asm"
 
 
-SECTION "bank4",ROMX,BANK[$4]
+SECTION "NPC Sprites 1", ROMX, BANK[NPC_SPRITES_1]
 
 OakAideSprite:         INCBIN "gfx/sprites/oak_aide.2bpp"
 RockerSprite:          INCBIN "gfx/sprites/rocker.2bpp"
@@ -4702,19 +4652,25 @@ SnorlaxSprite:         INCBIN "gfx/sprites/snorlax.2bpp"
 OldAmberSprite:        INCBIN "gfx/sprites/old_amber.2bpp"
 LyingOldManSprite:     INCBIN "gfx/sprites/lying_old_man.2bpp"
 
-PokemonLogoGraphics:            INCBIN "gfx/pokemon_logo.w128.2bpp"
-FontGraphics:                   INCBIN "gfx/font.w128.1bpp"
+
+SECTION "Graphics", ROMX, BANK[GFX]
+
+PokemonLogoGraphics:            INCBIN "gfx/pokemon_logo.2bpp"
+FontGraphics:                   INCBIN "gfx/font.1bpp"
 ABTiles:                        INCBIN "gfx/AB.2bpp"
 HpBarAndStatusGraphics:         INCBIN "gfx/hp_bar_and_status.2bpp"
 BattleHudTiles1:                INCBIN "gfx/battle_hud1.1bpp"
 BattleHudTiles2:                INCBIN "gfx/battle_hud2.1bpp"
 BattleHudTiles3:                INCBIN "gfx/battle_hud3.1bpp"
-NintendoCopyrightLogoGraphics:  INCBIN "gfx/copyright.h8.2bpp"
-GamefreakLogoGraphics:          INCBIN "gfx/gamefreak.h8.2bpp"
+NintendoCopyrightLogoGraphics:  INCBIN "gfx/copyright.2bpp"
+GamefreakLogoGraphics:          INCBIN "gfx/gamefreak.2bpp"
 TextBoxGraphics:                INCBIN "gfx/text_box.2bpp"
 PokedexTileGraphics:            INCBIN "gfx/pokedex.2bpp"
 WorldMapTileGraphics:           INCBIN "gfx/town_map.2bpp"
 PlayerCharacterTitleGraphics:   INCBIN "gfx/player_title.2bpp"
+
+
+SECTION "Battle (bank 4)", ROMX, BANK[$4]
 
 INCLUDE "engine/battle/4.asm"
 INCLUDE "engine/menu/status_screen.asm"
@@ -4726,19 +4682,15 @@ ShrinkPic1::  INCBIN "pic/trainer/shrink1.pic"
 ShrinkPic2::  INCBIN "pic/trainer/shrink2.pic"
 
 INCLUDE "engine/turn_sprite.asm"
-
 INCLUDE "engine/menu/start_sub_menus.asm"
-
 INCLUDE "engine/items/tms.asm"
-
 INCLUDE "engine/battle/4_2.asm"
-
 INCLUDE "engine/random.asm"
 
 EXPBarGraphics:  INCBIN "gfx/exp_bar.h8.2bpp"
 
 
-SECTION "bank5",ROMX,BANK[$5]
+SECTION "NPC Sprites 2", ROMX, BANK[NPC_SPRITES_2]
 
 RedCyclingSprite:     INCBIN "gfx/sprites/cycling.2bpp"
 RedSprite:            INCBIN "gfx/sprites/red.2bpp"
@@ -4781,15 +4733,14 @@ BrunoSprite:          INCBIN "gfx/sprites/bruno.2bpp"
 LoreleiSprite:        INCBIN "gfx/sprites/lorelei.2bpp"
 SeelSprite:           INCBIN "gfx/sprites/seel.2bpp"
 
-INCLUDE "engine/load_pokedex_tiles.asm"
 
+SECTION "Battle (bank 5)", ROMX, BANK[$5]
+
+INCLUDE "engine/load_pokedex_tiles.asm"
 INCLUDE "engine/overworld/map_sprites.asm"
 INCLUDE "engine/overworld/emotion_bubbles.asm"
-
 INCLUDE "engine/evolve_trade.asm"
-
 INCLUDE "engine/battle/5.asm"
-
 INCLUDE "engine/menu/pc.asm"
 
 
@@ -5049,7 +5000,7 @@ INCLUDE "engine/menu/oaks_pc.asm"
 INCLUDE "engine/hidden_object_functions7.asm"
 
 
-SECTION "bank9",ROMX,BANK[$9]
+SECTION "Pics 1", ROMX, BANK[PICS_1]
 
 BulbasaurPicFront::   INCBIN "pic/bmon/bulbasaur.pic"
 BulbasaurPicBack::    INCBIN "pic/monback/bulbasaurb.pic"
@@ -5106,10 +5057,11 @@ RaichuPicBack::       INCBIN "pic/monback/raichub.pic"
 
 	ds $a3
 
+SECTION "Battle (bank 9)", ROMX, BANK[$9]
 INCLUDE "engine/battle/9.asm"
 
 
-SECTION "bankA",ROMX,BANK[$A]
+SECTION "Pics 2", ROMX, BANK[PICS_2]
 
 SandshrewPicFront::   INCBIN "pic/bmon/sandshrew.pic"
 SandshrewPicBack::    INCBIN "pic/monback/sandshrewb.pic"
@@ -5164,10 +5116,11 @@ DugtrioPicBack::      INCBIN "pic/monback/dugtriob.pic"
 
 	ds $233
 
+SECTION "Battle (bank A)", ROMX, BANK[$A]
 INCLUDE "engine/battle/a.asm"
 
 
-SECTION "bankB",ROMX,BANK[$B]
+SECTION "Pics 3", ROMX, BANK[PICS_3]
 
 MeowthPicFront::      INCBIN "pic/bmon/meowth.pic"
 MeowthPicBack::       INCBIN "pic/monback/meowthb.pic"
@@ -5218,6 +5171,9 @@ GeodudePicBack::      INCBIN "pic/monback/geodudeb.pic"
 
 	ds $2c
 
+
+SECTION "Battle (bank B)", ROMX, BANK[$B]
+
 INCLUDE "engine/battle/b.asm"
 
 TrainerInfoTextBoxTileGraphics:  INCBIN "gfx/trainer_info.2bpp"
@@ -5230,7 +5186,7 @@ INCLUDE "engine/battle/b_2.asm"
 INCLUDE "engine/game_corner_slots2.asm"
 
 
-SECTION "bankC",ROMX,BANK[$C]
+SECTION "Pics 4", ROMX, BANK[PICS_4]
 
 GravelerPicFront::   INCBIN "pic/bmon/graveler.pic"
 GravelerPicBack::    INCBIN "pic/monback/gravelerb.pic"
@@ -5286,10 +5242,12 @@ KrabbyPicBack::      INCBIN "pic/monback/krabbyb.pic"
 RedPicBack::  INCBIN "pic/trainer/redb.pic"
 OldManPic::  INCBIN "pic/trainer/oldman.pic"
 
+
+SECTION "Battle (bank C)", ROMX, BANK[$C]
 INCLUDE "engine/battle/c.asm"
 
 
-SECTION "bankD",ROMX,BANK[$D]
+SECTION "Pics 5", ROMX, BANK[PICS_5]
 
 KinglerPicFront::      INCBIN "pic/bmon/kingler.pic"
 KinglerPicBack::       INCBIN "pic/monback/kinglerb.pic"
@@ -5333,6 +5291,9 @@ GhostPic::             INCBIN "pic/other/ghost.pic"
 
 	ds $42
 
+
+SECTION "Battle (bank D)", ROMX, BANK[$D]
+
 INCLUDE "engine/titlescreen2.asm"
 INCLUDE "engine/battle/d.asm"
 INCLUDE "engine/slot_machine.asm"
@@ -5373,7 +5334,7 @@ EnemyHealthBarUpdated:
 	dec a
 	jr  nz, .noBattle
 	push hl
-	ld a, [wcfe5]
+	ld a, [wEnemyMon]
 	ld [wd11e], a
 	ld hl, IndexToPokedex
 	ld b, BANK(IndexToPokedex)
@@ -5381,10 +5342,9 @@ EnemyHealthBarUpdated:
 	ld a, [wd11e]
 	dec a
 	ld c, a
-	ld a, $10
 	ld b, $2
 	ld hl, wPokedexOwned
-	call Predef
+	predef FlagActionPredef
 	ld a, c
 	and a
 	jr z, .notOwned
@@ -5404,7 +5364,7 @@ INCLUDE "engine/battle/core.asm"
 
 LoadBackSpriteUnzoomed:
 	ld a, $66
-	ld de, $9310
+	ld de, vBackPic
 	push de
 	jp LoadUncompressedBackSprite
 
@@ -5449,16 +5409,16 @@ CalcEXPBarPixelLength:
 .start
 	; get the base exp needed for the current level
 	ld a, [W_PLAYERBATTSTATUS3]
-	ld hl, W_PLAYERMONID
+	ld hl, wBattleMonSpecies
 	bit 3, a
 	jr z, .skip
-	ld hl, W_PARTYMON1DATA
+	ld hl, wPartyMon1
 	call BattleMonPartyAttr
 .skip
 	ld a, [hl]
 	ld [wd0b5], a
 	call GetMonHeader
-	ld a, [W_PLAYERMONLEVEL]
+	ld a, [wBattleMonLevel]
 	ld d, a
 	ld hl, CalcExperience
 	ld b, BANK(CalcExperience)
@@ -5475,7 +5435,7 @@ CalcEXPBarPixelLength:
 	ld [de], a
 
 	; get the exp needed to gain a level
-	ld a, [W_PLAYERMONLEVEL]
+	ld a, [wBattleMonLevel]
 	ld d, a
 	inc d
 	ld hl, CalcExperience
@@ -5483,7 +5443,7 @@ CalcEXPBarPixelLength:
 	call Bankswitch
 
 	; get the address of the active Pokemon's current experience
-	ld hl, W_PARTYMON1_EXP
+	ld hl, wPartyMon1Exp
 	call BattleMonPartyAttr
 
 	; current exp - base exp
@@ -5590,7 +5550,7 @@ SubThreeByteNum:
 ; return the address of the BattleMon's party struct attribute in hl
 BattleMonPartyAttr:
 	ld a, [wPlayerMonNumber]
-	ld bc, W_PARTYMON2DATA - W_PARTYMON1DATA
+	ld bc, wPartyMon2 - wPartyMon1
 	jp AddNTimes
 
 
@@ -6223,7 +6183,7 @@ AnimateEXPBar:
 	ld bc, $08
 	FuncCoord 10,11
 	ld hl, Coord
-	ld de, $c5ee
+	ld de, wTileMapBackup + 10 + 11 * 20
 	call CopyData
 	ld c, $20
 	jp DelayFrames
@@ -6616,23 +6576,23 @@ INCLUDE "engine/hidden_object_functions18.asm"
 
 SECTION "bank19",ROMX,BANK[$19]
 
-Overworld_GFX:     INCBIN "gfx/tilesets/overworld.w128.t2.2bpp"
+Overworld_GFX:     INCBIN "gfx/tilesets/overworld.t2.2bpp"
 Overworld_Block:   INCBIN "gfx/blocksets/overworld.bst"
 
 RedsHouse1_GFX:
-RedsHouse2_GFX:    INCBIN "gfx/tilesets/reds_house.w128.t7.2bpp"
+RedsHouse2_GFX:    INCBIN "gfx/tilesets/reds_house.t7.2bpp"
 RedsHouse1_Block:
 RedsHouse2_Block:  INCBIN "gfx/blocksets/reds_house.bst"
 
-House_GFX:         INCBIN "gfx/tilesets/house.w128.t2.2bpp"
+House_GFX:         INCBIN "gfx/tilesets/house.t2.2bpp"
 House_Block:       INCBIN "gfx/blocksets/house.bst"
-Mansion_GFX:       INCBIN "gfx/tilesets/mansion.w128.t2.2bpp"
+Mansion_GFX:       INCBIN "gfx/tilesets/mansion.t2.2bpp"
 Mansion_Block:     INCBIN "gfx/blocksets/mansion.bst"
-ShipPort_GFX:      INCBIN "gfx/tilesets/ship_port.w128.t2.2bpp"
+ShipPort_GFX:      INCBIN "gfx/tilesets/ship_port.t2.2bpp"
 ShipPort_Block:    INCBIN "gfx/blocksets/ship_port.bst"
-Interior_GFX:      INCBIN "gfx/tilesets/interior.w128.t1.2bpp"
+Interior_GFX:      INCBIN "gfx/tilesets/interior.t1.2bpp"
 Interior_Block:    INCBIN "gfx/blocksets/interior.bst"
-Plateau_GFX:       INCBIN "gfx/tilesets/plateau.w128.t10.2bpp"
+Plateau_GFX:       INCBIN "gfx/tilesets/plateau.t10.2bpp"
 Plateau_Block:     INCBIN "gfx/blocksets/plateau.bst"
 
 
@@ -6642,50 +6602,50 @@ INCLUDE "engine/battle/1a.asm"
 
 Version_GFX:
 IF _RED
-	INCBIN "gfx/red/redgreenversion.h8.1bpp" ; 10 tiles
+	INCBIN "gfx/red/redgreenversion.1bpp" ; 10 tiles
 ENDC
 IF _BLUE
-	INCBIN "gfx/blue/blueversion.h8.1bpp" ; 8 tiles
+	INCBIN "gfx/blue/blueversion.1bpp" ; 8 tiles
 ENDC
 
 Dojo_GFX:
-Gym_GFX:           INCBIN "gfx/tilesets/gym.w128.2bpp"
+Gym_GFX:           INCBIN "gfx/tilesets/gym.2bpp"
 Dojo_Block:
 Gym_Block:         INCBIN "gfx/blocksets/gym.bst"
 
 Mart_GFX:
-Pokecenter_GFX:    INCBIN "gfx/tilesets/pokecenter.w128.2bpp"
+Pokecenter_GFX:    INCBIN "gfx/tilesets/pokecenter.2bpp"
 Mart_Block:
 Pokecenter_Block:  INCBIN "gfx/blocksets/pokecenter.bst"
 
 ForestGate_GFX:
 Museum_GFX:
-Gate_GFX:          INCBIN "gfx/tilesets/gate.w128.t1.2bpp"
+Gate_GFX:          INCBIN "gfx/tilesets/gate.t1.2bpp"
 ForestGate_Block:
 Museum_Block:
 Gate_Block:        INCBIN "gfx/blocksets/gate.bst"
 
-Forest_GFX:        INCBIN "gfx/tilesets/forest.w128.2bpp"
+Forest_GFX:        INCBIN "gfx/tilesets/forest.2bpp"
 Forest_Block:      INCBIN "gfx/blocksets/forest.bst"
-Facility_GFX:      INCBIN "gfx/tilesets/facility.w128.2bpp"
+Facility_GFX:      INCBIN "gfx/tilesets/facility.2bpp"
 Facility_Block:    INCBIN "gfx/blocksets/facility.bst"
 
 
 SECTION "bank1B",ROMX,BANK[$1B]
 
-Cemetery_GFX:      INCBIN "gfx/tilesets/cemetery.w128.t4.2bpp"
+Cemetery_GFX:      INCBIN "gfx/tilesets/cemetery.t4.2bpp"
 Cemetery_Block:    INCBIN "gfx/blocksets/cemetery.bst"
-Cavern_GFX:        INCBIN "gfx/tilesets/cavern.w128.t14.2bpp"
+Cavern_GFX:        INCBIN "gfx/tilesets/cavern.t14.2bpp"
 Cavern_Block:      INCBIN "gfx/blocksets/cavern.bst"
-Lobby_GFX:         INCBIN "gfx/tilesets/lobby.w128.t2.2bpp"
+Lobby_GFX:         INCBIN "gfx/tilesets/lobby.t2.2bpp"
 Lobby_Block:       INCBIN "gfx/blocksets/lobby.bst"
-Ship_GFX:          INCBIN "gfx/tilesets/ship.w128.t6.2bpp"
+Ship_GFX:          INCBIN "gfx/tilesets/ship.t6.2bpp"
 Ship_Block:        INCBIN "gfx/blocksets/ship.bst"
-Lab_GFX:           INCBIN "gfx/tilesets/lab.w128.t4.2bpp"
+Lab_GFX:           INCBIN "gfx/tilesets/lab.t4.2bpp"
 Lab_Block:         INCBIN "gfx/blocksets/lab.bst"
-Club_GFX:          INCBIN "gfx/tilesets/club.w128.t5.2bpp"
+Club_GFX:          INCBIN "gfx/tilesets/club.t5.2bpp"
 Club_Block:        INCBIN "gfx/blocksets/club.bst"
-Underground_GFX:   INCBIN "gfx/tilesets/underground.w128.t7.2bpp"
+Underground_GFX:   INCBIN "gfx/tilesets/underground.t7.2bpp"
 Underground_Block: INCBIN "gfx/blocksets/underground.bst"
 
 

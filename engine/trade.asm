@@ -104,16 +104,16 @@ LoadTradingGFXAndMonNames: ; 411a1 (10:51a1)
 	call Func_41196
 	call DisableLCD
 	ld hl, TradingAnimationGraphics ; $69be
-	ld de, $9310
+	ld de, vChars2 + $310
 	ld bc, $310
 	ld a, BANK(TradingAnimationGraphics)
 	call FarCopyData2
 	ld hl, TradingAnimationGraphics2 ; $6cce
-	ld de, $87c0
+	ld de, vSprites + $7c0
 	ld bc, $40
 	ld a, BANK(TradingAnimationGraphics2)
 	call FarCopyData2
-	ld hl, $9800
+	ld hl, vBGMap0
 	ld bc, $800
 	ld a, $7f
 	call FillMemory
@@ -151,12 +151,12 @@ Func_4120b: ; 4120b (10:520b)
 	jp Bankswitch
 
 Func_41217: ; 41217 (10:5217)
-	ld hl, W_PLAYERNAME
+	ld hl, wPlayerName
 	ld de, wHPBarMaxHP
 	ld bc, $000b
 	call CopyData
 	ld hl, W_GRASSRATE
-	ld de, W_PLAYERNAME
+	ld de, wPlayerName
 	ld bc, $000b
 	call CopyData
 	ld hl, wHPBarMaxHP
@@ -220,7 +220,7 @@ Func_41298: ; 41298 (10:5298)
 	call CopyScreenTileBufferToVRAM
 	ld b, $8
 	call GoPAL_SET
-	ld hl, $9c8c
+	ld hl, vBGMap1 + $8c
 	call Func_414ae
 	ld a, $a0
 	ld [$ffae], a
@@ -340,7 +340,7 @@ Func_41376: ; 41376 (10:5376)
 	call Func_4142d
 	call Func_41186
 	call Func_4149f
-	ld hl, $9c8c
+	ld hl, vBGMap1 + $8c
 	call Func_414ae
 	ld b, $6
 	call Func_414c5
@@ -371,7 +371,7 @@ Func_413c6: ; 413c6 (10:53c6)
 	call Func_4145c
 	call Func_41186
 	call Func_4149f
-	ld hl, $9c94
+	ld hl, vBGMap1 + $94
 	call Func_414ae
 	call Func_41525
 	ld b, $6
@@ -427,7 +427,7 @@ Func_4142d: ; 4142d (10:542d)
 	call TextBoxBorder
 	FuncCoord 5, 14
 	ld hl, Coord
-	ld de, W_PLAYERNAME ; wd158
+	ld de, wPlayerName ; wd158
 	call PlaceString
 	jp DelayFrame
 
@@ -492,7 +492,7 @@ Func_414ae: ; 414ae (10:54ae)
 	call ScheduleRowRedrawHelper
 	pop hl
 	ld a, h
-	ld [$ffd2], a
+	ld [H_SCREENEDGEREDRAWADDR + 1], a
 	ld a, l
 	ld [H_SCREENEDGEREDRAWADDR], a ; $ffd1
 	ld a, $2
@@ -766,5 +766,4 @@ Func_41676: ; 41676 (10:5676)
 	ld [W_ANIMATIONID], a ; W_ANIMATIONID
 	xor a
 	ld [wcc5b], a
-	ld a, $8
-	jp Predef ; indirect jump to MoveAnimation (78d5e (1e:4d5e))
+	predef_jump MoveAnimation

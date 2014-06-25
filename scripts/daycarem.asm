@@ -17,7 +17,7 @@ DayCareMText1: ; 56254 (15:6254)
 	and a
 	ld hl, DayCareMText_5643b
 	jp nz, DayCareMScript_56409
-	ld a, [W_NUMINPARTY]
+	ld a, [wPartyCount]
 	dec a
 	ld hl, DayCareMText_56445
 	jp z, DayCareMScript_56409
@@ -41,7 +41,7 @@ DayCareMText1: ; 56254 (15:6254)
 	xor a
 	ld [wcc2b], a
 	ld a, [wWhichPokemon]
-	ld hl, W_PARTYMON1NAME
+	ld hl, wPartyMonNicks
 	call GetPartyMonName
 	ld hl, DayCareMText_56419
 	call PrintText
@@ -71,7 +71,7 @@ DayCareMScript_562e1: ; 562e1 (15:62e1)
 	jr c, .asm_56315
 	ld d, $64
 	callab CalcExperience
-	ld hl, wda6d
+	ld hl, wDayCareMonExp
 	ld a, [H_NUMTOPRINT]
 	ld [hli], a
 	ld a, [$ff97]
@@ -83,7 +83,7 @@ DayCareMScript_562e1: ; 562e1 (15:62e1)
 .asm_56315
 	xor a
 	ld [wTrainerEngageDistance], a
-	ld hl, wda62
+	ld hl, wDayCareMonBoxLevel
 	ld a, [hl]
 	ld [wTrainerSpriteOffset], a
 	cp d
@@ -99,7 +99,7 @@ DayCareMScript_562e1: ; 562e1 (15:62e1)
 
 .asm_56333
 	call PrintText
-	ld a, [W_NUMINPARTY]
+	ld a, [wPartyCount]
 	cp $6
 	ld hl, DayCareMText_56440
 	jp z, .asm_56403
@@ -120,8 +120,7 @@ DayCareMScript_562e1: ; 562e1 (15:62e1)
 	push hl
 	push de
 	push bc
-	ld a, $b ; AddBCDPredef
-	call Predef
+	predef AddBCDPredef
 	pop bc
 	pop de
 	pop hl
@@ -156,8 +155,7 @@ DayCareMScript_562e1: ; 562e1 (15:62e1)
 	inc hl
 	ld de, wPlayerMoney + 2
 	ld c, $3
-	ld a, $c ; SubtractBCDPredef
-	call Predef
+	predef SubBCDPredef
 	ld a, (SFX_02_5a - SFX_Headers_02) / 3
 	call PlaySoundWaitForCurrent
 	ld a, $13
@@ -168,24 +166,23 @@ DayCareMScript_562e1: ; 562e1 (15:62e1)
 	ld a, $2
 	ld [wcf95], a
 	call Func_3a68
-	ld a, [W_DAYCAREMONDATA]
+	ld a, [wDayCareMonSpecies]
 	ld [wcf91], a
-	ld a, [W_NUMINPARTY]
+	ld a, [wPartyCount]
 	dec a
 	push af
 	ld bc, $002c
 	push bc
-	ld hl, W_PARTYMON1_MOVE1
+	ld hl, wPartyMon1Moves
 	call AddNTimes
 	ld d, h
 	ld e, l
 	ld a, $1
 	ld [wHPBarMaxHP], a
-	ld a, $3e
-	call Predef
+	predef WriteMonMoves
 	pop bc
 	pop af
-	ld hl, W_PARTYMON1_HP
+	ld hl, wPartyMon1HP
 	call AddNTimes
 	ld d, h
 	ld e, l
@@ -203,7 +200,7 @@ DayCareMScript_562e1: ; 562e1 (15:62e1)
 
 .asm_56403
 	ld a, [wTrainerSpriteOffset]
-	ld [wda62], a
+	ld [wDayCareMonBoxLevel], a
 
 DayCareMScript_56409: ; 56409 (15:6409)
 	call PrintText

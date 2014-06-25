@@ -1,5 +1,5 @@
 ; tests if mon [wcf91] can learn move [wd0e0]
-TestMonMoveCompatibility: ; 1373e (4:773e)
+CanLearnTM: ; 1373e (4:773e)
 	ld a, [wcf91]
 	ld [wd0b5], a
 	call GetMonHeader
@@ -18,8 +18,7 @@ TestMonMoveCompatibility: ; 1373e (4:773e)
 .TMfoundLoop
 	pop hl
 	ld b, $2  ; read corresponding bit from TM compatibility array
-	ld a, $10 ; FlagActionPredef
-	jp Predef
+	predef_jump FlagActionPredef
 
 ; converts TM/HM number in wd11e into move number
 ; HMs start at 51

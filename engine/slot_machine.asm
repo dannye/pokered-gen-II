@@ -17,8 +17,7 @@ PromptUserToPlaySlots: ; 3730e (d:730e)
 	xor a
 	ld [hli], a
 	ld [hl], $2
-	ld a, $4c
-	call Predef
+	predef EmotionBubble
 	call GBPalWhiteOutWithDelay3
 	call LoadSlotMachineTiles
 	call LoadFontTilePatterns
@@ -618,8 +617,7 @@ SlotMachine_37741: ; 37741 (d:7741)
 	ld [hli], a
 	ld de, wPlayerCoins + 1
 	ld c, $2
-	ld a, $c ; SubtractBCDPredef
-	call Predef
+	predef SubBCDPredef
 
 SlotMachine_37754: ; 37754 (d:7754)
 	ld hl, wTileMap + $19
@@ -660,8 +658,7 @@ SlotMachine_3776b: ; 3776b (d:776b)
 	ld hl, wcd47
 	ld de, wPlayerCoins + 1
 	ld c, $2
-	ld a, $b ; AddBCDPredef
-	call Predef
+	predef AddBCDPredef
 	call SlotMachine_37754
 	call SlotMachine_3775f
 	ld a, (SFX_1f_65 - SFX_Headers_1f) / 3
@@ -824,18 +821,18 @@ SlotMachine_37882: ; 37882 (d:7882)
 LoadSlotMachineTiles: ; 378a8 (d:78a8)
 	call DisableLCD
 	ld hl, SlotMachineTiles2
-	ld de, $8000
-	ld bc, $01c0
+	ld de, vChars0
+	ld bc, $1c0
 	ld a, BANK(SlotMachineTiles2)
 	call FarCopyData2
 	ld hl, SlotMachineTiles1
-	ld de, $9000
-	ld bc, $0250
+	ld de, vChars2
+	ld bc, $250
 	ld a, BANK(SlotMachineTiles1)
 	call FarCopyData2
 	ld hl, SlotMachineTiles2
-	ld de, $9250
-	ld bc, $01c0
+	ld de, vChars2 + $250
+	ld bc, $1c0
 	ld a, BANK(SlotMachineTiles2)
 	call FarCopyData2
 	ld hl, SlotMachineMap

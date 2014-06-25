@@ -90,9 +90,9 @@ PayDayEffect_ ; 2feb8 (b:7eb8)
 	ld [hli], a
 	ld a, [$fff3]
 	and a
-	ld a, [W_PLAYERMONLEVEL]
+	ld a, [wBattleMonLevel]
 	jr z, .asm_2fec8 ; 0x2fec3 $3
-	ld a, [W_ENEMYMONLEVEL]
+	ld a, [wEnemyMonLevel]
 .asm_2fec8
 	add a
 	ld [$ff98], a
@@ -120,8 +120,7 @@ PayDayEffect_ ; 2feb8 (b:7eb8)
 	ld [hl], a
 	ld de, wcce7
 	ld c, $3
-	ld a, $b ; AddBCDPredef
-	call Predef
+	predef AddBCDPredef
 	ld hl, CoinsScatteredText ; $7f04
 	jp PrintText
 

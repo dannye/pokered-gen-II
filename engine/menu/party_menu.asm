@@ -32,7 +32,7 @@ RedrawPartyMenu_: ; 12ce3 (4:6ce3)
 	callba SendBlkPacket_PartyMenu ; loads some data to wcf2e
 	FuncCoord 3,0
 	ld hl,Coord
-	ld de,W_PARTYMON1
+	ld de,wPartySpecies
 	xor a
 	ld c,a
 	ld [$FF8C],a ; loop counter
@@ -46,7 +46,7 @@ RedrawPartyMenu_: ; 12ce3 (4:6ce3)
 	push hl
 	ld a,c
 	push hl
-	ld hl,W_PARTYMON1NAME
+	ld hl,wPartyMonNicks
 	call GetPartyMonName
 	pop hl
 	call PlaceString ; print the pokemon's name
@@ -93,8 +93,7 @@ RedrawPartyMenu_: ; 12ce3 (4:6ce3)
 	set 0,a
 	ld [$FFF6],a
 	add hl,bc
-	ld a,$60
-	call Predef ; draw HP bar and prints current / max HP
+	predef Func_128f6 ; draw HP bar and prints current / max HP
 	ld a,[$FFF6]
 	res 0,a
 	ld [$FFF6],a
@@ -103,8 +102,7 @@ RedrawPartyMenu_: ; 12ce3 (4:6ce3)
 	jr .printLevel
 .teachMoveMenu
 	push hl
-	ld a,$43
-	call Predef ; check if the pokemon can learn the move
+	predef CanLearnTM ; check if the pokemon can learn the move
 	pop hl
 	ld de,.ableToLearnMoveText
 	ld a,c
@@ -231,7 +229,7 @@ RedrawPartyMenu_: ; 12ce3 (4:6ce3)
 	ld l,a
 	push hl
 	ld a,[wcf06]
-	ld hl,W_PARTYMON1NAME
+	ld hl,wPartyMonNicks
 	call GetPartyMonName
 	pop hl
 	call PrintText

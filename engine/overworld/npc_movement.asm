@@ -86,8 +86,7 @@ Func_1a485: ; 1a485 (6:6485)
 	ld a, [wcca1]
 	ld [wcd38], a
 	ld [$ff95], a
-	ld a, $23
-	call Predef
+	predef Func_f9a0
 	call Func_3486
 	ld a, $2
 	ld [wcf10], a
@@ -145,8 +144,7 @@ Func_1a4f4: ; 1a4f4 (6:64f4)
 	ret nz
 	ld a, $0
 	ld [wcc4d], a
-	ld a, $11
-	call Predef ; indirect jump to RemoveMissableObject (f1d7 (3:71d7))
+	predef HideObject
 	ld hl, wd730
 	res 7, [hl]
 	ld hl, wd72e
@@ -158,7 +156,7 @@ PointerTable_1a510: ; 1a510 (6:6510)
 	dw Func_1a56b
 
 Func_1a514: ; 1a514 (6:6514)
-	ld a, Bank(Func_9876)
+	ld a, BANK(Music_MuseumGuy)
 	ld [wc0ef], a
 	ld [wc0f0], a
 	ld a, MUSIC_MUSEUM_GUY
@@ -175,8 +173,7 @@ Func_1a514: ; 1a514 (6:6514)
 	ld [wcd38], a
 	xor a
 	ld [wd12f], a
-	ld a, $4f
-	call Predef
+	predef PewterGuys
 	ld hl, wcc97
 	ld de, RLEList_PewterMuseumGuy
 	call DecodeRLEList
@@ -215,7 +212,7 @@ PointerTable_1a57d: ; 1a57d (6:657d)
 	dw Func_1a56b
 
 Func_1a581: ; 1a581 (6:6581)
-	ld a, Bank(Func_9876)
+	ld a, BANK(Music_MuseumGuy)
 	ld [wc0ef], a
 	ld [wc0f0], a
 	ld a, MUSIC_MUSEUM_GUY
@@ -233,8 +230,7 @@ Func_1a581: ; 1a581 (6:6581)
 	ld [wcd38], a
 	ld a, $1
 	ld [wd12f], a
-	ld a, $4f
-	call Predef
+	predef PewterGuys
 	ld hl, wcc97
 	ld de, RLEList_PewterGymGuy
 	call DecodeRLEList
