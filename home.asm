@@ -1925,8 +1925,7 @@ DisplayListMenuID:: ; 2be6 (0:2be6)
 	ld [wd125],a
 	call DisplayTextBoxID ; draw the menu text box
 	call UpdateSprites ; move sprites
-	FuncCoord 4,2 ; coordinates of upper left corner of menu text box
-	ld hl,Coord
+	hlCoord 4, 2 ; coordinates of upper left corner of menu text box
 	ld de,$090e ; height and width of menu text box
 	ld a,[wListMenuID]
 	and a ; is it a PC pokemon list?
@@ -1962,13 +1961,12 @@ DisplayListMenuIDLoop:: ; 2c53 (0:2c53)
 	jr z,.notOldManBattle
 .oldManBattle
 	ld a,"▶"
-	FuncCoord 5,4
-	ld [Coord],a ; place menu cursor in front of first menu entry
+	Coorda 5, 4 ; place menu cursor in front of first menu entry
 	ld c,80
 	call DelayFrames
 	xor a
 	ld [wCurrentMenuItem],a
-	ld hl,Coord
+	hlCoord 5, 4
 	ld a,l
 	ld [wMenuCursorLocation],a
 	ld a,h
@@ -2087,27 +2085,23 @@ DisplayListMenuIDLoop:: ; 2c53 (0:2c53)
 
 DisplayChooseQuantityMenu:: ; 2d57 (0:2d57)
 ; text box dimensions/coordinates for just quantity
-	FuncCoord 15,9
-	ld hl,Coord
+	hlCoord 15, 9
 	ld b,1 ; height
 	ld c,3 ; width
 	ld a,[wListMenuID]
 	cp a,PRICEDITEMLISTMENU
 	jr nz,.drawTextBox
 ; text box dimensions/coordinates for quantity and price
-	FuncCoord 7,9
-	ld hl,Coord
+	hlCoord 7, 9
 	ld b,1  ; height
 	ld c,11 ; width
 .drawTextBox
 	call TextBoxBorder
-	FuncCoord 16,10
-	ld hl,Coord
+	hlCoord 16, 10
 	ld a,[wListMenuID]
 	cp a,PRICEDITEMLISTMENU
 	jr nz,.printInitialQuantity
-	FuncCoord 8,10
-	ld hl,Coord
+	hlCoord 8, 10
 .printInitialQuantity
 	ld de,InitialQuantityText
 	call PlaceString
@@ -2147,8 +2141,7 @@ DisplayChooseQuantityMenu:: ; 2d57 (0:2d57)
 	ld a,[wcf97] ; max quantity
 	ld [hl],a
 .handleNewQuantity
-	FuncCoord 17,10
-	ld hl,Coord
+	hlCoord 17, 10
 	ld a,[wListMenuID]
 	cp a,PRICEDITEMLISTMENU
 	jr nz,.printQuantity
@@ -2187,15 +2180,13 @@ DisplayChooseQuantityMenu:: ; 2d57 (0:2d57)
 	ld a,[$ffa4]
 	ld [$ffa1],a
 .skipHalvingPrice
-	FuncCoord 12,10
-	ld hl,Coord
+	hlCoord 12, 10
 	ld de,SpacesBetweenQuantityAndPriceText
 	call PlaceString
 	ld de,$ff9f ; total price
 	ld c,$a3
 	call PrintBCDNumber
-	FuncCoord 9,10
-	ld hl,Coord
+	hlCoord 9, 10
 .printQuantity
 	ld de,wcf96 ; current quantity
 	ld bc,$8102 ; print leading zeroes, 1 byte, 2 digits
@@ -2234,8 +2225,7 @@ ExitListMenu:: ; 2e3b (0:2e3b)
 	ret
 
 PrintListMenuEntries:: ; 2e5a (0:2e5a)
-	FuncCoord 5, 3
-	ld hl,Coord
+	hlCoord 5, 3
 	ld b,$09
 	ld c,$0e
 	call ClearScreenArea
@@ -2260,8 +2250,7 @@ PrintListMenuEntries:: ; 2e5a (0:2e5a)
 	jr nc,.noCarry
 	inc d
 .noCarry
-	FuncCoord 6,4 ; coordinates of first list entry name
-	ld hl,Coord
+	hlCoord 6, 4 ; coordinates of first list entry name
 	ld b,4 ; print 4 names
 .loop
 	ld a,b
@@ -3527,8 +3516,7 @@ Func_35f4:: ; 35f4 (0:35f4)
 InitYesNoTextBoxParameters:: ; 35ff (0:35ff)
 	xor a
 	ld [wd12c], a
-	FuncCoord 14, 7
-	ld hl, Coord
+	hlCoord 14, 7
 	ld bc, $80f
 	ret
 
@@ -3536,8 +3524,7 @@ YesNoChoicePokeCenter:: ; 360a (0:360a)
 	call SaveScreenTilesToBuffer1
 	ld a, $6
 	ld [wd12c], a
-	FuncCoord 11, 6
-	ld hl, Coord
+	hlCoord 11, 6
 	ld bc, $80c
 	jr DisplayYesNoChoice
 
@@ -3545,8 +3532,7 @@ Func_361a:: ; 361a (0:361a)
 	call SaveScreenTilesToBuffer1
 	ld a, $3
 	ld [wd12c], a
-	FuncCoord 12, 7
-	ld hl, Coord
+	hlCoord 12, 7
 	ld bc, $080d
 DisplayYesNoChoice:: ; 3628 (0:3628)
 	ld a, $14
@@ -3978,8 +3964,7 @@ WaitForTextScrollButtonPress:: ; 3865 (0:3865)
 	jr z, .asm_387c
 	call Func_716c6
 .asm_387c
-	FuncCoord 18, 16
-	ld hl, Coord
+	hlCoord 18, 16
 	call HandleDownArrowBlinkTiming
 	pop hl
 	call JoypadLowSensitivity
@@ -4455,8 +4440,7 @@ HandleMenuInputPokemonSelection:: ; 3ac2 (0:3ac2)
 	and a ; was a key pressed?
 	jr nz,.keyPressed
 	push hl
-	FuncCoord 18,11 ; coordinates of blinking down arrow in some menus
-	ld hl,Coord
+	hlCoord 18, 11 ; coordinates of blinking down arrow in some menus
 	call HandleDownArrowBlinkTiming ; blink down arrow (if any)
 	pop hl
 	ld a,[wMenuJoypadPollCount]
@@ -4717,8 +4701,7 @@ PrintText:: ; 3c49 (0:3c49)
 	call Delay3
 	pop hl
 Func_3c59:: ; 3c59 (0:3c59)
-	FuncCoord 1,14
-	ld bc,Coord
+	bcCoord 1, 14
 	jp TextCommandProcessor
 
 ; converts a big-endian binary number into decimal and prints it

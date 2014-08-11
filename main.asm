@@ -157,8 +157,7 @@ INCLUDE "engine/overworld/oam.asm"
 INCLUDE "engine/oam_dma.asm"
 
 PrintWaitingText:
-	FuncCoord 3, 10
-	ld hl, Coord
+	hlCoord 3, 10
 	ld b, $1
 	ld c, $b
 	ld a, [W_ISINBATTLE]
@@ -169,8 +168,7 @@ PrintWaitingText:
 .asm_4c17
 	call Func_5ab3
 .asm_4c1a
-	FuncCoord 4, 11
-	ld hl, Coord
+	hlCoord 4, 11
 	ld de, WaitingText
 	call PlaceString
 	ld c, 50
@@ -919,21 +917,18 @@ DisplayTextIDInit: ; 7096 (1:7096)
 	ld a,[wd74b]
 	bit 5,a ; does the player have the pokedex?
 ; start menu with pokedex
-	FuncCoord 10, 0
-	ld hl,Coord
+	hlCoord 10, 0
 	ld b,$0e
 	ld c,$08
 	jr nz,.drawTextBoxBorder
 ; start menu without pokedex
-	FuncCoord 10, 0
-	ld hl,Coord
+	hlCoord 10, 0
 	ld b,$0c
 	ld c,$08
 	jr .drawTextBoxBorder
 ; if text ID is not 0 (i.e. not the start menu) then do a standard dialogue text box
 .notStartMenu
-	FuncCoord 0, 12
-	ld hl,Coord
+	hlCoord 0, 12
 	ld b,$04
 	ld c,$12
 .drawTextBoxBorder
@@ -991,14 +986,12 @@ DrawStartMenu: ; 710b (1:710b)
 	ld a,[wd74b]
 	bit 5,a ; does the player have the pokedex?
 ; menu with pokedex
-	FuncCoord 10, 0
-	ld hl,Coord
+	hlCoord 10, 0
 	ld b,$0e
 	ld c,$08
 	jr nz,.drawTextBoxBorder
 ; shorter menu if the player doesn't have the pokedex
-	FuncCoord 10, 0
-	ld hl,Coord
+	hlCoord 10, 0
 	ld b,$0c
 	ld c,$08
 .drawTextBoxBorder
@@ -1016,8 +1009,7 @@ DrawStartMenu: ; 710b (1:710b)
 	ld [wcc37],a
 	ld hl,wd730
 	set 6,[hl] ; no pauses between printing each letter
-	FuncCoord 12, 2
-	ld hl,Coord
+	hlCoord 12, 2
 	ld a,[wd74b]
 	bit 5,a ; does the player have the pokedex?
 ; case for not having pokdex
@@ -1359,13 +1351,11 @@ Func_74ba: ; 74ba (1:74ba)
 	ld a, $f
 	ld [wd125], a
 	call DisplayTextBoxID
-	FuncCoord 13, 1
-	ld hl, Coord
+	hlCoord 13, 1
 	ld b, $1
 	ld c, $6
 	call ClearScreenArea
-	FuncCoord 12, 1
-	ld hl, Coord
+	hlCoord 12, 1
 	ld de, wPlayerMoney ; wPlayerMoney
 	ld c, $a3
 	call PrintBCDNumber
@@ -1636,22 +1626,19 @@ Func_76e1: ; 76e1 (1:36e1)
 	ld a, [wTrainerScreenX]
 	and a
 	jr nz, .asm_770f
-	FuncCoord 11, 11
-	ld hl, Coord
+	hlCoord 11, 11
 	ld b, $5
 	ld c, $7
 	call TextBoxBorder
 	call UpdateSprites
 	ld a, $c
 	ld [$fff7], a
-	FuncCoord 13, 12
-	ld hl, Coord
+	hlCoord 13, 12
 	ld de, PokemonMenuEntries ; $77c2
 	jp PlaceString
 .asm_770f
 	push af
-	FuncCoord 0, 11
-	ld hl, Coord
+	hlCoord 0, 11
 	ld a, [wcd42]
 	dec a
 	ld e, a
@@ -1674,8 +1661,7 @@ Func_76e1: ; 76e1 (1:36e1)
 	inc b
 	call TextBoxBorder
 	call UpdateSprites
-	FuncCoord 0, 12
-	ld hl, Coord
+	hlCoord 0, 12
 	ld a, [wcd42]
 	inc a
 	ld e, a
@@ -1722,8 +1708,7 @@ Func_76e1: ; 76e1 (1:36e1)
 	pop hl
 	ld a, [wcd42]
 	ld [$fff7], a
-	FuncCoord 0, 12
-	ld hl, Coord
+	hlCoord 0, 12
 	ld a, [wcd42]
 	inc a
 	ld e, a
@@ -2206,8 +2191,7 @@ Func_c49d: ; c49d (3:449d)
 	ld h, [hl]
 	ld l, a
 	ld de, $1
-	FuncCoord 8, 9
-	ld a, [Coord]
+	aCoord 8, 9
 	call IsInArray
 	jr nc, .asm_c4c8
 	ld hl, wd736
@@ -2230,29 +2214,24 @@ PrintSafariZoneSteps: ; c52f (3:452f)
 	ld b, $3
 	ld c, $7
 	call TextBoxBorder
-	FuncCoord 1, 1
-	ld hl, Coord
+	hlCoord 1, 1
 	ld de, wSafariSteps ; wd70d
 	ld bc, $203
 	call PrintNumber
-	FuncCoord 4, 1
-	ld hl, Coord
+	hlCoord 4, 1
 	ld de, SafariSteps ; $4579
 	call PlaceString
-	FuncCoord 1, 3
-	ld hl, Coord
+	hlCoord 1, 3
 	ld de, SafariBallText
 	call PlaceString
 	ld a, [W_NUMSAFARIBALLS] ; W_NUMSAFARIBALLS
 	cp $a
 	jr nc, .asm_c56d
-	FuncCoord 5, 3
-	ld hl, Coord
+	hlCoord 5, 3
 	ld a, $7f
 	ld [hl], a
 .asm_c56d
-	FuncCoord 6, 3
-	ld hl, Coord
+	hlCoord 6, 3
 	ld de, W_NUMSAFARIBALLS ; W_NUMSAFARIBALLS
 	ld bc, $102
 	jp PrintNumber
@@ -2274,29 +2253,25 @@ Func_c589: ; c589 (3:4589)
 	ld a, [wSpriteStateData1 + 9]
 	and a
 	jr nz, .asm_c59d
-	FuncCoord 8, 11
-	ld a, [Coord]
+	aCoord 8, 11
 	inc d
 	jr .asm_c5b9
 .asm_c59d
 	cp $4
 	jr nz, .asm_c5a7
-	FuncCoord 8, 7
-	ld a, [Coord]
+	aCoord 8, 7
 	dec d
 	jr .asm_c5b9
 .asm_c5a7
 	cp $8
 	jr nz, .asm_c5b1
-	FuncCoord 6, 9
-	ld a, [Coord]
+	aCoord 6, 9
 	dec e
 	jr .asm_c5b9
 .asm_c5b1
 	cp $c
 	jr nz, .asm_c5b9
-	FuncCoord 10, 9
-	ld a, [Coord]
+	aCoord 10, 9
 	inc e
 .asm_c5b9
 	ld c, a
@@ -2315,8 +2290,7 @@ Func_c5be: ; c5be (3:45be)
 	jr nz, .asm_c5d8
 	ld hl, $ffdb
 	set 0, [hl]
-	FuncCoord 8, 13
-	ld a, [Coord]
+	aCoord 8, 13
 	inc d
 	jr .asm_c603
 .asm_c5d8
@@ -2324,8 +2298,7 @@ Func_c5be: ; c5be (3:45be)
 	jr nz, .asm_c5e7
 	ld hl, $ffdb
 	set 1, [hl]
-	FuncCoord 8, 5
-	ld a, [Coord]
+	aCoord 8, 5
 	dec d
 	jr .asm_c603
 .asm_c5e7
@@ -2333,8 +2306,7 @@ Func_c5be: ; c5be (3:45be)
 	jr nz, .asm_c5f6
 	ld hl, $ffdb
 	set 2, [hl]
-	FuncCoord 4, 9
-	ld a, [Coord]
+	aCoord 4, 9
 	dec e
 	jr .asm_c603
 .asm_c5f6
@@ -2342,8 +2314,7 @@ Func_c5be: ; c5be (3:45be)
 	jr nz, .asm_c603
 	ld hl, $ffdb
 	set 3, [hl]
-	FuncCoord 12, 9
-	ld a, [Coord]
+	aCoord 12, 9
 	inc e
 .asm_c603
 	ld c, a
@@ -2934,13 +2905,11 @@ DrawBadges: ; ea03 (3:6a03)
 	ld [hli], a
 	ld [hl], $60 ; First name
 
-	FuncCoord 2, 11
-	ld hl, Coord
+	hlCoord 2, 11
 	ld de, wcd49
 	call .DrawBadgeRow
 
-	FuncCoord 2, 14
-	ld hl, Coord
+	hlCoord 2, 14
 	ld de, wcd49 + 4
 ;	call .DrawBadgeRow
 ;	ret
@@ -5348,8 +5317,7 @@ EnemyHealthBarUpdated:
 	ld a, c
 	and a
 	jr z, .notOwned
-	FuncCoord 1, 1
-	ld hl, Coord
+	hlCoord 1, 1
 	ld [hl], $E9
 .notOwned
 	pop hl
@@ -5375,8 +5343,7 @@ PrintEXPBar:
 	ld b, a
 	ld c, $08
 	ld d, $08
-	FuncCoord 17,11
-	ld hl, Coord
+	hlCoord 17, 11
 .loop
 	ld a, b
 	sub c
@@ -6138,8 +6105,7 @@ AnimateEXPBarAgain:
 	ret nz
 	xor a
 	ld [wEXPBarPixelLength], a
-	FuncCoord 17,11
-	ld hl, Coord
+	hlCoord 17, 11
 	ld a, $c0
 	ld c, $08
 .loop
@@ -6162,8 +6128,7 @@ AnimateEXPBar:
 	jr z, .done
 	ld b, a
 	ld c, $08
-	FuncCoord 17,11
-	ld hl, Coord
+	hlCoord 17, 11
 .loop1
 	ld a, [hl]
 	cp $c8
@@ -6181,8 +6146,7 @@ AnimateEXPBar:
 	jr .loop1
 .done
 	ld bc, $08
-	FuncCoord 10,11
-	ld hl, Coord
+	hlCoord 10, 11
 	ld de, wTileMapBackup + 10 + 11 * 20
 	call CopyData
 	ld c, $20
