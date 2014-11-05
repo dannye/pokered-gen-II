@@ -5,7 +5,7 @@ PlayIntro: ; 41682 (10:5682)
 	ld [H_AUTOBGTRANSFERENABLED], a
 	call PlayShootingStar
 	call PlayIntroScene
-	call GBFadeOut2
+	call GBFadeOutToWhite
 	xor a
 	ld [$ffae], a
 	ld [H_AUTOBGTRANSFERENABLED], a
@@ -429,13 +429,13 @@ FightIntroBackMon: ; 41a99 (10:5a99)
 
 FightIntroFrontMon: ; 42099 (10:6099)
 
-IF _RED
+IF DEF(_RED)
 	INCBIN "gfx/red/intro_nido_1.6x6.2bpp"
 	INCBIN "gfx/red/intro_nido_2.6x6.2bpp"
 	INCBIN "gfx/red/intro_nido_3.6x6.2bpp"
 	ds $10 ; blank tile
 ENDC
-IF _BLUE
+IF DEF(_BLUE)
 	INCBIN "gfx/blue/intro_purin_1.6x6.2bpp"
 	INCBIN "gfx/blue/intro_purin_2.6x6.2bpp"
 	INCBIN "gfx/blue/intro_purin_3.6x6.2bpp"

@@ -9,7 +9,7 @@ db FIRE ; species type 1
 db FLYING ; species type 2
 db 45 ; catch rate
 db 209 ; base exp yield
-db $77 ; sprite dimensions
+INCBIN "pic/bmon/charizard.pic",0,1 ; 77, sprite dimensions
 dw CharizardPicFront
 dw CharizardPicBack
 ; attacks known at lvl 0
@@ -25,10 +25,9 @@ db %01001111
 db %11001110
 db %11100011
 db %00001000
-IF !_YELLOW
-	db %00100110
-ENDC
-IF _YELLOW
+IF DEF(_YELLOW)
 	db %00101110
+ELSE
+	db %00100110
 ENDC
 db BANK(CharizardPicFront)
