@@ -13,7 +13,7 @@ VBlank::
 	ld a, [hSCY]
 	ld [rSCY], a
 
-	ld a, [wd0a0]
+	ld a, [wDisableVBlankWYUpdate]
 	and a
 	jr nz, .ok
 	ld a, [hWY]
@@ -65,7 +65,7 @@ VBlank::
 	cp BANK(Music8_UpdateMusic)
 	jr nz, .bank1F
 .bank8
-	call Func_2136e
+	call Music_DoLowHealthAlarm
 	call Music8_UpdateMusic
 	jr .afterMusic
 .bank1F

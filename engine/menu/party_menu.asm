@@ -1,4 +1,4 @@
-; [wd07d] = menu type / message ID
+; [wPartyMenuTypeOrMessageID] = menu type / message ID
 ; if less than $F0, it is a menu type
 ; menu types:
 ; 00: normal pokemon menu (e.g. Start menu)
@@ -21,20 +21,20 @@ DrawPartyMenu_: ; 12cd2 (4:6cd2)
 	xor a
 	ld [H_AUTOBGTRANSFERENABLED],a
 	call ClearScreen
-	call UpdateSprites ; move sprites
-	callba Func_71791 ; load pokemon icon graphics
+	call UpdateSprites
+	callba LoadMonPartySpriteGfxWithLCDDisabled ; load pokemon icon graphics
 
 RedrawPartyMenu_: ; 12ce3 (4:6ce3)
-	ld a,[wd07d]
-	cp a,$04
+	ld a,[wPartyMenuTypeOrMessageID]
+	cp a,SWAP_MONS_PARTY_MENU
 	jp z,.printMessage
 	call ErasePartyMenuCursors
-	callba SendBlkPacket_PartyMenu ; loads some data to wcf2e
-	hlCoord 3, 0
+	callba SendBlkPacket_PartyMenu
+	coord hl, 3, 0
 	ld de,wPartySpecies
 	xor a
 	ld c,a
-	ld [$FF8C],a ; loop counter
+	ld [hPartyMonIndex],a
 	ld [wcf2d],a
 .loop
 	ld a,[de]
@@ -49,11 +49,11 @@ RedrawPartyMenu_: ; 12ce3 (4:6ce3)
 	call GetPartyMonName
 	pop hl
 	call PlaceString ; print the pokemon's name
-	callba Func_71868 ; place the appropriate pokemon icon
-	ld a,[$FF8C] ; loop counter
+	callba WriteMonPartySpriteOAMByPartyIndex ; place the appropriate pokemon icon
+	ld a,[hPartyMonIndex]
 	ld [wWhichPokemon],a
 	inc a
-	ld [$FF8C],a
+	ld [hPartyMonIndex],a
 	call LoadMonData
 	pop hl
 	push hl
@@ -75,27 +75,27 @@ RedrawPartyMenu_: ; 12ce3 (4:6ce3)
 	inc hl
 	inc hl
 .skipUnfilledRightArrow
-	ld a,[wd07d] ; menu type
-	cp a,$03
+	ld a,[wPartyMenuTypeOrMessageID] ; menu type
+	cp a,TMHM_PARTY_MENU
 	jr z,.teachMoveMenu
-	cp a,$05
+	cp a,EVO_STONE_PARTY_MENU
 	jr z,.evolutionStoneMenu
 	push hl
 	ld bc,14 ; 14 columns to the right
 	add hl,bc
-	ld de,wcf9c
+	ld de,wLoadedMonStatus
 	call PrintStatusCondition
 	pop hl
 	push hl
 	ld bc,20 + 1 ; down 1 row and right 1 column
-	ld a,[$FFF6]
+	ld a,[hFlags_0xFFF6]
 	set 0,a
-	ld [$FFF6],a
+	ld [hFlags_0xFFF6],a
 	add hl,bc
-	predef Func_128f6 ; draw HP bar and prints current / max HP
-	ld a,[$FFF6]
+	predef DrawHP2 ; draw HP bar and prints current / max HP
+	ld a,[hFlags_0xFFF6]
 	res 0,a
-	ld [$FFF6],a
+	ld [hFlags_0xFFF6],a
 	call SetPartyMenuHealthBarColor ; color the HP bar (on SGB)
 	pop hl
 	jr .printLevel
@@ -134,7 +134,7 @@ RedrawPartyMenu_: ; 12ce3 (4:6ce3)
 	push hl
 	ld hl,EvosMovesPointerTable
 	ld b,0
-	ld a,[wcf98] ; pokemon ID
+	ld a,[wLoadedMonSpecies]
 	dec a
 	add a
 	rl b
@@ -196,7 +196,7 @@ RedrawPartyMenu_: ; 12ce3 (4:6ce3)
 	push af
 	push hl
 	set 6,[hl] ; turn off letter printing delay
-	ld a,[wd07d] ; message ID
+	ld a,[wPartyMenuTypeOrMessageID] ; message ID
 	cp a,$F0
 	jr nc,.printItemUseMessage
 	add a
@@ -227,7 +227,7 @@ RedrawPartyMenu_: ; 12ce3 (4:6ce3)
 	ld h,[hl]
 	ld l,a
 	push hl
-	ld a,[wcf06]
+	ld a,[wUsedItemOnWhichPokemon]
 	ld hl,wPartyMonNicks
 	call GetPartyMonName
 	pop hl

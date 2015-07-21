@@ -51,7 +51,7 @@ RedrawExposedScreenEdge:: ; 1d01 (0:1d01)
 	ld e,a
 	ld a,[H_SCREENEDGEREDRAWADDR + 1]
 	ld d,a
-	ld c,18 ; screen height
+	ld c,SCREEN_HEIGHT
 .loop1
 	ld a,[hli]
 	ld [de],a
@@ -130,7 +130,7 @@ AutoBgMapTransfer:: ; 1d57 (0:1d57)
 	dec a
 	jr z,.transferMiddleThird
 .transferBottomThird
-	hlCoord 0, 12
+	coord hl, 0, 12
 	ld sp,hl
 	ld a,[H_AUTOBGTRANSFERDEST + 1]
 	ld h,a
@@ -141,7 +141,7 @@ AutoBgMapTransfer:: ; 1d57 (0:1d57)
 	xor a ; TRANSFERTOP
 	jr .doTransfer
 .transferTopThird
-	hlCoord 0, 0
+	coord hl, 0, 0
 	ld sp,hl
 	ld a,[H_AUTOBGTRANSFERDEST + 1]
 	ld h,a
@@ -150,7 +150,7 @@ AutoBgMapTransfer:: ; 1d57 (0:1d57)
 	ld a,TRANSFERMIDDLE
 	jr .doTransfer
 .transferMiddleThird
-	hlCoord 0, 6
+	coord hl, 0, 6
 	ld sp,hl
 	ld a,[H_AUTOBGTRANSFERDEST + 1]
 	ld h,a

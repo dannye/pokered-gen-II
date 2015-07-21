@@ -78,7 +78,7 @@ BuildStatusScreenPalPacket: ; 71e4f (1c:5e4f)
 	push af
 	ld hl, wcf2e
 	ld a, [wcf25]
-	add $1f
+	add PAL_GREENBAR
 	ld [hli], a
 	inc hl
 	pop af
@@ -261,7 +261,7 @@ LoopCounts_71f8f: ; 71f8f (1c:5f8f)
 	ds $1F
 
 SendBlkPacket_PartyMenu: ; 71fb6 (1c:5fb6)
-	ld hl, BlkPacket_PartyMenu ; $62f4
+	ld hl, BlkPacket_PartyMenu
 	ld de, wcf2e
 	ld bc, $30
 	jp CopyData
@@ -309,10 +309,10 @@ SendSGBPacket: ; 71feb (1c:5feb)
 	ld [$fff9],a
 ; send RESET signal (P14=LOW, P15=LOW)
 	xor a
-	ld [$ff00],a
+	ld [rJOYP],a
 ; set P14=HIGH, P15=HIGH
 	ld a,$30
-	ld [$ff00],a
+	ld [rJOYP],a
 ;load length of packets (16 bytes)
 	ld b,$10
 .nextByte
@@ -329,10 +329,10 @@ SendSGBPacket: ; 71feb (1c:5feb)
 ; else (if 0th bit is zero) set P14=LOW,P15=HIGH (send bit 0)
 	ld a,$20
 .next0
-	ld [$ff00],a
+	ld [rJOYP],a
 ; must set P14=HIGH,P15=HIGH between each "pulse"
 	ld a,$30
-	ld [$ff00],a
+	ld [rJOYP],a
 ; rotation will put next bit in 0th position (so  we can always use command
 ; "bit 0,d" to fetch the bit that has to be sent)
 	rr d
@@ -343,10 +343,10 @@ SendSGBPacket: ; 71feb (1c:5feb)
 	jr nz,.nextByte
 ; send bit 1 as a "stop bit" (end of parameter data)
 	ld a,$20
-	ld [$ff00],a
+	ld [rJOYP],a
 ; set P14=HIGH,P15=HIGH
 	ld a,$30
-	ld [$ff00],a
+	ld [rJOYP],a
 	xor a
 	ld [$fff9],a
 ; wait for about 70000 cycles
@@ -362,7 +362,7 @@ SendSGBPacket: ; 71feb (1c:5feb)
 LoadSGB: ; 7202b (1c:602b)
 	xor a
 	ld [wOnSGB], a
-	call Func_7209b
+	call CheckSGB
 	ret nc
 	ld a, $1
 	ld [wOnSGB], a
@@ -421,7 +421,7 @@ PointerTable_72089: ; 72089 (1c:6089)
 	dw DataSnd_725a8
 	dw DataSnd_725b8
 
-Func_7209b: ; 7209b (1c:609b)
+CheckSGB: ; 7209b (1c:609b)
 	ld hl, MltReq2Packet
 	di
 	call SendSGBPacket
@@ -429,38 +429,38 @@ Func_7209b: ; 7209b (1c:609b)
 	ld [$fff9], a
 	ei
 	call Wait7000
-	ld a, [rJOYP] ; $ff0
+	ld a, [rJOYP]
 	and $3
 	cp $3
 	jr nz, .asm_720fd
 	ld a, $20
-	ld [rJOYP], a ; $ff0
-	ld a, [rJOYP] ; $ff0
-	ld a, [rJOYP] ; $ff0
+	ld [rJOYP], a
+	ld a, [rJOYP]
+	ld a, [rJOYP]
 	call Wait7000
 	call Wait7000
 	ld a, $30
-	ld [rJOYP], a ; $ff0
+	ld [rJOYP], a
 	call Wait7000
 	call Wait7000
 	ld a, $10
-	ld [rJOYP], a ; $ff0
-	ld a, [rJOYP] ; $ff0
-	ld a, [rJOYP] ; $ff0
-	ld a, [rJOYP] ; $ff0
-	ld a, [rJOYP] ; $ff0
-	ld a, [rJOYP] ; $ff0
-	ld a, [rJOYP] ; $ff0
+	ld [rJOYP], a
+	ld a, [rJOYP]
+	ld a, [rJOYP]
+	ld a, [rJOYP]
+	ld a, [rJOYP]
+	ld a, [rJOYP]
+	ld a, [rJOYP]
 	call Wait7000
 	call Wait7000
 	ld a, $30
-	ld [rJOYP], a ; $ff0
-	ld a, [rJOYP] ; $ff0
-	ld a, [rJOYP] ; $ff0
-	ld a, [rJOYP] ; $ff0
+	ld [rJOYP], a
+	ld a, [rJOYP]
+	ld a, [rJOYP]
+	ld a, [rJOYP]
 	call Wait7000
 	call Wait7000
-	ld a, [rJOYP] ; $ff0
+	ld a, [rJOYP]
 	and $3
 	cp $3
 	jr nz, .asm_720fd
@@ -482,7 +482,7 @@ Func_7210b: ; 7210b (1c:610b)
 	push de
 	call DisableLCD
 	ld a, $e4
-	ld [rBGP], a ; $ff47
+	ld [rBGP], a
 	ld de, vChars1
 	ld a, [wcf2d]
 	and a
@@ -508,17 +508,16 @@ Func_7210b: ; 7210b (1c:610b)
 	dec c
 	jr nz, .asm_72132
 	ld a, $e3
-	ld [rLCDC], a ; $ff40
+	ld [rLCDC], a
 	pop hl
 	call SendSGBPacket
 	xor a
-	ld [rBGP], a ; $ff47
+	ld [rBGP], a
 	ei
 	ret
 
 Wait7000: ; 7214a (1c:614a)
-; each loop takes about 10 cycles so this routine actually loops through 70000
-; cycles.
+; Each loop takes 9 cycles so this routine actually waits 63000 cycles.
 	ld de, 7000
 .loop
 	nop

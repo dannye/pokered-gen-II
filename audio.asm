@@ -365,7 +365,7 @@ SECTION "Audio Engine 1", ROMX, BANK[AUDIO_1]
 PlayBattleMusic:: ; 0x90c6
 	xor a
 	ld [wMusicHeaderPointer], a
-	ld [wd083], a
+	ld [wLowHealthAlarm], a
 	dec a
 	ld [wc0ee], a
 	call PlaySound ; stop music
@@ -443,7 +443,7 @@ Music_Cities1AlternateTempo:: ; 0x9b81
 	ld [wcfc9], a
 	ld a, $ff
 	ld [wMusicHeaderPointer], a
-	ld c, $64
+	ld c, 100
 	call DelayFrames
 	ld c, BANK(Music_Cities1)
 	ld a, MUSIC_CITIES1
@@ -455,63 +455,80 @@ Music_Cities1AlternateTempo:: ; 0x9b81
 
 SECTION "Audio Engine 2", ROMX, BANK[AUDIO_2]
 
-Func_2136e:: ; 2136e (8:536e)
-	ld a, [wd083]
+Music_DoLowHealthAlarm:: ; 2136e (8:536e)
+	ld a, [wLowHealthAlarm]
 	cp $ff
-	jr z, .asm_2139b
-	bit 7, a
-	ret z
-	and $7f
-	jr nz, .asm_21383
-	call Func_213a7
-	ld a, $1e
-	jr .asm_21395
+	jr z, .disableAlarm
+
+	bit 7, a  ;alarm enabled?
+	ret z     ;nope
+
+	and $7f   ;low 7 bits are the timer.
+	jr nz, .asm_21383 ;if timer > 0, play low tone.
+
+	call .playToneHi
+	ld a, 30 ;keep this tone for 30 frames.
+	jr .asm_21395 ;reset the timer.
+
 .asm_21383
-	cp $14
-	jr nz, .asm_2138a
-	call Func_213ac
+	cp 20
+	jr nz, .asm_2138a ;if timer == 20,
+	call .playToneLo  ;actually set the sound registers.
+
 .asm_2138a
 	ld a, $86
-	ld [wc02a], a
-	ld a, [wd083]
-	and $7f
+	ld [wc02a], a ;disable sound channel?
+	ld a, [wLowHealthAlarm]
+	and $7f ;decrement alarm timer.
 	dec a
+
 .asm_21395
+	; reset the timer and enable flag.
 	set 7, a
-	ld [wd083], a
+	ld [wLowHealthAlarm], a
 	ret
-.asm_2139b
+
+.disableAlarm
 	xor a
-	ld [wd083], a
-	ld [wc02a], a
-	ld de, Unknown_213c4 ; $53c4
-	jr asm_213af
+	ld [wLowHealthAlarm], a  ;disable alarm
+	ld [wc02a], a  ;re-enable sound channel?
+	ld de, .toneDataSilence
+	jr .playTone
 
-Func_213a7: ; 213a7 (8:53a7)
-	ld de, Unknown_213bc ; $53bc
-	jr asm_213af
+;update the sound registers to change the frequency.
+;the tone set here stays until we change it.
+.playToneHi
+	ld de, .toneDataHi
+	jr .playTone
 
-Func_213ac: ; 213ac (8:53ac)
-	ld de, Unknown_213c0 ; $53c0
-asm_213af: ; 213af (8:53af)
-	ld hl, $ff10
+.playToneLo
+	ld de, .toneDataLo
+
+;update sound channel 1 to play the alarm, overriding all other sounds.
+.playTone
+	ld hl, rNR10 ;channel 1 sound register
 	ld c, $5
 	xor a
-.asm_213b5
+
+.copyLoop
 	ld [hli], a
 	ld a, [de]
 	inc de
 	dec c
-	jr nz, .asm_213b5
+	jr nz, .copyLoop
 	ret
 
-Unknown_213bc: ; 213bc (8:53bc)
+;bytes to write to sound channel 1 registers for health alarm.
+;starting at FF11 (FF10 is always zeroed), so these bytes are:
+;length, envelope, freq lo, freq hi
+.toneDataHi
 	db $A0,$E2,$50,$87
 
-Unknown_213c0: ; 213c0 (8:53c0)
+.toneDataLo
 	db $B0,$E2,$EE,$86
 
-Unknown_213c4: ; 213c4 (8:53c4)
+;written to stop the alarm
+.toneDataSilence
 	db $00,$00,$00,$80
 
 
@@ -521,7 +538,7 @@ INCLUDE "audio/engine_2.asm"
 
 
 Music_PokeFluteInBattle:: ; 22306 (8:6306)
-	ld a, (SFX_08_46 - SFX_Headers_08) / 3 ; PokeFlute outside of battle
+	ld a, SFX_BATTLE_06 ; PokeFlute outside of battle
 	call PlaySoundWaitForCurrent
 	ld hl, wc00e
 	ld de, SFX_08_PokeFlute_Ch1
@@ -540,7 +557,7 @@ Music8_OverwriteChannelPointer: ; 2231d (8:631d)
 
 SECTION "Audio Engine 3", ROMX, BANK[AUDIO_3]
 
-Func_7d13b:: ; 7d13b (1f:513b)
+PlayPokedexRatingSfx:: ; 7d13b (1f:513b)
 	ld a, [$ffdc]
 	ld c, $0
 	ld hl, OwnedMonValues
@@ -566,13 +583,13 @@ Func_7d13b:: ; 7d13b (1f:513b)
 	jp PlayDefaultMusic
 
 PokedexRatingSfxPointers: ; 7d162 (1f:5162)
-	db (SFX_1f_51 - SFX_Headers_1f) / 3, BANK(SFX_1f_51)
-	db (SFX_02_41 - SFX_Headers_02) / 3, BANK(SFX_02_41)
-	db (SFX_02_3a - SFX_Headers_02) / 3, BANK(SFX_02_3a)
-	db (SFX_08_46 - SFX_Headers_08) / 3, BANK(SFX_08_46)
-	db (SFX_08_3a - SFX_Headers_08) / 3, BANK(SFX_08_3a)
-	db (SFX_02_42 - SFX_Headers_02) / 3, BANK(SFX_02_42)
-	db (SFX_02_3b - SFX_Headers_02) / 3, BANK(SFX_02_3b)
+	db SFX_DENIED,         BANK(SFX_1f_51)
+	db SFX_POKEDEX_RATING, BANK(SFX_02_41)
+	db SFX_GET_ITEM_1,     BANK(SFX_02_3a)
+	db SFX_BATTLE_06,      BANK(SFX_08_46)
+	db SFX_LEVEL_UP,       BANK(SFX_08_3a)
+	db SFX_GET_KEY_ITEM,   BANK(SFX_02_42)
+	db SFX_GET_ITEM_2,     BANK(SFX_02_3b)
 
 OwnedMonValues: ; 7d170 (1f:5170)
 	db 10, 40, 60, 90, 120, 150, $ff

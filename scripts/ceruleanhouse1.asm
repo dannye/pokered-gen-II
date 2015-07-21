@@ -10,8 +10,8 @@ CeruleanHouse1Text1: ; 1d6fd (7:56fd)
 	db "@"
 
 CeruleanHouse1Text2: ; 1d702 (7:5702)
-	db $08 ; asm
+	TX_ASM
 	ld a, $6
 	ld [wWhichTrade], a
-	predef Predef54
+	predef DoInGameTradeDialogue
 	jp TextScriptEnd

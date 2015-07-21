@@ -143,7 +143,7 @@ UpdateHPBar_AnimateHPBar: ; fab1 (3:7ab1)
 	push de
 	ld d, $6
 	call DrawHPBar
-	ld c, $2
+	ld c, 2
 	call DelayFrames
 	pop de
 	ld a, [wHPBarDelta] ; +1 or -1
@@ -203,7 +203,7 @@ UpdateHPBar_CalcHPDifference: ; fad7 (3:7ad7)
 UpdateHPBar_PrintHPNumber: ; faf5 (3:7af5)
 	push af
 	push de
-	ld a, [wListMenuID] ; wListMenuID
+	ld a, [wHPBarType]
 	and a
 	jr z, .asm_fb2d
 	ld a, [wHPBarOldHP]
@@ -211,7 +211,7 @@ UpdateHPBar_PrintHPNumber: ; faf5 (3:7af5)
 	ld a, [wHPBarOldHP+1]
 	ld [wcef0], a
 	push hl
-	ld a, [$fff6]
+	ld a, [hFlags_0xFFF6]
 	bit 0, a
 	jr z, .asm_fb15
 	ld de, $9

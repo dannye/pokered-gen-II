@@ -1,7 +1,7 @@
 SoftReset::
 	call StopAllSounds
 	call GBPalWhiteOut
-	ld c, $20
+	ld c, 32
 	call DelayFrames
 	; fallthrough
 
@@ -23,17 +23,17 @@ rLCDC_DEFAULT EQU %11100011
 	xor a
 	ld [rIF], a
 	ld [rIE], a
-	ld [$ff43], a
-	ld [$ff42], a
+	ld [rSCX], a
+	ld [rSCY], a
 	ld [rSB], a
-	ld [$ff02], a
-	ld [$ff4b], a
-	ld [$ff4a], a
-	ld [$ff06], a
-	ld [$ff07], a
-	ld [$ff47], a
-	ld [$ff48], a
-	ld [$ff49], a
+	ld [rSC], a
+	ld [rWX], a
+	ld [rWY], a
+	ld [rTMA], a
+	ld [rTAC], a
+	ld [rBGP], a
+	ld [rOBP0], a
+	ld [rOBP1], a
 
 	ld a, rLCDC_ENABLE_MASK
 	ld [rLCDC], a
@@ -66,10 +66,10 @@ rLCDC_DEFAULT EQU %11100011
 
 	xor a
 	ld [hTilesetType], a
-	ld [$ff41], a
-	ld [$ffae], a
-	ld [$ffaf], a
-	ld [$ff0f], a
+	ld [rSTAT], a
+	ld [hSCX], a
+	ld [hSCY], a
+	ld [rIF], a
 	ld a, 1 << VBLANK + 1 << TIMER + 1 << SERIAL
 	ld [rIE], a
 
@@ -79,8 +79,8 @@ rLCDC_DEFAULT EQU %11100011
 	ld a, 7
 	ld [rWX], a
 
-	ld a, $ff
-	ld [$ffaa], a
+	ld a, CONNECTION_NOT_ESTABLISHED
+	ld [hSerialConnectionStatus], a
 
 	ld h, vBGMap0 / $100
 	call ClearBgMap
@@ -101,9 +101,9 @@ rLCDC_DEFAULT EQU %11100011
 	ld [wc0ef], a
 	ld [wc0f0], a
 	ld a, $9c
-	ld [$ffbd], a
+	ld [H_AUTOBGTRANSFERDEST + 1], a
 	xor a
-	ld [$ffbc], a
+	ld [H_AUTOBGTRANSFERDEST], a
 	dec a
 	ld [wUpdateSpritesEnabled], a
 

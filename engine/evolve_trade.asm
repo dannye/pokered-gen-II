@@ -17,7 +17,7 @@ EvolveTradeMon: ; 17d7d (5:7d7d)
 
 ; This was fixed in Yellow.
 
-	ld a, [wTradeMonNick]
+	ld a, [wInGameTradeReceiveMonName]
 
 	; GRAVELER
 	cp "G"
@@ -26,19 +26,19 @@ EvolveTradeMon: ; 17d7d (5:7d7d)
 	; "SPECTRE" (HAUNTER)
 	cp "S"
 	ret nz
-	ld a, [wTradeMonNick + 1]
+	ld a, [wInGameTradeReceiveMonName + 1]
 	cp "P"
 	ret nz
 
 .ok
-	ld a, [wPartyCount] ; wPartyCount
+	ld a, [wPartyCount]
 	dec a
-	ld [wWhichPokemon], a ; wWhichPokemon
+	ld [wWhichPokemon], a
 	ld a, $1
-	ld [wccd4], a
-	ld a, $32
-	ld [W_ISLINKBATTLE], a ; W_ISLINKBATTLE
+	ld [wForceEvolution], a
+	ld a, LINK_STATE_TRADING
+	ld [wLinkState], a
 	callab TryEvolvingMon
-	xor a
-	ld [W_ISLINKBATTLE], a ; W_ISLINKBATTLE
+	xor a ; LINK_STATE_NONE
+	ld [wLinkState], a
 	jp PlayDefaultMusic
