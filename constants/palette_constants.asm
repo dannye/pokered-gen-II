@@ -136,7 +136,7 @@ const_value = 0
 	const PAL_SLOWBRO    ; $74
 	const PAL_MAGNEMITE  ; $75
 	const PAL_MAGNETON   ; $76
-	const PAL_FARFETCH_D ; $77
+	const PAL_FARFETCHD  ; $77
 	const PAL_DODUO      ; $78
 	const PAL_DODRIO     ; $79
 	const PAL_SEEL       ; $7A
