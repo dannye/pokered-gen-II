@@ -1912,6 +1912,7 @@ DrawPlayerHUDAndHPBar:
 	ld de, wBattleMonNick
 	coord hl, 10, 7
 	call PlaceString
+	call PrintPlayerMonGender
 	call PrintEXPBar
 	ld hl, wBattleMonSpecies
 	ld de, wLoadedMon
@@ -1972,6 +1973,7 @@ DrawEnemyHUDAndHPBar:
 	coord hl, 1, 0
 	call CenterMonName
 	call PlaceString
+	call PrintEnemyMonGender
 	coord hl, 6, 1
 	push hl
 	inc hl
@@ -8723,4 +8725,40 @@ PlayBattleAnimationGotID:
 	pop bc
 	pop de
 	pop hl
+	ret
+
+PrintEnemyMonGender:
+; draw a male, female, or blank symbol for the Enemy 'mon
+	ld a, [wEnemyMonSpecies]
+	ld de, wEnemyMonDVs
+	call PrintGenderCommon
+	coord hl, 9, 1
+	ld [hl], a
+	ret
+
+PrintPlayerMonGender:
+; draw a male, female, or blank symbol for the Player 'mon
+	ld a, [wBattleMonSpecies]
+	ld de, wBattleMonDVs
+	call PrintGenderCommon
+	coord hl, 17, 8
+	ld [hl], a
+	ret
+
+PrintGenderCommon: ; used by both routines
+	ld [wd11e], a
+	callba GetMonGender
+	ld a, [wd11e]
+	and a
+	jr z, .noGender
+	dec a
+	jr z, .male
+	; else female
+	ld a, "♀"
+	ret
+.male
+	ld a, "♂"
+	ret
+.noGender
+	ld a, " "
 	ret

@@ -7055,3 +7055,4 @@ MewPicBack::          INCBIN "pic/monback/mewb.pic"
 SECTION "bank2F",ROMX,BANK[$2F]
 
 INCLUDE "data/super_palettes.asm"
+INCLUDE "engine/mon_gender.asm"

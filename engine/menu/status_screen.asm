@@ -164,6 +164,7 @@ StatusScreen:
 	ld de, wLoadedMonOTID
 	lb bc, LEADING_ZEROES | 2, 5
 	call PrintNumber ; ID Number
+	call PrintGenderStatusScreen
 	ld d, $0
 	call PrintStatsBox
 	call Delay3
@@ -477,4 +478,27 @@ StatusScreen_PrintPP:
 	add hl, de
 	dec c
 	jr nz, StatusScreen_PrintPP
+	ret
+
+PrintGenderStatusScreen:
+	ld a, [wLoadedMonSpecies]
+	ld [wd11e], a
+	ld de, wLoadedMonDVs
+	callba GetMonGender
+	ld a, [wd11e]
+	and a
+	jr z, .noGender
+	dec a
+	jr z, .male
+	; else female
+	ld a, "♀"
+	jr .printSymbol
+.male
+	ld a, "♂"
+	jr .printSymbol
+.noGender
+	ld a, " "
+.printSymbol
+	coord hl, 17, 2
+	ld [hl], a
 	ret
