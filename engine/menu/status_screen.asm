@@ -486,19 +486,6 @@ PrintGenderStatusScreen:
 	ld de, wLoadedMonDVs
 	callba GetMonGender
 	ld a, [wd11e]
-	and a
-	jr z, .noGender
-	dec a
-	jr z, .male
-	; else female
-	ld a, "♀"
-	jr .printSymbol
-.male
-	ld a, "♂"
-	jr .printSymbol
-.noGender
-	ld a, " "
-.printSymbol
 	coord hl, 17, 2
 	ld [hl], a
 	ret

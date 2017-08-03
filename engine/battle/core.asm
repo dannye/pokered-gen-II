@@ -8749,16 +8749,4 @@ PrintGenderCommon: ; used by both routines
 	ld [wd11e], a
 	callba GetMonGender
 	ld a, [wd11e]
-	and a
-	jr z, .noGender
-	dec a
-	jr z, .male
-	; else female
-	ld a, "♀"
-	ret
-.male
-	ld a, "♂"
-	ret
-.noGender
-	ld a, " "
 	ret
