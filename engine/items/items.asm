@@ -1,7 +1,7 @@
 UseItem_:
 	ld a,1
 	ld [wActionResultOrTookBattleTurn],a ; initialise to success value
-	ld a,[wcf91]	;contains item_ID
+	ld a,[wcf91] ;contains item_ID
 	cp a,HM_01
 	jp nc,ItemUseTMHM
 	ld hl,ItemUsePtrTable
@@ -235,7 +235,7 @@ ItemUseBall:
 	ld b,a
 
 .skipAilmentValueSubtraction
-	push bc	; save (Rand1 - Status)
+	push bc ; save (Rand1 - Status)
 
 ; Calculate MaxHP * 255.
 	xor a
@@ -608,7 +608,8 @@ ItemUseBallText05:
 ;"All right! {MonName} was caught!"
 ;play sound
 	TX_FAR _ItemUseBallText05
-	db $12,$06
+	TX_SFX_CAUGHT_MON
+	TX_BLINK
 	db "@"
 ItemUseBallText07:
 ;"X was transferred to Bill's PC"
@@ -623,7 +624,8 @@ ItemUseBallText06:
 ;"New DEX data will be added..."
 ;play sound
 	TX_FAR _ItemUseBallText06
-	db $13,$06
+	TX_SFX_DEX_PAGE_ADDED
+	TX_BLINK
 	db "@"
 
 ItemUseTownMap:
@@ -988,7 +990,7 @@ ItemUseMedicine:
 .notFullHP ; if the pokemon's current HP doesn't equal its max HP
 	xor a
 	ld [wLowHealthAlarm],a ;disable low health alarm
-	ld [wChannelSoundIDs + CH4],a
+	ld [wChannelSoundIDs + Ch4],a
 	push hl
 	push de
 	ld bc,wPartyMon1MaxHP - (wPartyMon1HP + 1)
@@ -1775,7 +1777,7 @@ ItemUsePokeflute:
 	call WaitForSoundToFinish ; wait for sound to end
 	callba Music_PokeFluteInBattle ; play in-battle pokeflute music
 .musicWaitLoop ; wait for music to finish playing
-	ld a,[wChannelSoundIDs + CH6]
+	ld a,[wChannelSoundIDs + Ch6]
 	and a ; music off?
 	jr nz,.musicWaitLoop
 .skipMusic
@@ -1836,7 +1838,7 @@ FluteWokeUpText:
 
 PlayedFluteHadEffectText:
 	TX_FAR _PlayedFluteHadEffectText
-	db $06
+	TX_BLINK
 	TX_ASM
 	ld a,[wIsInBattle]
 	and a
@@ -1848,7 +1850,7 @@ PlayedFluteHadEffectText:
 	ld c, BANK(SFX_Pokeflute)
 	call PlayMusic
 .musicWaitLoop ; wait for music to finish playing
-	ld a,[wChannelSoundIDs + CH2]
+	ld a,[wChannelSoundIDs + Ch2]
 	cp a, SFX_POKEFLUE
 	jr z,.musicWaitLoop
 	call PlayDefaultMusic ; start playing normal music again
@@ -2395,19 +2397,19 @@ BoxFullCannotThrowBallText:
 
 ItemUseText00:
 	TX_FAR _ItemUseText001
-	db $05
+	TX_LINE
 	TX_FAR _ItemUseText002
 	db "@"
 
 GotOnBicycleText:
 	TX_FAR _GotOnBicycleText1
-	db $05
+	TX_LINE
 	TX_FAR _GotOnBicycleText2
 	db "@"
 
 GotOffBicycleText:
 	TX_FAR _GotOffBicycleText1
-	db $05
+	TX_LINE
 	TX_FAR _GotOffBicycleText2
 	db "@"
 

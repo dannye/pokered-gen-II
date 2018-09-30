@@ -166,7 +166,6 @@ MtMoon3TextPointers:
 	dw PickUpItemText
 	dw MtMoon3Text_49f99
 
-MtMoon3TrainerHeaders:
 MtMoon3TrainerHeader0:
 	dbEventFlagBit EVENT_BEAT_MT_MOON_3_TRAINER_0
 	db ($4 << 4) ; trainer's view range
@@ -176,28 +175,28 @@ MtMoon3TrainerHeader0:
 	dw MtMoon3EndBattleText2 ; TextEndBattle
 	dw MtMoon3EndBattleText2 ; TextEndBattle
 
-MtMoon3TrainerHeader2:
-	dbEventFlagBit EVENT_BEAT_MT_MOON_3_TRAINER_2
+MtMoon3TrainerHeader1:
+	dbEventFlagBit EVENT_BEAT_MT_MOON_3_TRAINER_1
 	db ($4 << 4) ; trainer's view range
-	dwEventFlagAddress EVENT_BEAT_MT_MOON_3_TRAINER_2
+	dwEventFlagAddress EVENT_BEAT_MT_MOON_3_TRAINER_1
 	dw MtMoon3BattleText3 ; TextBeforeBattle
 	dw MtMoon3AfterBattleText3 ; TextAfterBattle
 	dw MtMoon3EndBattleText3 ; TextEndBattle
 	dw MtMoon3EndBattleText3 ; TextEndBattle
 
-MtMoon3TrainerHeader3:
-	dbEventFlagBit EVENT_BEAT_MT_MOON_3_TRAINER_3
+MtMoon3TrainerHeader2:
+	dbEventFlagBit EVENT_BEAT_MT_MOON_3_TRAINER_2
 	db ($4 << 4) ; trainer's view range
-	dwEventFlagAddress EVENT_BEAT_MT_MOON_3_TRAINER_3
+	dwEventFlagAddress EVENT_BEAT_MT_MOON_3_TRAINER_2
 	dw MtMoon3BattleText4 ; TextBeforeBattle
 	dw MtMoon3AfterBattleText4 ; TextAfterBattle
 	dw MtMoon3EndBattleText4 ; TextEndBattle
 	dw MtMoon3EndBattleText4 ; TextEndBattle
 
-MtMoon3TrainerHeader4:
-	dbEventFlagBit EVENT_BEAT_MT_MOON_3_TRAINER_4
+MtMoon3TrainerHeader3:
+	dbEventFlagBit EVENT_BEAT_MT_MOON_3_TRAINER_3
 	db ($4 << 4) ; trainer's view range
-	dwEventFlagAddress EVENT_BEAT_MT_MOON_3_TRAINER_4
+	dwEventFlagAddress EVENT_BEAT_MT_MOON_3_TRAINER_3
 	dw MtMoon3BattleText5 ; TextBeforeBattle
 	dw MtMoon3AfterBattleText5 ; TextAfterBattle
 	dw MtMoon3EndBattleText5 ; TextEndBattle
@@ -245,19 +244,19 @@ MtMoon3Text2:
 
 MtMoon3Text3:
 	TX_ASM
-	ld hl, MtMoon3TrainerHeader2
+	ld hl, MtMoon3TrainerHeader1
 	call TalkToTrainer
 	jp TextScriptEnd
 
 MtMoon3Text4:
 	TX_ASM
-	ld hl, MtMoon3TrainerHeader3
+	ld hl, MtMoon3TrainerHeader2
 	call TalkToTrainer
 	jp TextScriptEnd
 
 MtMoon3Text5:
 	TX_ASM
-	ld hl, MtMoon3TrainerHeader4
+	ld hl, MtMoon3TrainerHeader3
 	call TalkToTrainer
 	jp TextScriptEnd
 
@@ -323,7 +322,9 @@ MtMoon3Script_49f69:
 
 MtMoon3Text_49f6f:
 	TX_FAR _MtMoon3Text_49f6f
-	db $11, $d, "@"
+	TX_SFX_KEY_ITEM
+	TX_WAIT
+	db "@"
 
 MtMoon3Script_49f76:
 	ld hl, MtMoon3Text_49f7f
@@ -332,7 +333,8 @@ MtMoon3Script_49f76:
 
 MtMoon3Text_49f7f:
 	TX_FAR _MtMoon3Text_49f7f
-	db $d, "@"
+	TX_WAIT
+	db "@"
 
 MtMoon3Text_49f85:
 	TX_FAR _MtMoon3Text_49f85
@@ -352,7 +354,8 @@ MtMoon3Text_49f94:
 
 MtMoon3Text_49f99:
 	TX_FAR _MtMoon3Text_49f99
-	db $11, "@"
+	TX_SFX_KEY_ITEM
+	db "@"
 
 MtMoon3BattleText2:
 	TX_FAR _MtMoon3BattleText2
