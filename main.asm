@@ -167,7 +167,7 @@ SECTION "Bill's PC", ROMX
 INCLUDE "engine/pokemon/bills_pc.asm"
 
 
-SECTION "Bill's PC 2", ROMX
+;SECTION "Bill's PC 2", ROMX
 
 PCBoxOWPal::
 	call Delay3
