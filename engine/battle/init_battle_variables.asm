@@ -1,6 +1,6 @@
 InitBattleVariables:
-	ld a, [hTilesetType]
-	ld [wSavedTilesetType], a
+	ldh a, [hTileAnimations]
+	ld [wSavedTileAnimations], a
 	xor a
 	ld [wActionResultOrTookBattleTurn], a
 	ld [wBattleResult], a
@@ -34,4 +34,4 @@ InitBattleVariables:
 	ld a, BATTLE_TYPE_SAFARI
 	ld [wBattleType], a
 .notSafariBattle
-	jpab PlayBattleMusic
+	jpfar PlayBattleMusic

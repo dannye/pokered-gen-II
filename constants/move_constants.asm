@@ -1,5 +1,11 @@
-const_value = 1
-
+; move ids
+; indexes for:
+; - Moves (see data/moves/moves.asm)
+; - MoveNames (see data/moves/names.asm)
+; - AttackAnimationPointers (see data/moves/animations.asm)
+; - MoveSoundTable (see data/moves/sfx.asm)
+	const_def
+	const NO_MOVE      ; 00
 	const POUND        ; 01
 	const KARATE_CHOP  ; 02
 	const DOUBLESLAP   ; 03
@@ -164,10 +170,8 @@ const_value = 1
 	const SUPER_FANG   ; a2
 	const SLASH        ; a3
 	const SUBSTITUTE   ; a4
-
-NUM_ATTACKS EQU const_value + -1
-
-	const STRUGGLE
+	const STRUGGLE     ; a5
+NUM_ATTACKS EQU const_value - 1
 
 	; Moves do double duty as animation identifiers.
 
@@ -208,3 +212,5 @@ NUM_ATTACKS EQU const_value + -1
 	const HIDEPIC_ANIM ; monster disappears
 	const ROCK_ANIM ; throw rock
 	const BAIT_ANIM ; throw bait
+
+NUM_ATTACK_ANIMS EQU const_value - 1

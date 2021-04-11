@@ -1,5 +1,5 @@
-const_value = 0
-
+; CreditsTextPointers indexes (see data/credits/credits_text.asm)
+	const_def
 	const CRED_VERSION        ; $00
 	const CRED_TAJIRI         ; $01
 	const CRED_TA_OOTA        ; $02
@@ -64,4 +64,12 @@ const_value = 0
 	const CRED_FUKUI          ; $3D
 	const CRED_CLUB           ; $3E
 	const CRED_PAAD           ; $3F
+NUM_CRED_STRINGS EQU const_value
 
+	const_def -1, -1
+	const CRED_TEXT_FADE_MON ; $FF
+	const CRED_TEXT_MON      ; $FE
+	const CRED_TEXT_FADE     ; $FD
+	const CRED_TEXT          ; $FC
+	const CRED_COPYRIGHT     ; $FB
+	const CRED_THE_END       ; $FA
