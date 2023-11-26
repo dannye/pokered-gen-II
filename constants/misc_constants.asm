@@ -17,6 +17,9 @@ DEF TEXT_DELAY_SLOW   EQU %101 ; 5
 	const BIT_BATTLE_SHIFT     ; 6
 	const BIT_BATTLE_ANIMATION ; 7
 
+; wd732 flags
+DEF BIT_DEBUG_MODE EQU 1
+
 ; Used  to define gender ratios
 MALE_ONLY         EQU $00
 MALE_88_PERCENT   EQU $1F
