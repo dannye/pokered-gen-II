@@ -19,7 +19,7 @@ InitBattleVariables:
 	call HealthBarPal
 	ld a, $00
 	ld hl, wCanEvolveFlags
-	ld b, $3c
+	ld b, wMiscBattleDataEnd - wMiscBattleData
 .loop
 	ld [hli], a
 	dec b
