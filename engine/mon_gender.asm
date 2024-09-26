@@ -1,12 +1,12 @@
 ; Determine a Pokémon's gender based on its DVs
 ; This uses the same formula as Gen 2, so gender should match if you trade them forward via Time Capsule
-; INPUTS - Mon DVs in de, species in wd11e
-; OUTPUT - Mon's gender in wd11e
+; INPUTS - Mon DVs in de, species in wPokedexNum
+; OUTPUT - Mon's gender in wPokedexNum
 GetMonGender::
 	push de
 	predef IndexToPokedex
 	pop de
-	ld a, [wd11e]
+	ld a, [wPokedexNum]
 	dec a
 	ld c, a
 	ld b, 0
@@ -52,7 +52,7 @@ GetMonGender::
 .genderless
 	ld a, " " ; GENDERLESS
 .done
-	ld [wd11e], a
+	ld [wPokedexNum], a
 	ret
 
 MonGenderRatios:

@@ -51,9 +51,7 @@ GetRivalPalID:
 	ld a, PAL_GARY1
 GotPaletteID:
 	push af
-	ld hl, SendIntroPal
-	ld b, BANK(SendIntroPal)
-	jp Bankswitch
+	jpfar SendIntroPal
 
 
 SECTION "bank3", ROMX
@@ -239,11 +237,9 @@ EnemyHealthBarUpdated:
 	jr  nz, .noBattle
 	push hl
 	ld a, [wEnemyMonSpecies2]
-	ld [wd11e], a
-	ld hl, IndexToPokedex
-	ld b, BANK(IndexToPokedex)
-	call Bankswitch
-	ld a, [wd11e]
+	ld [wPokedexNum], a
+	callfar IndexToPokedex
+	ld a, [wPokedexNum]
 	dec a
 	ld c, a
 	ld b, $2
@@ -285,9 +281,9 @@ PrintPlayerMonGender:
 	ret
 
 PrintGenderCommon: ; used by both routines
-	ld [wd11e], a
+	ld [wPokedexNum], a
 	farcall GetMonGender
-	ld a, [wd11e]
+	ld a, [wPokedexNum]
 	ret
 
 LoadBackSpriteUnzoomed:
@@ -343,13 +339,11 @@ CalcEXPBarPixelLength:
 	call BattleMonPartyAttr
 .skip
 	ld a, [hl]
-	ld [wd0b5], a
+	ld [wCurSpecies], a
 	call GetMonHeader
 	ld a, [wBattleMonLevel]
 	ld d, a
-	ld hl, CalcExperience
-	ld b, BANK(CalcExperience)
-	call Bankswitch
+	callfar CalcExperience
 	ld hl, hMultiplicand
 	ld de, wEXPBarBaseEXP
 	ld a, [hli]
@@ -365,9 +359,7 @@ CalcEXPBarPixelLength:
 	ld a, [wBattleMonLevel]
 	ld d, a
 	inc d
-	ld hl, CalcExperience
-	ld b, BANK(CalcExperience)
-	call Bankswitch
+	callfar CalcExperience
 
 	; get the address of the active Pokemon's current experience
 	ld hl, wPartyMon1Exp
@@ -569,9 +561,7 @@ AnimateEXPBar:
 	ret nz
 	ld a, SFX_HEAL_HP
 	call PlaySoundWaitForCurrent
-	ld hl, CalcEXPBarPixelLength
-	ld b, BANK(CalcEXPBarPixelLength)
-	call Bankswitch
+	callfar CalcEXPBarPixelLength
 	ld hl, wEXPBarPixelLength
 	ld a, [hl]
 	ld b, a
@@ -611,7 +601,7 @@ KeepEXPBarFull:
 	ld a, [wEXPBarKeepFullFlag]
 	set 0, a
 	ld [wEXPBarKeepFullFlag], a
-	ld a, [wCurEnemyLVL]
+	ld a, [wCurEnemyLevel]
 	ret
 
 IsCurrentMonBattleMon:

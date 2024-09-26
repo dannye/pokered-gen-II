@@ -8,7 +8,7 @@ UncompressMonSprite::
 	ld [wSpriteInputPtr], a    ; fetch sprite input pointer
 	ld a, [hl]
 	ld [wSpriteInputPtr+1], a
-	ld a, [wcf91]
+	ld a, [wCurPartySpecies]
 	cp FOSSIL_KABUTOPS
 	jr z, .RecallBank
 	cp FOSSIL_AERODACTYL
