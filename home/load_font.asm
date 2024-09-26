@@ -1,6 +1,6 @@
 LoadFontTilePatterns::
 	ldh a, [rLCDC]
-	bit 7, a ; is the LCD enabled?
+	bit rLCDC_ENABLE, a
 	jr nz, .on
 .off
 	ld hl, FontGraphics
@@ -16,7 +16,7 @@ LoadFontTilePatterns::
 
 LoadTextBoxTilePatterns::
 	ldh a, [rLCDC]
-	bit 7, a ; is the LCD enabled?
+	bit rLCDC_ENABLE, a
 	jr nz, .on
 .off
 	ld hl, TextBoxGraphics

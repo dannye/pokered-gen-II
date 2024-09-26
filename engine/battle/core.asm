@@ -229,7 +229,7 @@ StartBattle:
 	ld b, 0
 	add hl, bc
 	ld a, [hl] ; species
-	ld [wcf91], a
+	ld [wCurPartySpecies], a
 	ld [wBattleMonSpecies2], a
 	call LoadScreenTilesFromBuffer1
 	hlcoord 1, 5
@@ -417,7 +417,7 @@ MainInBattleLoop:
 	jr c, .AIActionUsedEnemyFirst
 	call ExecuteEnemyMove
 	ld a, [wEscapedFromBattle]
-	and a ; was Teleport, Road, or Whirlwind used to escape from battle?
+	and a ; was Teleport, Roar, or Whirlwind used to escape from battle?
 	ret nz ; if so, return
 	ld a, b
 	and a
@@ -428,7 +428,7 @@ MainInBattleLoop:
 	call DrawHUDsAndHPBars
 	call ExecutePlayerMove
 	ld a, [wEscapedFromBattle]
-	and a ; was Teleport, Road, or Whirlwind used to escape from battle?
+	and a ; was Teleport, Roar, or Whirlwind used to escape from battle?
 	ret nz ; if so, return
 	ld a, b
 	and a
@@ -441,7 +441,7 @@ MainInBattleLoop:
 .playerMovesFirst
 	call ExecutePlayerMove
 	ld a, [wEscapedFromBattle]
-	and a ; was Teleport, Road, or Whirlwind used to escape from battle?
+	and a ; was Teleport, Roar, or Whirlwind used to escape from battle?
 	ret nz ; if so, return
 	ld a, b
 	and a
@@ -455,7 +455,7 @@ MainInBattleLoop:
 	jr c, .AIActionUsedPlayerFirst
 	call ExecuteEnemyMove
 	ld a, [wEscapedFromBattle]
-	and a ; was Teleport, Road, or Whirlwind used to escape from battle?
+	and a ; was Teleport, Roar, or Whirlwind used to escape from battle?
 	ret nz ; if so, return
 	ld a, b
 	and a
@@ -844,7 +844,7 @@ FaintEnemyPokemon:
 ; the player has exp all
 ; now, set the gain exp flag for every party member
 ; half of the total stat exp and normal exp will divided evenly amongst every party member
-	ld a, $1
+	ld a, TRUE
 	ld [wBoostExpByExpAll], a
 	ld a, [wPartyCount]
 	ld b, 0
@@ -924,8 +924,8 @@ TrainerBattleVictory:
 	cp RIVAL3 ; final battle against rival
 	jr nz, .notrival
 	ld b, MUSIC_DEFEATED_GYM_LEADER
-	ld hl, wFlags_D733
-	set 1, [hl]
+	ld hl, wStatusFlags7
+	set BIT_NO_MAP_MUSIC, [hl]
 .notrival
 	ld a, [wLinkState]
 	cp LINK_STATE_BATTLING
@@ -1007,12 +1007,12 @@ RemoveFaintedPlayerMon:
 	ld b, FLAG_RESET
 	predef FlagActionPredef ; clear gain exp flag for fainted mon
 	ld hl, wEnemyBattleStatus1
-	res 2, [hl]   ; reset "attacking multiple times" flag
+	res ATTACKING_MULTIPLE_TIMES, [hl]
 	ld a, [wLowHealthAlarm]
-	bit 7, a      ; skip sound flag (red bar (?))
+	bit BIT_LOW_HEALTH_ALARM, a
 	jr z, .skipWaitForSound
-	ld a, $ff
-	ld [wLowHealthAlarm], a ;disable low health alarm
+	ld a, DISABLE_LOW_HEALTH_ALARM
+	ld [wLowHealthAlarm], a
 	call WaitForSoundToFinish
 .skipWaitForSound
 ; a is 0, so this zeroes the enemy's accumulated damage.
@@ -1157,9 +1157,9 @@ HandlePlayerBlackOut:
 	ld hl, LinkBattleLostText
 .noLinkBattle
 	call PrintText
-	ld a, [wd732]
-	res 5, a
-	ld [wd732], a
+	ld a, [wStatusFlags6]
+	res BIT_ALWAYS_ON_BIKE, a
+	ld [wStatusFlags6], a
 	call ClearScreen
 	scf
 	ret
@@ -1179,10 +1179,10 @@ LinkBattleLostText:
 ; slides pic of fainted mon downwards until it disappears
 ; bug: when this is called, [hAutoBGTransferEnabled] is non-zero, so there is screen tearing
 SlideDownFaintedMonPic:
-	ld a, [wd730]
+	ld a, [wStatusFlags5]
 	push af
-	set 6, a
-	ld [wd730], a
+	set BIT_NO_TEXT_DELAY, a
+	ld [wStatusFlags5], a
 	ld b, 7 ; number of times to slide
 .slideStepLoop ; each iteration, the mon is slid down one row
 	push bc
@@ -1221,7 +1221,7 @@ SlideDownFaintedMonPic:
 	dec b
 	jr nz, .slideStepLoop
 	pop af
-	ld [wd730], a
+	ld [wStatusFlags5], a
 	ret
 
 SevenSpacesText:
@@ -1305,7 +1305,7 @@ EnemySendOutFirstMon:
 	dec a
 	ld [wAICount], a
 	ld hl, wPlayerBattleStatus1
-	res 5, [hl]
+	res USING_TRAPPING_MOVE, [hl]
 	hlcoord 18, 0
 	ld a, 8
 	call SlideTrainerPicOffScreen
@@ -1344,7 +1344,7 @@ EnemySendOutFirstMon:
 	ld bc, wEnemyMon2 - wEnemyMon1
 	call AddNTimes
 	ld a, [hl]
-	ld [wCurEnemyLVL], a
+	ld [wCurEnemyLevel], a
 	ld a, [wWhichPokemon]
 	inc a
 	ld hl, wEnemyPartyCount
@@ -1353,7 +1353,7 @@ EnemySendOutFirstMon:
 	add hl, bc
 	ld a, [hl]
 	ld [wEnemyMonSpecies2], a
-	ld [wcf91], a
+	ld [wCurPartySpecies], a
 	call LoadEnemyMonData
 	ld hl, wEnemyMonHP
 	ld a, [hli]
@@ -1420,8 +1420,8 @@ EnemySendOutFirstMon:
 	ld hl, TrainerSentOutText
 	call PrintText
 	ld a, [wEnemyMonSpecies2]
-	ld [wcf91], a
-	ld [wd0b5], a
+	ld [wCurPartySpecies], a
+	ld [wCurSpecies], a
 	call GetMonHeader
 	ld de, vFrontPic
 	call LoadMonFrontSprite
@@ -1642,7 +1642,7 @@ LoadBattleMonFromParty:
 	ld bc, wBattleMonPP - wBattleMonLevel
 	call CopyData
 	ld a, [wBattleMonSpecies2]
-	ld [wd0b5], a
+	ld [wCurSpecies], a
 	call GetMonHeader
 	ld hl, wPartyMonNicks
 	ld a, [wPlayerMonNumber]
@@ -1686,7 +1686,7 @@ LoadEnemyMonFromParty:
 	ld bc, wEnemyMonPP - wEnemyMonLevel
 	call CopyData
 	ld a, [wEnemyMonSpecies]
-	ld [wd0b5], a
+	ld [wCurSpecies], a
 	call GetMonHeader
 	ld hl, wEnemyMonNicks
 	ld a, [wWhichPokemon]
@@ -1759,7 +1759,7 @@ SendOutMon:
 	call PlayMoveAnimation
 	hlcoord 4, 11
 	predef AnimateSendingOutMon
-	ld a, [wcf91]
+	ld a, [wCurPartySpecies]
 	call PlayCry
 	call PrintEmptyString
 	jp SaveScreenTilesToBuffer1
@@ -1842,7 +1842,7 @@ DrawPlayerHUDAndHPBar:
 	call PrintLevel
 .doNotPrintLevel
 	ld a, [wLoadedMonSpecies]
-	ld [wcf91], a
+	ld [wCurPartySpecies], a
 	hlcoord 10, 9
 	predef DrawHP
 	ld a, $1
@@ -1861,15 +1861,15 @@ DrawPlayerHUDAndHPBar:
 	jr z, .setLowHealthAlarm
 .fainted
 	ld hl, wLowHealthAlarm
-	bit 7, [hl] ;low health alarm enabled?
-	ld [hl], $0
+	bit BIT_LOW_HEALTH_ALARM, [hl]
+	ld [hl], 0
 	ret z
 	xor a
 	ld [wChannelSoundIDs + CHAN5], a
 	ret
 .setLowHealthAlarm
 	ld hl, wLowHealthAlarm
-	set 7, [hl] ;enable low health alarm
+	set BIT_LOW_HEALTH_ALARM, [hl]
 	ret
 
 DrawEnemyHUDAndHPBar:
@@ -2123,7 +2123,7 @@ DisplayBattleMenu::
 	ld a, D_LEFT | A_BUTTON
 	ld [hli], a ; wMenuWatchedKeys
 	call HandleMenuInput
-	bit 5, a ; check if left was pressed
+	bit BIT_D_LEFT, a
 	jr nz, .leftColumn ; if left was pressed, jump
 	ld a, [wCurrentMenuItem]
 	add $2 ; if we're in the right column, the actual id is +2
@@ -2161,7 +2161,7 @@ DisplayBattleMenu::
 	jp LoadScreenTilesFromBuffer1 ; restore saved screen and return
 .throwSafariBallWasSelected
 	ld a, SAFARI_BALL
-	ld [wcf91], a
+	ld [wCurItem], a
 	jr UseBagItem
 
 .upperLeftMenuItemWasNotSelected ; a menu item other than the upper left item was selected
@@ -2186,7 +2186,7 @@ DisplayBattleMenu::
 
 ; bait was selected
 	ld a, SAFARI_BAIT
-	ld [wcf91], a
+	ld [wCurItem], a
 	jr UseBagItem
 
 BagWasSelected:
@@ -2238,8 +2238,8 @@ DisplayBagMenu:
 
 UseBagItem:
 	; either use an item from the bag or use a safari zone item
-	ld a, [wcf91]
-	ld [wd11e], a
+	ld a, [wCurItem]
+	ld [wNamedObjectIndex], a
 	call GetItemName
 	call CopyToStringBuffer
 	xor a
@@ -2307,7 +2307,7 @@ PartyMenuOrRockOrRun:
 	jr nz, .partyMenuWasSelected
 ; safari battle
 	ld a, SAFARI_ROCK
-	ld [wcf91], a
+	ld [wCurItem], a
 	jp UseBagItem
 .partyMenuWasSelected
 	call LoadScreenTilesFromBuffer1
@@ -2381,8 +2381,8 @@ PartyMenuOrRockOrRun:
 	jr nz, .doEnemyMonAnimation
 ; enemy mon is not minimised
 	ld a, [wEnemyMonSpecies]
-	ld [wcf91], a
-	ld [wd0b5], a
+	ld [wCurPartySpecies], a
+	ld [wCurSpecies], a
 	call GetMonHeader
 	ld de, vFrontPic
 	call LoadMonFrontSprite
@@ -2475,11 +2475,11 @@ MoveSelectionMenu:
 .writemoves
 	ld de, wMovesString
 	ldh a, [hUILayoutFlags]
-	set 2, a
+	set BIT_SINGLE_SPACED_LINES, a
 	ldh [hUILayoutFlags], a
 	call PlaceString
 	ldh a, [hUILayoutFlags]
-	res 2, a
+	res BIT_SINGLE_SPACED_LINES, a
 	ldh [hUILayoutFlags], a
 	ret
 
@@ -2560,7 +2560,7 @@ MoveSelectionMenu:
 	cp LINK_STATE_BATTLING
 	jr z, .matchedkeyspicked
 	; Disable left, right, and START buttons in regular battles.
-	ld a, [wFlags_D733]
+	ld a, [wStatusFlags7]
 	bit BIT_TEST_BATTLE, a
 	ld b, D_UP | D_DOWN | A_BUTTON | B_BUTTON | SELECT
 	jr z, .matchedkeyspicked
@@ -2589,7 +2589,7 @@ SelectMenuItem:
 	jr .select
 .battleselect
 	; Hide move swap cursor in TestBattle.
-	ld a, [wFlags_D733]
+	ld a, [wStatusFlags7]
 	bit BIT_TEST_BATTLE, a
 	; This causes PrintMenuItem to not run in TestBattle.
 	; MoveSelectionMenu still draws part of its window, an issue
@@ -2606,10 +2606,10 @@ SelectMenuItem:
 	ld [hl], "▷"
 .select
 	ld hl, hUILayoutFlags
-	set 1, [hl]
+	set BIT_DOUBLE_SPACED_MENU, [hl]
 	call HandleMenuInput
 	ld hl, hUILayoutFlags
-	res 1, [hl]
+	res BIT_DOUBLE_SPACED_MENU, [hl]
 	bit BIT_D_UP, a
 	jp nz, SelectMenuItem_CursorUp
 	bit BIT_D_DOWN, a
@@ -2654,7 +2654,7 @@ SelectMenuItem:
 	cp c
 	jr z, .disabled
 	ld a, [wPlayerBattleStatus3]
-	bit 3, a ; transformed
+	bit TRANSFORMED, a
 	jr nz, .transformedMoveSelected
 .transformedMoveSelected ; pointless
 	; Allow moves copied by Transform to be used.
@@ -2880,7 +2880,7 @@ PrintMenuItem:
 	add hl, bc
 	ld a, [hl]
 	and $3f
-	ld [wcd6d], a
+	ld [wBattleMenuCurrentPP], a
 ; print TYPE/<type> and <curPP>/<maxPP>
 	hlcoord 1, 9
 	ld de, TypeText
@@ -2890,7 +2890,7 @@ PrintMenuItem:
 	hlcoord 5, 9
 	ld [hl], "/"
 	hlcoord 5, 11
-	ld de, wcd6d
+	ld de, wBattleMenuCurrentPP
 	lb bc, 1, 2
 	call PrintNumber
 	hlcoord 8, 11
@@ -3566,7 +3566,7 @@ CheckPlayerStatusConditions:
 	bit USING_RAGE, a ; is mon using rage?
 	jp z, .checkPlayerStatusConditionsDone ; if we made it this far, mon can move normally this turn
 	ld a, RAGE
-	ld [wd11e], a
+	ld [wNamedObjectIndex], a
 	call GetMoveName
 	call CopyToStringBuffer
 	xor a
@@ -3656,7 +3656,7 @@ PrintMoveIsDisabledText:
 	res CHARGING_UP, a ; end the pokemon's
 	ld [de], a
 	ld a, [hl]
-	ld [wd11e], a
+	ld [wNamedObjectIndex], a
 	call GetMoveName
 	ld hl, MoveIsDisabledText
 	jp PrintText
@@ -3730,13 +3730,13 @@ MonName1Text:
 	ld hl, wEnemyUsedMove
 .playerTurn
 	ld [hl], a
-	ld [wd11e], a
+	ld [wMoveGrammar], a
 	call DetermineExclamationPointTextNum
 	ld a, [wMonIsDisobedient]
 	and a
 	ld hl, Used2Text
 	ret nz
-	ld a, [wd11e]
+	ld a, [wMoveGrammar]
 	cp 3
 	ld hl, Used2Text
 	ret c
@@ -3773,7 +3773,7 @@ _PrintMoveName:
 	text_far _MoveNameText
 	text_asm
 	ld hl, ExclamationPointPointerTable
-	ld a, [wd11e] ; exclamation point num
+	ld a, [wMoveGrammar]
 	add a
 	push bc
 	ld b, $0
@@ -3821,7 +3821,7 @@ ExclamationPoint5Text:
 ; but the functionality didn't get removed
 DetermineExclamationPointTextNum:
 	push bc
-	ld a, [wd11e] ; move ID
+	ld a, [wMoveGrammar] ; move ID
 	ld c, a
 	ld b, $0
 	ld hl, ExclamationPointMoveSets
@@ -3837,7 +3837,7 @@ DetermineExclamationPointTextNum:
 	jr .loop
 .done
 	ld a, b
-	ld [wd11e], a ; exclamation point num
+	ld [wMoveGrammar], a
 	pop bc
 	ret
 
@@ -3852,7 +3852,7 @@ PrintMoveFailureText:
 .playersTurn
 	ld hl, DoesntAffectMonText
 	ld a, [wDamageMultipliers]
-	and $7f
+	and EFFECTIVENESS_MASK
 	jr z, .gotTextToPrint
 	ld hl, AttackMissedText
 	ld a, [wCriticalHitOrOHKO]
@@ -4406,9 +4406,9 @@ GetEnemyMonStat:
 	ret
 .notLinkBattle
 	ld a, [wEnemyMonLevel]
-	ld [wCurEnemyLVL], a
+	ld [wCurEnemyLevel], a
 	ld a, [wEnemyMonSpecies]
-	ld [wd0b5], a
+	ld [wCurSpecies], a
 	call GetMonHeader
 	ld hl, wEnemyMonDVs
 	ld de, wLoadedMonSpeedExp
@@ -4612,7 +4612,7 @@ CriticalHitTest:
 	jr nz, .handleEnemy
 	ld a, [wBattleMonSpecies]
 .handleEnemy
-	ld [wd0b5], a
+	ld [wCurSpecies], a
 	call GetMonHeader
 	ld a, [wMonHBaseSpeed]
 	ld b, a
@@ -5122,7 +5122,7 @@ MirrorMoveFailedText:
 
 ; function used to reload move data for moves like Mirror Move and Metronome
 ReloadMoveData:
-	ld [wd11e], a
+	ld [wNamedObjectIndex], a
 	dec a
 	ld hl, Moves
 	ld bc, MOVE_LENGTH
@@ -5250,7 +5250,7 @@ AdjustDamageForMoveType:
 	ld a, l
 	ld [wDamage + 1], a
 	ld hl, wDamageMultipliers
-	set 7, [hl]
+	set BIT_STAB_DAMAGE, [hl]
 .skipSameTypeAttackBonus
 	ld a, [wMoveType]
 	ld b, a
@@ -5273,7 +5273,7 @@ AdjustDamageForMoveType:
 	push bc
 	inc hl
 	ld a, [wDamageMultipliers]
-	and $80
+	and 1 << BIT_STAB_DAMAGE
 	ld b, a
 	ld a, [hl] ; a = damage multiplier
 	ldh [hMultiplier], a
@@ -5627,13 +5627,13 @@ EnemyCanExecuteChargingMove:
 	res CHARGING_UP, [hl] ; no longer charging up for attack
 	res INVULNERABLE, [hl] ; no longer invulnerable to typical attacks
 	ld a, [wEnemyMoveNum]
-	ld [wd0b5], a
+	ld [wNameListIndex], a
 	ld a, BANK(MoveNames)
 	ld [wPredefBank], a
 	ld a, MOVE_NAME
 	ld [wNameListType], a
 	call GetName
-	ld de, wcd6d
+	ld de, wNameBuffer
 	call CopyToStringBuffer
 EnemyCanExecuteMove:
 	xor a
@@ -6069,7 +6069,7 @@ CheckEnemyStatusConditions:
 	bit USING_RAGE, a ; is mon using rage?
 	jp z, .checkEnemyStatusConditionsDone ; if we made it this far, mon can move normally this turn
 	ld a, RAGE
-	ld [wd11e], a
+	ld [wNamedObjectIndex], a
 	call GetMoveName
 	call CopyToStringBuffer
 	xor a
@@ -6094,13 +6094,13 @@ GetCurrentMove:
 .player
 	ld de, wPlayerMoveNum
 	; Apply InitBattleVariables to TestBattle.
-	ld a, [wFlags_D733]
+	ld a, [wStatusFlags7]
 	bit BIT_TEST_BATTLE, a
 	ld a, [wTestBattlePlayerSelectedMove]
 	jr nz, .selected
 	ld a, [wPlayerSelectedMove]
 .selected
-	ld [wd0b5], a
+	ld [wNameListIndex], a
 	dec a
 	ld hl, Moves
 	ld bc, MOVE_LENGTH
@@ -6113,7 +6113,7 @@ GetCurrentMove:
 	ld a, MOVE_NAME
 	ld [wNameListType], a
 	call GetName
-	ld de, wcd6d
+	ld de, wNameBuffer
 	jp CopyToStringBuffer
 
 LoadEnemyMonData:
@@ -6122,7 +6122,7 @@ LoadEnemyMonData:
 	jp z, LoadEnemyMonFromParty
 	ld a, [wEnemyMonSpecies2]
 	ld [wEnemyMonSpecies], a
-	ld [wd0b5], a
+	ld [wCurSpecies], a
 	call GetMonHeader
 	ld a, [wEnemyBattleStatus3]
 	bit TRANSFORMED, a ; is enemy mon transformed?
@@ -6145,7 +6145,7 @@ LoadEnemyMonData:
 	ld [hli], a
 	ld [hl], b
 	ld de, wEnemyMonLevel
-	ld a, [wCurEnemyLVL]
+	ld a, [wCurEnemyLevel]
 	ld [de], a
 	inc de
 	ld b, $0
@@ -6247,16 +6247,16 @@ LoadEnemyMonData:
 	ld a, [hl]     ; base exp
 	ld [de], a
 	ld a, [wEnemyMonSpecies2]
-	ld [wd11e], a
+	ld [wNamedObjectIndex], a
 	call GetMonName
-	ld hl, wcd6d
+	ld hl, wNameBuffer
 	ld de, wEnemyMonNick
 	ld bc, NAME_LENGTH
 	call CopyData
 	ld a, [wEnemyMonSpecies2]
-	ld [wd11e], a
+	ld [wPokedexNum], a
 	predef IndexToPokedex
-	ld a, [wd11e]
+	ld a, [wPokedexNum]
 	dec a
 	ld c, a
 	ld b, FLAG_SET
@@ -6779,12 +6779,12 @@ InitBattle::
 
 InitOpponent:
 	ld a, [wCurOpponent]
-	ld [wcf91], a
+	ld [wCurPartySpecies], a
 	ld [wEnemyMonSpecies2], a
 	jr InitBattleCommon
 
 DetermineWildOpponent:
-	ld a, [wd732]
+	ld a, [wStatusFlags6]
 	bit BIT_DEBUG_MODE, a
 	jr z, .notDebugMode
 	ldh a, [hJoyHeld]
@@ -6802,7 +6802,7 @@ InitBattleCommon:
 	ld hl, wLetterPrintingDelayFlags
 	ld a, [hl]
 	push af
-	res 1, [hl]
+	res BIT_TEXT_DELAY, [hl] ; no delay
 	callfar InitBattleVariables
 	ld a, [wEnemyMonSpecies2]
 	sub OPP_ID_OFFSET
@@ -6855,14 +6855,14 @@ InitWildBattle:
 	ld a, "T"
 	ld [hli], a
 	ld [hl], "@"
-	ld a, [wcf91]
+	ld a, [wCurPartySpecies]
 	push af
 	ld a, MON_GHOST
-	ld [wcf91], a
+	ld [wCurPartySpecies], a
 	ld de, vFrontPic
 	call LoadMonFrontSprite ; load ghost sprite
 	pop af
-	ld [wcf91], a
+	ld [wCurPartySpecies], a
 	jr .spriteLoaded
 .isNoGhost
 	ld de, vFrontPic
@@ -7038,7 +7038,7 @@ LoadMonBackPic:
 ; Assumes the monster's attributes have
 ; been loaded with GetMonHeader.
 	ld a, [wBattleMonSpecies2]
-	ld [wcf91], a
+	ld [wCurPartySpecies], a
 	hlcoord 1, 5
 	ld b, 7
 	ld c, 8

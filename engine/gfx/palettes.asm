@@ -69,7 +69,7 @@ SetPal_StatusScreen:
 	ld de, wPalPacket
 	ld bc, $10
 	call CopyData
-	ld a, [wcf91]
+	ld a, [wCurPartySpecies]
 	cp NUM_POKEMON_INDEXES + 1
 	jr c, .pokemon
 	ld a, $1 ; not pokemon
@@ -97,7 +97,7 @@ SetPal_Pokedex:
 	ld de, wPalPacket
 	ld bc, $10
 	call CopyData
-	ld a, [wcf91]
+	ld a, [wCurPartySpecies]
 	call DeterminePaletteIDOutOfBattle
 	ld hl, wPalPacket + 3
 	ld [hl], a
@@ -620,7 +620,7 @@ INCLUDE "data/pokemon/palettes.asm"
 DeterminePaletteIDFront:
 	ld a, [hl]
 DeterminePaletteIDOutOfBattle:
-	ld [wd11e], a
+	ld [wPokedexNum], a
 	and a
 	ld a, [wTrainerClass]
 	ld hl, TrainerPalettes
@@ -636,7 +636,7 @@ DeterminePaletteIDBack:
 	call AddNTimes
 .skip
 	ld a, [hl]
-	ld [wd11e], a
+	ld [wPokedexNum], a
 	and a
 	ld a, PAL_HERO
 	ret z
@@ -644,7 +644,7 @@ GetMonPalID:
 	push bc
 	predef IndexToPokedex
 	pop bc
-	ld a, [wd11e]
+	ld a, [wPokedexNum]
 	ld hl, MonsterPalettes
 GetTrainerPalID:
 	ld e, a
