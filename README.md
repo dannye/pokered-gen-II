@@ -1,8 +1,8 @@
-# pokered-crysaudio
+# pokered-gen-2-gfx
 
-Pokémon Red/Blue with the Pokémon Crystal sound engine stitched in. Made by Sanqui and dannye.
+Pokémon Red/Blue with 2nd Gen. Graphical Enhancements. Also check out the crysaudio branch.
 
-Original README follows...
+**Note:** This repository used to be called **pokered-gen-II**.
 
 # Pokémon Red and Blue [![Build Status][ci-badge]][ci]
 
