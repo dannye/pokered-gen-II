@@ -2,6 +2,7 @@
 
 Music:
 ; entries correspond to MUSIC_* constants
+	table_width 3
 	dba Music_Nothing
 	dba Music_PalletTown
 	dba Music_PokemonCenter
@@ -48,3 +49,4 @@ Music:
 	dba Music_LookHiker
 	dba Music_LookLass
 	dba Music_LookOfficer
+	assert_table_length NUM_MUSIC_SONGS

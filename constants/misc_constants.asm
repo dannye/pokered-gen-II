@@ -8,6 +8,9 @@ DEF TRUE  EQU 1
 	const FLAG_SET   ; 1
 	const FLAG_TEST  ; 2
 
+; input
+DEF NO_INPUT EQU 0
+
 ; Used  to define gender ratios
 DEF MALE_ONLY         EQU $00
 DEF MALE_88_PERCENT   EQU $1F
